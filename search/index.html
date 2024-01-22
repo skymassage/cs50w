@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="style.css" rel="stylesheet">
+    <title>Google</title>
+</head>
+<body>
+    <header>
+        <ul>
+            <li><a href="#">Images</a></li>
+            <li><a href="#">Advanced</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <form action="https://www.google.com/search">
+            <input type="text" name="q">
+            <br> <!-- Inserts a single line break -->
+            <button type="submit">Google Search</button>
+            <button type="submit" name="btnI">I'm Feeling Lucky</button> 
+            <!-- "https://www.google.com/search?q=&btnI=" goes to Google Doodles page, 
+                 and"https://www.google.com/search?q=<...>&btnI=" goes to the website of the first Google search result <...>.
+                 "btnI" is the Google built-in key. -->
+        </form>
+    </main>
+</body>
+</html>
