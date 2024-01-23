@@ -4,33 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="style.css" rel="stylesheet">
-    <title>Google</title>
+    <title>Google Images</title>
 </head>
 <body>
-    <section>
-    <header>
-        <ul>
-            <li><a href="image.html">Images</a></li>
-            <li><a href="advanced.html">Advanced</a></li>
-        </ul>
+    <header id="head_0">
+        <div id="navbar_0">
+            <a href="index.html">Google Search</a>
+        </div>
     </header>
 
-    <div class="main">
-        <img src="static/google.png">
+    <main id="main_0">
+        <div id="image">
+            <img src="static/logo.png" alt="Google">
+            <div id="imageText">images</div>
+        </div>
+
         <form action="https://www.google.com/search">
-            <div class="searchbox">
-                <input type="text" name="q" class="search">
-                <div class="icon">
-                    <div><img src="static/search.png"></div>
-                </div>
-            </div>
-            <br>
-            <div class="buttons">
+            <div id="inputField">
+                <img src="static/search.png">
+                <input type="text" name="q">
                 <input type="hidden" name="tbm" value="isch">
+            </div>
+            <div id="buttons">
                 <button type="submit">Google Search</button>
             </div>
         </form>
-    </div>
-    </section>
+    </main>
 </body>
 </html>

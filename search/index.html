@@ -7,33 +7,29 @@
     <title>Google</title>
 </head>
 <body>
-    <section>
-    <header>
-        <ul>
-            <li><a href="image.html">Images</a></li>
-            <li><a href="advanced.html">Advanced</a></li>
-        </ul>
+    <header id="head_0">
+        <div id="navbar_0">
+            <a href="image.html">Images Search</a>
+            <a href="advanced.html">Advanced Search</a>
+        </div>
     </header>
 
-    <div class="main">
-        <img src="static/google.png">
+    <main id="main_0">
+        <img src="static/logo.png" alt="Google">
+
         <form action="https://www.google.com/search">
-            <div class="searchbox">
-                <input type="text" name="q" class="search">
-                <div class="icon">
-                    <div><img src="static/search.png"></div>
-                </div>
+            <div id="inputField">
+                <img src="static/search.png">
+                <input type="text" name="q">
             </div>
-            <br> <!-- Inserts a single line break -->
-            <div class="buttons">
+            <div id="buttons">
                 <button type="submit">Google Search</button>
                 <button type="submit" name="btnI">I'm Feeling Lucky</button> 
                 <!-- "https://www.google.com/search?q=&btnI=" goes to Google Doodles page, 
-                    and"https://www.google.com/search?q=<...>&btnI=" goes to the website of the first Google search result <...>.
-                    "btnI" is the Google built-in key. -->
+                     and"https://www.google.com/search?q=<...>&btnI=" goes to the website of the first Google search result <...>.
+                     "btnI" is the Google built-in key. -->
             </div>
         </form>
-    </div>
-    </section>
+    </main>
 </body>
 </html>
