@@ -123,10 +123,10 @@
 .inputOne {
     display: flex;
     align-items: center;
+    margin: 40px 2% 0 45px;
+    width: 100%;
     max-width: 1140px;
     min-width: 200px;
-    width: 100%;
-    margin: 40px 2% 0 45px;
 }
 
 .inputOne .textDesHeading {
@@ -134,18 +134,26 @@
     min-width: 167px;
     width: 16%;
     font-weight: 500;
-    color: #333;
+    color: rgb(51, 51, 51);
 }
   
 .inputOne .ToDoHeading {
-    color: #777;
     font-weight: bold;
+    color: rgb(119, 119, 119);
     font-size: 13px;
 }
 
 .inputOne .textDes {
     width: 200px;
     font-size: 13px;
+}
+
+.inputOne .toDo {
+    width: 32%;
+    min-width: 160px;
+    color: rgb(87, 87, 87);
+    font-size: 11px;
+    padding-left: 30px;
 }
 
 .inputOne .input-field {
@@ -169,36 +177,31 @@
     box-shadow: inset 0.01px 0.4px 2.5px gray;
 }
 
-.inputOne .toDo {
-    width: 32%;
-    min-width: 160px;
-    color: #555;
-    font-size: 11px;
-    padding-left: 30px;
-}
-
 span {
-    color: #666;
     font-family: monospace;
-    font-size: 11px;
     white-space: pre;
+    color: rgb(105, 108, 115);
+    font-size: 11px;
 }
 
 .inputOne .button {
-    width: 50%;
     display: flex;
     justify-content: flex-end;
+    width: 50%;
 }
 
-.button input {
-    background-color: #4d90fe;
-    background-image: -webkit-linear-gradient(top, #4d90fe, #4787ed);
-    color: white;
+.button button {
+    background-color: rgb(75, 141, 249);
     height: 30px;
     min-width: 120px;
-    border: 1px solid #3079ed;
-    color: #fff;
+    border: 1px solid rgb(47, 120, 237);
     border-radius: 2px;
     font-size: 11px;
     font-weight: bold;
+    color: white;
+}
+
+.button button:hover {
+    border: 1px solid rgb(34, 81, 178);
+    background-image: -webkit-linear-gradient(top, rgb(73, 140, 250), rgb(65, 133, 243));
 }
