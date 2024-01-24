@@ -112,11 +112,93 @@
 }
 
 #subheader_adv h1 {
+    font-weight: normal;
     color: rgb(217, 48, 37);
     font-size: 18px;
     margin-top: 20px;
     margin-bottom: 20px;
     margin-left: 40px;
-    font-weight: normal;
 }
 
+.inputOne {
+    display: flex;
+    align-items: center;
+    max-width: 1140px;
+    min-width: 200px;
+    width: 100%;
+    margin: 40px 2% 0 45px;
+}
+
+.inputOne .textDesHeading {
+    font-size: 16px;
+    min-width: 167px;
+    width: 16%;
+    font-weight: 500;
+    color: #333;
+}
+  
+.inputOne .ToDoHeading {
+    color: #777;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.inputOne .textDes {
+    width: 200px;
+    font-size: 13px;
+}
+
+.inputOne .input-field {
+    min-width: 150px;
+    width: 50%;
+}
+
+.inputOne .input-field input {
+    outline: none;
+    border: 1px solid rgb(223, 225, 229);
+    border-top: 1px solid rgb(189, 189, 189);
+    border-radius: 1px;
+    width: 100%;
+    height: 25px;
+    padding: 1px 8px;
+    font-size: 14px;
+}
+
+.inputOne .input-field input:focus {
+    border: 1px solid rgba(77, 144, 254);
+    box-shadow: inset 0.01px 0.4px 2.5px gray;
+}
+
+.inputOne .toDo {
+    width: 32%;
+    min-width: 160px;
+    color: #555;
+    font-size: 11px;
+    padding-left: 30px;
+}
+
+span {
+    color: #666;
+    font-family: monospace;
+    font-size: 11px;
+    white-space: pre;
+}
+
+.inputOne .button {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.button input {
+    background-color: #4d90fe;
+    background-image: -webkit-linear-gradient(top, #4d90fe, #4787ed);
+    color: white;
+    height: 30px;
+    min-width: 120px;
+    border: 1px solid #3079ed;
+    color: #fff;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: bold;
+}
