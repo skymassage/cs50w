@@ -4,7 +4,8 @@
 from django.urls import path 
 from . import views # "from ." means from the current directory.
 
-urlpatterns = [   # "urlpatterns" is a list of all of the allowable URLs that can be accessed for this particular app. 
+ # "urlpatterns" is a list of all of the allowable URLs that can be accessed for this particular app.
+urlpatterns = [  
     # The "path" function is the path converter
     # "path" give us the ability to reroute URLs and has two or three arguments: 
     # 1. A string representing the URL path (Here is the empty string which means nothing at the end of the route), 
@@ -15,7 +16,10 @@ urlpatterns = [   # "urlpatterns" is a list of all of the allowable URLs that ca
     # So if I want to render my "index" view (the "index" function in "views.py"). 
     # Then what I want to render when someone visits this URL (the empty URL) is going to be views.index. 
     path("", views.index, name="index"),           # Add "/hello" to the url of the home page to see the result.
-
+                                                   # When you go to the root URL (homepage), you will encounter 404.
+                                                   # This is because we have only defined the root URL "localhost:8000/hello", 
+                                                   # but we haven’t defined the URL "localhost:8000" with nothing added to the end.
+    
     path("brian", views.brian, name="brian"),      # Add "/hello/brain" to the url of the home page to see the result.
 
     # Use angle brackets "<>" to capture the values from the URL and pass them to the second arugment as the parameter to this function.

@@ -1,0 +1,18 @@
+<!-- Like Jinja syntax, tell Django where this block should be inserted. -->
+{% extends "tasks/layout.html" %}
+
+{% block body %}
+    <h1>Tasks:</h1>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task }}</li>
+        {% endfor %}
+    </ul>
+    <!--  Instead of hard-coding links though, we can use the name variable we assigned to each path in urls.py, 
+          and create a link that looks. So if ever I were to change the route to something else, 
+          Django would just figure out what the new URL should be. -->
+    <!--  This could potentially create a problem though, as we have a few routes named index throughout our different apps. 
+          We can solve this by going into each of our app's urls.py file, and adding an app_name variable. 
+          So we can use {# "{% url '<app_name>:<route_name>' %}" #} to tell Django where the path is. -->
+    <a href="{% url 'tasks:add' %}">Add a New Task</a>
+{% endblock %}

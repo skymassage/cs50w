@@ -26,5 +26,6 @@ urlpatterns = [
     # Here means to tell Django to look at the urls.py inside of the "hello" directory to figure out what additional URLs I can get to from there. 
     # So this is one master urls.py file that might connect to multiple different other URL configurations that exist as well. 
     path('hello/', include("hello.urls")),
-    path('newyear/', include("newyear.urls"))
+    path('newyear/', include("newyear.urls")),
+    path('tasks/', include("tasks.urls"))
 ]

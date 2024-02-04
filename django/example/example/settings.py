@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [  
     'hello',                      # Add the new app "hello" to this list.
     'newyear',                    # Add the new app "newyear" to this list.  
+    'tasks',                      # Add the new app "tasks" to this list.  
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
