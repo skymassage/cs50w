@@ -4,12 +4,26 @@
     <h1>Add Task:</h1>
     <form action="{% url 'tasks:add' %}" method="post">
         <!-- Here the method of this form is "post", this means the form data is sensitive.
-              -->
-        <!-- If we inspect this page's source code, we'll notice that a new input field has been added.
+             So Django requires a token to prevent Cross-Site Request Forgery (CSRF) Attack. 
+             This is an attack where a malicious user attempts to send a request to your server from somewhere other than your site. -->
+        <!-- To solve this problem, when Django sends a response rendering a template, 
+             it also provides a CSRF token that is unique with each new session on the site. 
+             Then, when a request is submitted, Django checks to make sure the CSRF token associated with the request matches 
+             one that it has recently provided. Therefore, if a malicious user on another site attempted to submit a request, 
+             they would be blocked due to an invalid CSRF token. This CSRF validation is built into the Django Middleware framework, 
+             which can intervene in the request-response processing of a Django app. -->
+        <!-- Inside of settings,py in the "example" folder, we can see there's a whole bunch of middleware that's installed by default 
+             inside of a Django app in terms of making sure that we have different features hooked into this request response processing. -->
+        {% csrf_token %} <!-- In any template that uses a POST form, use the "csrf_token" tag inside the <form> element if the form is for an internal URL -->
+        <!-- This line adds a hidden input field with the CSRF token provided by Django.  
+             So if we inspect this page's source code, we'll notice that a new input field has been added.
              and this input whose type is hidden, meaning we won't be able to see it normally, whose name is CSRF middleware token.
-             
-            -->
-        {% csrf_token %}
+             You can see a long string of characters that Django has generated for me, such that when I submit this form, 
+             it's going to check to make sure this token is valid. If it doesn't find this token, 
+             it is not going to accept my form submission; if someone else goes to this website, 
+             they are going to see a different token presented to them as well. 
+             That helps to make sure that nobody can forge these sorts of requests. -->
+
         <input type="text" name="task">
         <input type="submit">
     </form>
