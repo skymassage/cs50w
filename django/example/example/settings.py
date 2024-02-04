@@ -35,7 +35,8 @@ ALLOWED_HOSTS = []
 # "INSTALLED_APPS" is where Django configures what apps are installed on this project. 
 # And there are a whole bunch of individual apps that are installed by default that are just created by Django.
 INSTALLED_APPS = [  
-    'hello',                      # Add the new app to this list.
+    'hello',                      # Add the new app "hello" to this list.
+    'newyear',                    # Add the new app "newyear" to this list.  
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

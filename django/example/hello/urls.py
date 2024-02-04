@@ -15,6 +15,7 @@ urlpatterns = [   # "urlpatterns" is a list of all of the allowable URLs that ca
     # So if I want to render my "index" view (the "index" function in "views.py"). 
     # Then what I want to render when someone visits this URL (the empty URL) is going to be views.index. 
     path("", views.index, name="index"),           # Add "/hello" to the url of the home page to see the result.
+
     path("brian", views.brian, name="brian"),      # Add "/hello/brain" to the url of the home page to see the result.
 
     # Use angle brackets "<>" to capture the values from the URL and pass them to the second arugment as the parameter to this function.
@@ -22,5 +23,5 @@ urlpatterns = [   # "urlpatterns" is a list of all of the allowable URLs that ca
     # If the captured value is to be used as other types, its type can be converted from string to that type.
     # Note that the captured value must be named as the parameter of the called function so as to pass it to that funciton.
     # Here means that we capture the value "name" from the URL and convert it to a string, then this value is passed to the "greet" function in views.py as its parameter "name"
-    path("<str:name>", views.greet, name="greet"),     
+    path("<str:name>", views.greet, name="greet"), # Add "/hello/<name>" to the url of the home page to see the result, where "<name>" you can type anything you want.
 ]
