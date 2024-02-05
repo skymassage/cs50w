@@ -20,7 +20,7 @@ urlpatterns = [
                                                    # This is because we have only defined the root URL "localhost:8000/hello", 
                                                    # but we haven’t defined the URL "localhost:8000" with nothing added to the end.
     
-    path("brian", views.brian, name="brian"),      # Add "/hello/brain" to the url of the home page to see the result.
+    path("greet/david", views.david, name="david"), # Add "/hello/greet/david" to the url of the home page to see the result.
 
     # Use angle brackets "<>" to capture the values from the URL and pass them to the second arugment as the parameter to this function.
     # The captured value can optionally include the type. If the type isn't specifed, the captured value will be string by default. 

@@ -8,9 +8,6 @@ from django.shortcuts import render
 
 # This function, by convention, takes as argument a request argument.
 def index(request):
-    # return HttpResponse("Hello, world!") # Use HttpResponse (a very simple response that includes a response code of 200 
-                                         # and a string of text that can be displayed in a web browser) to return an http response of "Hello, World".
-    
     return render(request, "hello/index.html") # Use the "render" function to the template. 
                                                # Note that create a folder called "templates" inside this app ("hello" folder), 
                                                # and create a folder called "hello" (this app's name) within that, 
@@ -19,12 +16,11 @@ def index(request):
                                                # To make sure they don't conflict with each other, the best practice is to use "<APP_NAME>/index.html". 
                                                # That is why we create another "hello" folder in "templates".
 
-def brian(request):
-    return HttpResponse("Hello, Brian!")
+def david(request):
+    return HttpResponse("Hello, David!") # Use HttpResponse (a very simple response that includes a response code of 200 
+                                         # and a string of text that can be displayed in a web browser) to return an http response of "Hello, David!".
 
 def greet(request, name):
-    # return HttpResponse(f"Hello, {name.capitalize()}!")
-
     # Here the third argument is passed into "render" which is called context. 
     # In this context, we can provide information that we would like to have available within the HTML files. 
     # This context takes the form of a Python dictionary. 
