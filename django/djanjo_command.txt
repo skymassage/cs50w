@@ -11,4 +11,4 @@ python3 manage.py startapp <APP_NAME>: Create an application with some additiona
                                       we need to open up "settings.py" in the <PROJECT_NAME> directory, 
                                       and scroll down to the list of "INSTALLED_APPS"to add the new app name <APP_NAME> to this list.
 
-python3 manage.py migrate: 
+python3 manage.py migrate: Create all of the default tables inside of  Django's database.

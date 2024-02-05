@@ -1,3 +1,6 @@
+# Django tends to store data inside of tables in the databases. 
+# If table hasn't been created, we need to create it by running the command <python3 manage.py migrate> in the terminal. 
+# This command will allow us to create all of the default tables inside of  Django's database. 
 from django import forms
 from django.shortcuts import render
 from django.urls import reverse
