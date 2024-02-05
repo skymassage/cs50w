@@ -24,7 +24,8 @@
              they are going to see a different token presented to them as well. 
              That helps to make sure that nobody can forge these sorts of requests. -->
 
-        <input type="text" name="task">
+        <!-- Plug in the variable "form" here. So Django will generate the necessary HTML to make that form work. -->
+        {{ form }}  <!-- That's the same as "<input type="text" name="task">"." -->
         <input type="submit">
     </form>
     <a href="{% url 'tasks:index' %}">View Tasks</a>
