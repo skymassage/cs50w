@@ -6,6 +6,11 @@
     <ul>
         {% for task in tasks %}
             <li>{{ task }}</li>
+        {% empty %}
+        <!-- If I run the "for" loop but it doesn't run at all because the sequence is empty, I can run the following part.
+             Django provides this empty tag that just makes it easy to be able to deal with situations 
+             where we're iterating over an empty list.  -->
+            <li>No tasks.</li>
         {% endfor %}
     </ul>
     <!--  Instead of hard-coding links though, we can use the name variable we assigned to each path in urls.py, 

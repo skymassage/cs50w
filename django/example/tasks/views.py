@@ -3,8 +3,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 
-tasks = ["foo", "bar", "baz"]
-
 # Django provides an even easier way to collect information from a user: Django Forms.
 # Now, we can create a new form within views.py by creating a Python class.
 class NewTaskForm(forms.Form):
@@ -24,8 +22,14 @@ class NewTaskForm(forms.Form):
     # And it's going to constrain me to make sure that I'm typing in something that matches those values. 
 
 def index(request):
+    # We don't want to create the list "tasks" as a global variable and store the submitt data in it, 
+    # so that all of the users who visit the page see the exact same list.
+    # We can employ a tool known as sessions to solve this problem 
+    if "tasks" not in request.session:  # Check if there already exists a "tasks" key in our session, oththerwise create one.
+        request.session["tasks"] = []
+
     return render(request, "tasks/index.html", {
-        "tasks": tasks
+        "tasks": request.session["tasks"]
     })
 
 def add(request):
@@ -45,7 +49,8 @@ def add(request):
             # I can go to form.cleaned_data and then task. And then I'll save this as a variable also called "task."
             task = form.cleaned_data["task"]
 
-            tasks.append(task) # Add the new task to our list of tasks, and you can see it in the route "/tasks".
+            # Add the new task to our list of tasks, and you can see it in the route "/tasks".
+            request.session["tasks"] += [task] 
 
             # Return "HttpResponseRedirect" to redirect the user to a particular route, here is "/tasks", 
             # and see your submission of "New Task". And we generally try not to hardcode URLs into our app.
