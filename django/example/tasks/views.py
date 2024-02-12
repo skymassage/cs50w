@@ -1,6 +1,6 @@
 # Django tends to store data inside of tables in the databases. 
-# If table hasn't been created, we need to create it by running the command <python3 manage.py migrate> in the terminal. 
-# This command will allow us to create all of the default tables inside of  Django's database. 
+# If table hasn't been created, we need to create it by running the command "python3 manage.py migrate" in the terminal. 
+# This command will allow us to create all of the default tables inside of Django's database. 
 from django import forms
 from django.shortcuts import render
 from django.urls import reverse
@@ -20,12 +20,9 @@ class NewTaskForm(forms.Form):
     # Django automatically performs client-side validation, or validation local to the user's machine, 
     # meaning it will not allow a user to submit their form if it is incomplete.
     # You can try that if neither fields is not typed in or the "priority" field is not 1~10, the remainder will pop up.
-    # This is client-side validation. The server isn't getting any of this data. 
-    # It's just the web page has been encoded to know what the valid values are. 
-    # And it's going to constrain me to make sure that I'm typing in something that matches those values. 
 
 def index(request):
-    # We don't want to create the list "tasks" as a global variable and store the submitt data in it, 
+    # We don't want to create the list "tasks" as a global variable and store the submitted data in it, 
     # so that all of the users who visit the page see the exact same list.
     # We can employ a tool known as sessions to solve this problem 
     if "tasks" not in request.session:  # Check if there already exists a "tasks" key in our session, oththerwise create one.

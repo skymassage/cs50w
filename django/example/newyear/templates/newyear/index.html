@@ -1,12 +1,12 @@
 <!-- Add the line {% load static %} to the top of the HTML template,
-     which signals to Django that we wish to have access to the files in our static folder -->
+     which signals to Django that we wish to have access to the files in the folder named "static". -->
 {% load static %} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{% static 'newyear/styles.css' %}">
-    <!-- Similarly, create a "static" folder in this app, and create the newyear (app's name) folder inside of "static",
-         then create the CSS file there. -->
+    <!-- Similarly, create a folder and name it "static" (it's necessary because of Django setting) in this app, 
+         and create the newyear (app's name) folder inside of "static", then create the CSS file there. -->
     <!-- I don't hard-code to exactly specify where the URL is, but I just use Django-specific syntax to say it is a static file 
          that is inside of a "newyear" folder called "styles.css". And Django is going to figure out what that URL ought to be. 
          This is better than exactly specifying where the URL is, because in larger web applications you might move your static files to a different places.

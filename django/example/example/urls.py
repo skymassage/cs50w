@@ -18,12 +18,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+ # "urlpatterns" is a list of all of the allowable URLs that can be accessed for this particular app.
 urlpatterns = [
-    path('admin/', admin.site.urls),  # A path is already given to us by default called admin, it runs a default Django application called the admin application.
+    path('admin/', admin.site.urls), # A path is already given to us by default called admin, it runs a default Django application called the admin application.
 
     # In this urls.py, we want to be able to include all of the paths from the urls.py within the application using
-    # "include("<APP_NAME>.urls")", rather than adding a function from views.py to the second argument like we do in the urls.py of the application
-    # Here means to tell Django to look at the urls.py inside of the "hello" directory to figure out what additional URLs I can get to from there. 
+    # "include("<APP_NAME>.urls")", rather than adding a function from views.py to the second argument like we do in the urls.py of each application
+    # The first following line means to tell Django to look at the urls.py inside of the "hello" directory to figure out what additional URLs I can get to from there. 
     # So this is one master urls.py file that might connect to multiple different other URL configurations that exist as well. 
     path('hello/', include("hello.urls")),
     path('newyear/', include("newyear.urls")),

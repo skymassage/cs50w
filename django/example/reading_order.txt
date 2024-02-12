@@ -1,2 +1,0 @@
-App: hello -> newyear -> tasks
-views.py, urls.py, urls.py, template, static

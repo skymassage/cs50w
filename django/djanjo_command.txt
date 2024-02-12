@@ -7,8 +7,8 @@ django-admin startproject <PROJECT_NAME>: Create a number of starter files for a
 python3 manage.py runserver: Open a development server, which you can access by visiting the URL provided.
 
 python3 manage.py startapp <APP_NAME>: Create an application with some additional directories and files.
-                                      And in order to install the new app into the project, 
-                                      we need to open up "settings.py" in the <PROJECT_NAME> directory, 
-                                      and scroll down to the list of "INSTALLED_APPS"to add the new app name <APP_NAME> to this list.
+                                       And in order to install the new app into the project, 
+                                       we need to open up "settings.py" in the <PROJECT_NAME> directory, 
+                                       and scroll down to the list of "INSTALLED_APPS"to add the new app name <APP_NAME> to this list.
 
 python3 manage.py migrate: Create all of the default tables inside of  Django's database.

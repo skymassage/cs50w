@@ -1,7 +1,8 @@
 from django.urls import path
 from . import views
 
-# We have a few routes named "index" throughout our different apps, so add an app_name variable to prevent Django getting confused.
+# We have a few routes named "index" throughout our different apps, 
+# so declare a variable named "app_name" (necessary) to prevent Django getting confused.
 app_name = "tasks" 
 
 urlpatterns = [
