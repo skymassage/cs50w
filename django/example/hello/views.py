@@ -17,13 +17,13 @@ def index(request):
                                                # That is why we create another "hello" folder in "templates".
 
 def david(request):
-    return HttpResponse("Hello, David!") # Use HttpResponse (a very simple response that includes a response code of 200 
-                                         # and a string of text that can be displayed in a web browser) to return an http response of "Hello, David!".
+    return HttpResponse("Hey, David!") # Use HttpResponse (a very simple response that includes a response code of 200 
+                                       # and a string of text that can be displayed in a web browser) to return an http response of "Hello, David!".
 
 def greet(request, name):
     # Here the third argument is passed into "render" which is called context. 
     # In this context, we can provide information that we would like to have available within the HTML files. 
-    # This context takes the form of a Python dictionary. 
+    # This context takes the form of a Python dictionary, and the variable must be consistent with the template variable (here is "name"). 
     return render(request, "hello/greet.html", {
         "name": name.capitalize()
     })

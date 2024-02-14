@@ -16,7 +16,7 @@ class NewTaskForm(forms.Form):
     task = forms.CharField(label="New Task")
 
     # If we want to add new fields to the form, we can simply add them in views.py without typing additional HTML.
-    priority = forms.IntegerField(label="Priority", min_value=1, max_value=10)
+    priority = forms.IntegerField(label="Priority", min_value=1, max_value=2)
     # Django automatically performs client-side validation, or validation local to the user's machine, 
     # meaning it will not allow a user to submit their form if it is incomplete.
     # You can try that if neither fields is not typed in or the "priority" field is not 1~10, the remainder will pop up.
@@ -37,7 +37,7 @@ def add(request):
     if request.method == "POST":
 
         # If I just use NewTaskForm without arguments, that will create a empty form.
-        # If the argument is request.post, where request.post contains all of the data that the user submitted when they submitted the form. 
+        # If the argument is request.POST, where request.POST contains all of the data that the user submitted when they submitted the form. 
         # So I create a form variable by taking all of that data and fill it into this new task form, which will contain now all of the data the user submitted.
         # That is, take in the data the user submitted and save it as form.
         form = NewTaskForm(request.POST)
@@ -53,7 +53,7 @@ def add(request):
             request.session["tasks"] += [task] 
 
             # Return "HttpResponseRedirect" to redirect the user to a particular route, here is "/tasks", 
-            # and see your submission of "New Task". And we generally try not to hardcode URLs into our app.
+            # and see your submission of "New Task". Besides, we generally try not to hardcode URLs into our app.
             # The better design would be to give the name of the route and reverse engineer what the route actually is from that. 
             # So we can use the function called "reverse" with the argument "tasks:index" to find out 
             # what the exact URL of the "index" URL for the "tasks" is.
@@ -72,8 +72,8 @@ def add(request):
                 "form": form
             })
             # You can go to this page to fill out the "New Task" field and type a number between "min_value" and "max_value" in the "Priority" field.
-            # Then change "min_value" or "max_value" such that this number is not in the previous range, and submit. You will see an error occurs.
-            # That is why we generally want both client- and server-side validation. 
+            # Then change "min_value" or "max_value" in this file such that this number is not in the previous range, and go back to the page to submit. 
+            # You will see an error occurs. That is why we generally want both client- and server-side validation. 
             # Because client-end version may be not the up-to-date, server-side should check again to avoid errors.
 
     # Mean if method is GET. If the user just tried to get the page rather than submit data to it, 

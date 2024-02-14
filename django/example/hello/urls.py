@@ -17,10 +17,10 @@ urlpatterns = [
     # Then what I want to render when someone visits this URL (the empty URL) is going to be views.index. 
     path("", views.index, name="index"),           # Add "/hello" to the url of the home page to see the result.
                                                    # When you go to the root URL (homepage), you will encounter 404.
-                                                   # This is because we have only defined the root URL "localhost:8000/hello", 
+                                                   # This is because we have only defined the URL "localhost:8000/hello", 
                                                    # but we haven't defined the URL "localhost:8000" with nothing added to the end.
     
-    path("greet/david", views.david, name="david"), # Add "/hello/greet/david" to the url of the home page to see the result.
+    path("hey/david", views.david, name="david"), # Add "/hello/hey/david" to the url of the home page to see the result.
 
     # Use angle brackets "<>" to capture the values from the URL and pass them to the second arugment as the parameter to this function.
     # The captured value can optionally include the type. If the type isn't specifed, the captured value type will be string by default. 

@@ -29,4 +29,6 @@ urlpatterns = [
     path('hello/', include("hello.urls")),
     path('newyear/', include("newyear.urls")),
     path('tasks/', include("tasks.urls"))
+    # Because we don't set "path('', include("<APP_NAME>.urls"))" for the root URL, 
+    # you will encounter the 404 page at the homepage (localhost:8000).
 ]
