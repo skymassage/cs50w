@@ -16,7 +16,7 @@
 </head>
 <body>
     <!-- Like Jinja, use the logic syntax with {# {% ... %} #} as the following (use {# ... #} to prevent bug). -->
-    {% if newyear %} 
+    {% if newyear %} <!-- If the variable has been in the {# {% ... %} #}, there is no need to use {# {{ }} #}. -->
         <h1>YES</h1>
     {% else %}
         <h1>NO</h1>

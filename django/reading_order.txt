@@ -1,3 +1,5 @@
+Note that it is normal to see 404 error at the homepage, because we don't set anything for it.
+
 example/urls
 App: hello -> newyear -> tasks
 views.py, urls.py, template, static

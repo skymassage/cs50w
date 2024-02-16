@@ -1,0 +1,19 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}{{ entry_title }}{% endblock %}
+
+{% block body %}
+<!-- Since Markdown allows users to write HTML tags, users can attack websites by inserting malicious code. 
+For example, users can insert JavaScript code to perform cross-site scripting (XSS) attacks, 
+or other malicious code to steal sensitive information.
+To prevent this security risk, Django provides a safe filter, which is used to mark a string as safe HTML. 
+We can use the safe filter by adding "|safe" after the variable name you're substituting to ensure that the generated HTML is safe. -->
+<!-- Cross-site scripting (XSS) is a security exploit which allows an attacker to inject into a website malicious client-side code. 
+This code is executed by the victims and lets the attackers bypass access controls and impersonate users. -->
+{{ content|safe }}
+
+{% if not error %}
+       <a href="{% url 'wiki:edit' title=entry_title %}"><button>Edit</button></a> 
+{% endif %}
+
+{% endblock %}

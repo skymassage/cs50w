@@ -1,0 +1,17 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block body %}
+{% if no_results %}
+    <h1>No results were found.</h1>
+{% else %}
+    <h1>No results found for "{{ query }}".</h1>
+    <h2>You may mean the results containing "{{ query }}":</h2>
+    <ul>
+        {% for entry in entries %}
+            <li><a href="{% url 'wiki:entry' title=entry %}">{{ entry }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

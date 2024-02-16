@@ -12,7 +12,7 @@ urlpatterns = [
     # 2. A function from "views.py" that we wish to call when this URL is visited. 
     #    That is, what view should be rendered when this URL is visited. 
     # 3. A name for that path or URL. This argument is optional. 
-    #    Giving a name to a particular URL pattern makes it easy to reference it from other parts of the application.
+    #    Giving the name of the view to a particular URL pattern makes it easy to reference it from other parts of the application.
     # So if I want to render my "index" view (the "index" function in "views.py"). 
     # Then what I want to render when someone visits this URL (the empty URL) is going to be views.index. 
     path("", views.index, name="index"),           # Add "/hello" to the url of the home page to see the result.
