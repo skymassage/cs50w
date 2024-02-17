@@ -12,8 +12,8 @@ class EntryForm(forms.Form):
     # The default of "widget" is "TextInput" (i.e. <input>). Choose "Textarea" (i.e. <textarea>) to use multi-line text field.
     # Use the "attrs" argument to specify the attributes of the field for CSS styling.
     title = forms.CharField(label="", required=True,  widget=forms.TextInput(attrs={
-        "style":"height: 35px; width: 850px;", "class":"form-control", "id":"title_create"
+        "style":"height: 35px; width: 800px;", "class":"form-control", "id":"title_create"
     }))
     content = forms.CharField(label="", required=True, widget=forms.Textarea(attrs={
-        "style":"height: 400px; width: 850px;", "class":"form-control", "id":"content_create"
+        "style":"height: 250px; width: 800px;", "class":"form-control", "id":"content_create"
     }))

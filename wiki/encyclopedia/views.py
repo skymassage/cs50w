@@ -1,4 +1,5 @@
 from markdown2 import markdown
+from django.core.files.storage import default_storage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -32,7 +33,7 @@ def enter(request, title):
 
 
 def search(request):
-    query = request.GET.get('q').strip()
+    query = request.GET.get("q").strip()
     if query in util.list_entries():
         return redirect("wiki:entry", title=query)  # Here the space in "query" of the url will be replaced by "+".
 
@@ -90,6 +91,11 @@ def create(request):
 
 def edit(request, title):
     if request.method == "POST":
+        if request.POST.get("delete"):
+            filename = f"entries/{title}.md"
+            default_storage.delete(filename)
+            return redirect("wiki:index")
+
         edit_form = EntryForm(request.POST)
         if edit_form.is_valid():
             title = edit_form.cleaned_data.get("title").strip()
