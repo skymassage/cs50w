@@ -6,7 +6,7 @@ app_name = "wiki"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("wiki/<str:title>", views.enter, name="entry"),
+    path("wiki/<str:title>", views.enter, name="entry"), # If "<str:title>" contain spaces, they will be replaced by "%20".
     path("search", views.search, name="search"),
     path("create", views.create, name="create"),
     path("edit/<str:title>", views.edit, name="edit"),

@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 import random
 from . import util
+from .forms import EntryForm  # Separate the forms into another .py file. Import module from the file of the same directory by ".<file_name>".
 
 
 def index(request):
@@ -13,19 +14,19 @@ def index(request):
 
 
 def enter(request, title):
+    # Because "title" is from urls, if "title" contain spaces, they will be replaced "%20".
+    # But when "title" is passed to the view functiotn, "%20" will be converted back into spaces.
     title = title.strip() # Remove the leading and trailing spaces of "title".
     content = util.get_entry(title)
     if content is None:
-        return render(request, "encyclopedia/entry.html", {
-            "error": True,
-            "entry_title": "404 Error",
-            "content": f"<h1>404 Error: Entry for \"{title}\" not found</h1>"
+        return render(request, "encyclopedia/error.html", {
+            "error_title": "No Entry Found",
+            "error_message": f"404 Error: Entry for \"{title}\" not found"
         })
     else:
         return render(request, "encyclopedia/entry.html", {
-            "error": False,
-            "entry_title": title,  # URLs cannot contain spaces. URL encoding normally replaces a space with a plus (+) sign or with "%20".
-                                   # So here the space in "" of the url will be replaced by "%20".
+            "entry_title": title, # URLs cannot contain spaces. URL encoding normally replaces a space with a plus (+) sign or with "%20".
+                                  # Here spaces in "title" of the url will be replaced by "%20" when rendering the template.
             "content": markdown(content, safe_mode=True) # "safe_mode=True" means to ensure that the converted HTML is safe.
         })
 
@@ -33,20 +34,19 @@ def enter(request, title):
 def search(request):
     query = request.GET.get('q').strip()
     if query in util.list_entries():
-        return redirect("wiki:entry", title=query)  # here the space in "query" of the url will be replaced by "+".
+        return redirect("wiki:entry", title=query)  # Here the space in "query" of the url will be replaced by "+".
 
     results = util.search_entry(query)
     if not results:      # Check if "results" is empty.
-        return render(request, "encyclopedia/search.html", {
-            "no_results": True
+        return render(request, "encyclopedia/error.html", {
+            "error_title": "No Results",
+            "error_message": "No results were found. You can create a new entry for it."
         })
     else:
         return render(request, "encyclopedia/search.html", {
-            "no_results": False,
             "query": query,
             "entries": results
         })
- 
 
 def random_page(request): # Don't use "random" for the function name, because we are using the "random" package.
     # "HttpResponseRedirect" only supports hard-coded urls, that's why we need "reverse".
@@ -60,9 +60,50 @@ def random_page(request): # Don't use "random" for the function name, because we
     # Pass a hardcoded url to "redirect":
     # return redirect(reverse("wiki:entry", args=[random.choice(util.list_entries())])) 
 
-def edit(request, title):
-    return render(request, "encyclopedia/edit.html")
 
 def create(request):
+    if request.method == "POST":
+        create_form = EntryForm(request.POST)
+        if create_form.is_valid():
+            title = create_form.cleaned_data.get("title").strip()
+            content = create_form.cleaned_data.get("content").strip()
+            if title in util.list_entries():
+                return render(request, "encyclopedia/error.html", {
+                    "error_title": "Entry Creation Failed",
+                    "error_message": "Entry already exists. Entry titles cannot be repeated."
+                })
+
+            util.save_entry(title, content)
+            return redirect("wiki:entry", title=title)
+
+        else:
+            return render(request,  "encyclopedia/create.html", {
+                "create_form": create_form
+            })
     
-    return render(request, "encyclopedia/create.html")
+    # print(EntryForm())  # You can print "EntryForm()" to see exactly what it is.
+
+    return render(request, "encyclopedia/create.html", {
+        "create_form": EntryForm()
+    })
+
+
+def edit(request, title):
+    if request.method == "POST":
+        edit_form = EntryForm(request.POST)
+        if edit_form.is_valid():
+            title = edit_form.cleaned_data.get("title").strip()
+            content = edit_form.cleaned_data.get("content").strip()
+            util.save_entry(title, content)
+            return redirect("wiki:entry", title=title)
+        else:
+            return render(request, "encyclopedia/edit.html", {
+                "edit_form": edit_form
+            })
+      
+    # Set initial values for the required fields by giving an initial data dictionary to "EntryForm".
+    # Note that it should be a dictionary that maps the names of fields to their respective initial values. 
+    edit_form = EntryForm({"title": title, "content": util.get_entry(title)})
+    return render(request, "encyclopedia/edit.html", {
+        "edit_form": edit_form
+    })

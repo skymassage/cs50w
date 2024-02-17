@@ -12,8 +12,8 @@ We can use the safe filter by adding "|safe" after the variable name you're subs
 This code is executed by the victims and lets the attackers bypass access controls and impersonate users. -->
 {{ content|safe }}
 
-{% if not error %}
-       <a href="{% url 'wiki:edit' title=entry_title %}"><button>Edit</button></a> 
-{% endif %}
+<a href="{% url 'wiki:edit' title=entry_title %}"><button>Edit</button></a>
+ <!-- Note that "title" is the variable in the url (whose name is 'wiki:edit'),
+      if "entry_title" contains spaces, they will be replaced by "%20". -->
 
 {% endblock %}

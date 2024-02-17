@@ -4,8 +4,24 @@
 
 {% block body %}
 <h1>New Entry</h1>
+
 <form action="{% url 'wiki:create' %}" method="POST">
     {% csrf_token %}
-    {{ form }}
+
+    <div style="margin-bottom: 20px;">
+            <!-- <label> represents a caption for an element (usually for <input>) in a user interface.
+             If users difficulty click on very small regions (such as checkboxes), We can set the attribute "for" of <label> 
+             to be the same as the "id" of <input>. So when you click the label, it will toggle the field (i.e. <input>).-->
+        <label for="title_create"><h5>Title:</h5></label>
+        {{ create_form.title }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label for="content_create"><h5>Create entry content using Markdown syntax:</h5></label>
+        {{ create_form.content }}
+    </div>
+    
+    <button class="btn btn-primary">Create Entry</button>
 </form>
 {% endblock %}
+

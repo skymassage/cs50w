@@ -1,3 +1,3 @@
-# ken lin
+# ken Lin
 
-Hi! I'm lin.
+Hi! I'm Lin.
