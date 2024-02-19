@@ -80,7 +80,7 @@ class Flight(models.Model):
     # "on_delete" gives instructions for what should happen if an airport is deleted. 
     # "on_delete=models.CASCADE" means that when an airport is deleted, all flights associated with it should also be deleted. 
     # "related name" is a way of accessing a relationship in the reverse order. For example, if we have an airport, 
-    # and I want to know all of the flights that have that airport as their origin, the reasonable name for related_name can be "departures". 
+    # and I want to know all of the flights that have that airport as their origin, the reasonable name for "related_name" can be "departures". 
     # So we can access all of the departures, which gets me all of the flights that are leaving from that airport. 
     origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="departures")
     destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrivals")

@@ -7,7 +7,6 @@
         <li>Destination: {{ flight.destination }}</li>
         <li>Duration: {{ flight.duration }} minutes</li>
     </ul>
-    <a href="{% url 'index' %}">All Flights</a>
 
     <h2>Passengers:</h2>
     <ul>
@@ -17,4 +16,6 @@
             <li>No Passengers.</li>
         {% endfor %}
     </ul>
+
+    <a href="{% url 'index' %}">All Flights</a>
 {% endblock %}
