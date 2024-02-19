@@ -1,0 +1,7 @@
+Always note that when you create a new app, you must go to "settings.py" to add your app name to the "INSTALLED_APPS" list.
+Note that when you create or change the models, you need to run two command: "python3 manage.py makemigrations" and "python3 manage.py migrate".
+After changeing models, you should close the web by "Ctrl + C" in the terminal and run "python3 manage.py runserver" again so that it won't get an error.
+
+See flights/models.py first
+airline/urls/py
+flights/admin.py
