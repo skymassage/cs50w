@@ -4,11 +4,18 @@ django-admin startproject <PROJECT_NAME>: Create a number of starter files for a
 
 "cd <PROJECT_NAME>" to  get into the project folder to execute the following commands
 
-python3 manage.py runserver: Open a development server, which you can access by visiting the URL provided.
-
 python3 manage.py startapp <APP_NAME>: Create an application with some additional directories and files.
                                        And in order to install the new app into the project, 
                                        we need to open up "settings.py" in the <PROJECT_NAME> directory, 
                                        and scroll down to the list of "INSTALLED_APPS"to add the new app name <APP_NAME> to this list.
 
-python3 manage.py migrate: Create all of the default tables inside of  Django's database.
+python3 manage.py runserver: Open a development server, which you can access by visiting the URL provided.
+
+python3 manage.py migrate: Create all of the default tables inside of Django's database.
+
+python3 manage.py makemigration: Create some Python files that will create or edit our database to be able to store what we have in our models.
+
+python3 manage.py shell: Enter Django's shell.
+
+python3 manage.py create superuser: Create a superuser account in Django to have the ability to visit the web interface for the admin app.
+
