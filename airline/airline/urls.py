@@ -21,10 +21,12 @@ from django.urls import include, path
 # The way to do that is via the command line. Run "python manage.py create superuser", and set username, email address and password. 
 # And Django will create a superuser account in this web application so that we, using these credentials, 
 # have the ability to visit the web interface for the admin app and actually manipulate some of these underlying models.
-# username: haisen
-# email address: a6491080230@gmail.com
-# password: y27489307
+# We have created the superuser as below:
+# Username: haisen
+# Email address: haisen@example.com
+# Password: helloman
 urlpatterns = [
     path('admin/', admin.site.urls),    # "/admin" takes us to the admin app, and you can log in to get Django's site administration interface.
-    path("flights/", include("flights.urls"))
+    path("flights/", include("flights.urls")),
+    path("users/", include("users.urls"))
 ]

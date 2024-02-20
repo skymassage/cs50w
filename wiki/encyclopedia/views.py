@@ -52,7 +52,7 @@ def search(request):
 def random_page(request): # Don't use "random" for the function name, because we are using the "random" package.
     # "HttpResponseRedirect" only supports hard-coded urls, that's why we need "reverse".
     # You can use "args" in "reverse" to pass the parameters for urls.
-    return HttpResponseRedirect(reverse("wiki:entry", args=[random.choice(util.list_entries())]))
+    return HttpResponseRedirect(reverse("wiki:entry", args=[random.choice(util.list_entries())])) # Note that use "[]" for agrs.
     
     # We can also use the "redirect" function, there are two way to use it.
     # Pass the name of a view and optionally some positional or keyword arguments, 
