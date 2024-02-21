@@ -14,7 +14,9 @@ def flight(request, flight_id):
     return render(request, "flights/flight.html", {
         "flight": flight,
         "passengers": flight.passengers.all(),  # Note that "passengers" is the "related_name" argument which be used to track the passengers who happened to be on that flight.
-        "non_passengers": Passenger.objects.exclude(flights=flight).all()   # Use "exclude()" to exclude certain objects from a query. So exclude the passengers who are already on the flight.
+        "non_passengers": Passenger.objects.exclude(flights=flight).all()   # Use "exclude()" to exclude certain objects from a query. 
+                                                                            # Here is to exclude the passenger objects which have corresponded to this flight object,
+                                                                            # i.e., exclude the passengers who are already on this flight.
     })
 
 
@@ -25,7 +27,8 @@ def book(request, flight_id):
         flight = Flight.objects.get(pk=flight_id)           # Accessing the flight.
         passenger_id = int(request.POST["passenger"])       # Finding the passenger id from the submitted form data.
         passenger = Passenger.objects.get(pk=passenger_id)  # Finding the passenger based on the id.
-        passenger.flights.add(flight)                       # Add passenger to the flight using "add()".
+        passenger.flights.add(flight)                       # Add passenger to the flight using "add()",
+                                                            # i.e., make this passenger object correspond to this flight oject.
 
-        # return HttpResponseRedirect(reverse("flight", args=[flight.id]))
-        return redirect("flight", flight_id=flight.id) 
+        # return HttpResponseRedirect(reverse("flight:flight", args=[flight.id]))
+        return redirect("flight:flight", flight_id=flight.id) 

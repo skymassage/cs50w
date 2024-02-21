@@ -11,7 +11,10 @@ def index(request):
     # You can tell them apart with "is_authenticated".
     if not request.user.is_authenticated:                  # If no user is signed in, return to login page.
         return HttpResponseRedirect(reverse("login"))
-    return render(request, "users/user.html")
+    return render(request, "users/user.html")    # Django uses sessions and middleware to hook the authentication system into request objects.
+                                                 # These provide a request.user attribute and a request.auser async method on every request 
+                                                 # which represents the current user. If the current user has not logged in, 
+                                                 # this attribute will be set to an instance of AnonymousUser, otherwise it will be an instance of User. 
 
 def login_view(request):
     if request.method == "POST":
@@ -39,10 +42,10 @@ def login_view(request):
             return render(request, "users/login.html", {
                 "message": "Invalid Credentials"
             })
-    return render(request, "users/login.html")
+    return render(request, "users/login.html")  # # We can also not pass variables to the template if I don't actually need them.
 
 def logout_view(request):
     logout(request)       # "logout()" takes an HttpRequest object and has no return value.
     return render(request, "users/login.html", {
-                "message": "Logged Out"
+        "message": "Logged Out"
     })

@@ -1,0 +1,15 @@
+Note that when you create a new app, you must go to "settings.py" to add your app name to the "INSTALLED_APPS" list.
+Note that when you create or change the models, you need to run two command: "python3 manage.py makemigrations" and "python3 manage.py migrate".
+After changeing models or admin settings, you should close the web by "Ctrl + C" in the terminal and run "python3 manage.py runserver" again so that it won't get an error.
+
+We haven't set up the homepage yet, so it's normal to see an error at the root URL.
+
+We have created the superuser for this app as below:
+Username: haisen
+Email address: haisen@example.com
+Password: helloman
+
+Reader order:
+1st: airline/urls.py, airline/settings.py
+2nd: flights/urls.py, flights/models.py , flights/admin.py, flights/views.py, flights/templates
+3rd: user/urls.py, user/views.py, user/templates

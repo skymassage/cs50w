@@ -6,19 +6,19 @@ from django.db import models
 # In Django, we refer to this process as migrations. I create a migration to say, 
 # here are some changes that I would like to apply to the database. 
 # Then I migrate them to tell Django to take those changes and actually apply them to the database. 
-# So it's a two-step process. First is to create the migration, which is instructions for how to actually manipulate the database. 
+# So it's a two-step process. First is to create the migration, which is instructions for how to actually manipulate the database.
 # Then take the migration step, which is to take those instructions and actually applying them to the underlying database.
 # 1-step:
-# To create a database from our models, we navigate to the main directory of our project and run the command: "python manage.py makemigrations"
+# To create a database from our models, we navigate to the main directory of our project and run the command: "python3 manage.py makemigrations"
 # We wiil create a 0001_initial.py file in the "migrations" folder (flights/migrations/0001_initial.py). 
-# We also will create a migration inside of 0001_initial.py where in this migration it's created a model called "flight." 
+# We also will create a migration inside of 0001_initial.py where in this migration it's created a model called "Flight." 
 # This file has instructions to Django for how to manipulate the database to reflect the changes I have made to the model. 
-# That is an instruction to Django to create a new model called "flight" that has these particular fields inside of it. 
+# That is an instruction to Django to create a new model called "Flight" that has these particular fields inside of it. 
 # 2-step:
-# If we want to apply the migration to Django's database, we can run "python manage.py migrate" to apply these migrations. 
-# We'll see that some default migrations have been applied displayed in the terminal, 
-# but notice one line that "Applying flights.0001_initial" means to apply that migration and create that table that is going to represent flights. 
-# And we'll also notice that we now have a file called "db.sqlite3" in our project's directory.
+# If we want to apply the migration to Django's database, we can run "python3 manage.py migrate" to apply these migrations. 
+# We'll see that some default migrations have been applied and displayed on multiple lines in the terminal, 
+# but notice one line that "Applying flights.0001_initial" means to apply that migration and create that table that is going to represent Flight.
+# And we'll also notice that we will create a file called "db.sqlite3" in our project's directory.
 
 '''
 Create your models here.
@@ -27,14 +27,14 @@ class Flight(models.Model):
     destination = models.CharField(max_length=64)
     duration = models.IntegerField()
 
-    def __str__(self):
-        return f"{self.id}: {self.origin} to {self.destination}"
+    # def __str__(self):
+    #     return f"{self.id}: {self.origin} to {self.destination}"
 '''
 
 '''
-Run these two commands "python3 manage.py makemigrations", "python3 manage.py migrate"
-And we can run "python3 manage.py shell" to enter Django's shell where we can run Python commands within our project.
-For example, we can run the following Python code in the terminal after entering Django's shell, and will see the following:
+Run these two commands "python3 manage.py makemigrations" and "python3 manage.py migrate"
+And we can run "python3 manage.py shell" to enter Django's shell where we can run Python commands for testing within our project.
+For example, we can run the following Python code in the terminal after entering Django's shell, and see the following:
 In [1]: from flights.models import Flight                                  # Import the flight model from model.py
 In [2]: f = Flight(origin="New York", destination="London", duration=415)  # Create a new flight
 In [3]: f.save()                                                           # Instert that flight into our database
@@ -95,7 +95,6 @@ Note that you may have to delete your existing flight from New York to London, a
 So run these two commands again "python3 manage.py makemigrations", "python3 manage.py migrate".
 Then enter the Django's shell (using "python3 manage.py shell"), and run the following code to see the following:
 In [1]: from flights.models import *                                 # Import all models from model.py
-
 In [2]: jfk = Airport(code="JFK", city="New York")                   # Create some new airports and save them to the database
 In [3]: jfk.save()
 In [4]: lhr = Airport(code="LHR", city="London")
@@ -104,7 +103,6 @@ In [6]: cdg = Airport(code="CDG", city="Paris")
 In [7]: cdg.save()
 In [8]: nrt = Airport(code="NRT", city="Tokyo")
 In [9]: nrt.save()
-
 In [10]: f = Flight(origin=jfk, destination=lhr, duration=414)       # Add a flight and save it to the database
 In [11]: f.save()
 
@@ -125,26 +123,24 @@ Out[16]: <QuerySet [<Airport: New York (JFK)>]>
 In [17]: Airport.objects.filter(city="New York").first()             # Get me the first and only thing in that "QuerySet"
 Out[17]: <Airport: New York (JFK)>
 
-In [18]: Airport.objects.get(city="New York")                        # If you know you're only going to get one result back, you can use "get()" to get only one airport in New York. But it will throw an error if there's more than one result, or if there's none.
-Out[18]: <Airport: New York (JFK)>
-
-In [6]: jfk = Airport.objects.get(city="New York")                   # Assigning some airports to variable names:
-In [7]: cdg = Airport.objects.get(city="Paris")
-In [8]: f = Flight(origin=jfk, destination=cdg, duration=435)        # Creating and saving a new flight:
-In [9]: f.save()
+In [18]: Airport.objects.get(city="New York")                        # If you know you're only going to get one result back,
+Out[18]: <Airport: New York (JFK)>                                   # you can use "get()" to get only one airport in New York. 
+                                                                     # But it will throw an error if there's more than one result, or if there's none.
 ''' 
 
 class Passenger(models.Model):
     first = models.CharField(max_length=64)
     last = models.CharField(max_length=64)
+
     # Passengers have a Many to Many relationship with flights, because a passenger may take different flights, 
     # and a flight may have multiple passengers. So we describe in Django using "ManyToManyField".
     # The first argument in this field is the class of objects that this one is related to.
-    # So every passenger could be associated with many flights. Note the this is the "Passenger" class.
-    # "blank=True"  means a passenger can have no flights
+    # So every passenger could be associated with many flights. Note that we're in the "Passenger" class.
+    # "blank=True" means a passenger can have no flights.
     # related_name="passengers" will allow us to find all passengers on a given flight.
     flights = models.ManyToManyField(Flight, blank=True, related_name="passengers") 
+    # This is the relation that
+    # Passenger object corresponds to 
     
-
     def __str__(self):
         return f"{self.first} {self.last}"

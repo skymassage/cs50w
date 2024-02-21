@@ -19,8 +19,8 @@
 
     <h2>Add Passenger</h2>
     <!-- Generally speaking, anytime you want to manipulate the state of something, 
-         especially manipulating the database, that should be inside of a post request. -->
-    <form action="{% url 'book' flight.id %}" method="post">
+         especially manipulating the database, that should be inside of a "POST" request. -->
+    <form action="{% url 'flight:book' flight.id %}" method="post">
         {% csrf_token %}
         <select name="passenger" id="">
             {% for passenger in non_passengers %}
@@ -30,5 +30,5 @@
         <input type="submit">
     </form>
 
-    <a href="{% url 'index' %}">All Flights</a>
+    <a href="{% url 'flight:index' %}">All Flights</a>
 {% endblock %}
