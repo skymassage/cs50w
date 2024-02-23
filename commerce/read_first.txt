@@ -1,0 +1,25 @@
+Note that when you create a new app, you must go to "settings.py" to add your app name to the "INSTALLED_APPS" list.
+Note that when you create or change the models, you need to run two command: "python3 manage.py makemigrations" and "python3 manage.py migrate".
+After changeing models or admin settings, you should close the web by "Ctrl + C" in the terminal and run "python3 manage.py runserver" again so that it won't get an error.
+
+In this project, our own "User" class in /auctions/models.py we created conflicts with the "User" class that comes with Django.
+We must add the line "AUTH_USER_MODEL = '<Your_App_Name>.<Your_Class_Name>'" to the setting.py file to tell Django we use the customized model class.
+<Your_App_Name>: This is the name of the app that will have the User Model.
+<Your_Class_Name>: This is the name of the class used inside the models.py file.
+So add this line "AUTH_USER_MODEL = 'auctions.User'" to our setting.py file, usually below the following code:
+'''
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+'''
+
+
+haisen
+haisen@example.com
+123

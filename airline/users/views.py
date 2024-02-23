@@ -31,7 +31,7 @@ def login_view(request):
         # your site and are used to enable things like restricting access, registering user profiles, 
         # associating content with creators etc. Only one class of user exists in Django’s authentication framework, 
         # i.e., 'superusers' or admin 'staff' users are just user objects with special attributes set, 
-        # not different classes of user objects.
+        # not different classes of user objects. The primary attributes of the default user are: username, password, email, first_name, last_name
         
         if user is not None:                                 
             # If you want to attach an authenticated user to the current session, use "login()""  to log a user in from a view.

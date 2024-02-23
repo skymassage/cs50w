@@ -1,7 +1,7 @@
 # In order to manipulate some of the underlying models in the admin app, 
 # we need to import and register our models the models to the admin app. 
 # We can log in at "/admin" to get Django's site administration interface to manipulate the underlying database ("Airports", "Flight", "Passenger").
-# We have created the superuser for this app, so go to "app_note.txt" in this project folder to see the superuser information for login in.
+# We have created the superuser for this app, so go to "read_first.txt" in this project folder to see the superuser information for login in.
 from django.contrib import admin
 from .models import Flight, Airport, Passenger
 

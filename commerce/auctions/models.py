@@ -8,4 +8,13 @@ class User(AbstractUser):
     pass
 
 
+# class Listing(models.Model):
+
+
+# class Bid(models.Model):
+
+
+# class Comments(models.Model):
+
+
 # Also need to add additional models to represent details about auction listings, bids, comments, and auction categories. 
