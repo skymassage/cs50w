@@ -1,3 +1,6 @@
+from django.shortcuts import render
+
+# Create your views here.
 from markdown2 import markdown
 from django.core.files.storage import default_storage
 from django.http import HttpResponseRedirect
