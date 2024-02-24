@@ -19,4 +19,4 @@ python3 manage.py migrate: Create all of the default tables inside of Django's d
 
 python3 manage.py shell: Enter Django's shell.
 
-python3 manage.py create superuser: create a superuser account that can access Django's admin interface.
+python3 manage.py createsuperuser: create a superuser account that can access Django's admin interface.

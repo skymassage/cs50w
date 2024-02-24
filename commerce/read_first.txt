@@ -19,7 +19,7 @@ DATABASES = {
 }
 '''
 
+Superuser: super
+Email address: super@example.com
+Password: hellosuper
 
-haisen
-haisen@example.com
-123

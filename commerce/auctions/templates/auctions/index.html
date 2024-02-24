@@ -5,5 +5,34 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    <form action="{% url 'categorize' %}">
+        <select name="category_id">
+            <option disabled selected>Select Category</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <br>
+    
+    <h1>13</h1>
+
+    {% for listing in listings %}
+        {% if listing.active %}    <!-- title, image, desctiprion, price, detailed button -->
+            <a href="{% url 'listing' listing_id=listing.id %}" class="text-reset">
+            <div class="card-deck">
+                <div class="card">
+                    <img class="card-img-top" src="{{ listing.img }}" height="100" alt="Card image cap">
+                    <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+            </a>
+        {% endif %}
+    {% endfor %}
 {% endblock %}

@@ -77,11 +77,13 @@ class Airport(models.Model):
 class Flight(models.Model):
     # Specify the origin and destination fields as each Foreign Keys, which means they refer to another object.
     # By entering "Airport" as our first argument, we are specifying the type of object this field refers to.
-    # "on_delete" gives instructions for what should happen if an airport is deleted. 
-    # "on_delete=models.CASCADE" means that when an airport is deleted, all flights associated with it should also be deleted. 
+    # "on_delete" gives instructions for what should do if an object referenced by a ForeignKey is deleted.
+    # "models.CASCADE" means that when the ForeignKey is deleted, the object containing the ForeignKey is also deleted.
+    # Here means that when an airport (ForeignKey) is deleted, all flights associated with it should also be deleted.
     # "related name" is a way of accessing a relationship in the reverse order. For example, if we have an airport, 
     # and I want to know all of the flights that have that airport as their origin, the reasonable name for "related_name" can be "departures". 
     # So we can access all of the departures, which gets me all of the flights that are leaving from that airport. 
+    # Note that "on_delete" and "related_name" are required for "ForeignKey".
     origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="departures")
     destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrivals")
     duration = models.IntegerField()
@@ -136,7 +138,7 @@ class Passenger(models.Model):
     # and a flight may have multiple passengers. So we describe in Django using "ManyToManyField".
     # The first argument in this field is the class of objects that this one is related to.
     # So every passenger could be associated with many flights. Note that we're in the "Passenger" class.
-    # "blank=True" means a passenger can have no flights.
+    # If True, the field is allowed to be blank. Default is False. Here means a passenger can have no flights.
     # related_name="passengers" will allow us to find all passengers on a given flight.
     flights = models.ManyToManyField(Flight, blank=True, related_name="passengers") 
     # This is the relation that
