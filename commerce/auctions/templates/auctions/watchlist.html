@@ -1,22 +1,9 @@
 {% extends "auctions/layout.html" %}
 
-{% block title %}Auctions - {{ title }}{% endblock %}
+{% block title %}Auctions - Watchlist{% endblock %}
 
 {% block body %}
-<h2 class="text-center title">{{ category_name }}</h2>
-
-<form class="text-center" action="{% url 'category' %}">
-    <select name="category_name">
-            <option disabled selected>Select Category</option>
-            {% for category in categories %}
-                <option value="{{ category.name }}">{{ category.name }}</option>
-            {% endfor %}
-            <option value="all_listings">All Listings</option>
-    </select>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-<br>
+<h2 class="text-center title">Watchlist</h2>
 
 <div class="container">
     <div class="row row-cols-1 row-cols-md-4 g-4">
@@ -31,7 +18,7 @@
                             <p class="card-text">$ {{ listing.starting_price }}</p>
                             <form action="{% url 'watchlist' %}" method="post">
                                 {% csrf_token %}
-                                <button name="watch_id" value="{{ listing.id }}" class="btn btn-success">Add to Wtchlist</button>
+                                <button name="discard_id" value="{{ listing.id }}" class="btn btn-success">Discard</button>
                             </form>
                         </div>
                     </a>    
@@ -40,5 +27,9 @@
     
         {% endif %} {% endfor %}
     </div>
+</div>
+
+<div class="text-center">
+    <a href="{% url 'index' %}" class="btn btn-primary">Back to All Listings</a>
 </div>
 {% endblock %}

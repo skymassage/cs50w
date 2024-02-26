@@ -5,9 +5,9 @@ After changeing models or admin settings, you should close the web by "Ctrl + C"
 We haven't set up the homepage yet, so it's normal to see an error at the root URL.
 
 We have created the superuser for this app as below:
-Superuser: haisen
-Email address: haisen@example.com
-Password: helloman
+Superuser: super
+Email address: super@example.com
+Password: hellosuper
 
 Reader order:
 1st: airline/urls.py, airline/settings.py

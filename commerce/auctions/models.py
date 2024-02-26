@@ -41,7 +41,7 @@ class Listing(models.Model):
     name = models.CharField(max_length=100)     # "CharField" must use "max_length" to specify a maximum length,
     description = models.TextField()            # but "TextField" doesn't necessarily need "max_length".
     img = models.CharField(max_length=10000)      
-    starting_price = models.DecimalField(max_digits=5, decimal_places=2) # "decimal_places" is the number of decimal places to store with the number.
+    starting_price = models.DecimalField(max_digits=6, decimal_places=2) # "decimal_places" is the number of decimal places to store with the number.
                                                                          # "max_digits" is the maximum number of digits allowed in the number. 
                                                                          # Note that this number must be greater than or equal to "decimal_places".
     category = models.ForeignKey("Category", on_delete=models.SET_DEFAULT, blank=True, null=True, default="", related_name="category_listings")
@@ -78,7 +78,7 @@ class Comment(models.Model):
         return f"{self.author} comments on {self.listing}"
 
 class Category(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.name
