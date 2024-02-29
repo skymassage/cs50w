@@ -44,10 +44,13 @@ def add(request):
 
         # Check if form data is valid (server-side). That is, are they providing all the necessary data in the right format?
         if form.is_valid():  
-
-            # I want to get what "task" they submitted. Because I had a variable here called "task" inside of NewTaskForm,
-            # I can go to form.cleaned_data and then task. And then I'll save this as a variable also called "task."
-            task = form.cleaned_data["task"]
+            
+            # We can use "cleaned_data["key_name"]" to access the submitted data whose key is called "task".
+            # If the key doesn't  exist, it will return KeyError.
+            task = form.cleaned_data["task"] # Note that here we use square brackets "[]".
+            # Also, we can use "cleaned_data.get("key_name")" to access the submitted data.
+            # If the key doesn't exist, it will return None. So you can use this way if you are not sure whether the key exists.
+            # task = form.cleaned_data.get("task") # Note that here we use parenthesis "()".
 
             # Add the new task to our list of tasks, and you can see it in the route "/tasks".
             request.session["tasks"] += [task] 
@@ -76,7 +79,7 @@ def add(request):
             # You will see an error occurs. That is why we generally want both client- and server-side validation. 
             # Because client-end version may be not the up-to-date, server-side should check again to avoid errors.
 
-    # Mean if method is GET. If the user just tried to get the page rather than submit data to it, 
+    # The default method is GET. That is, the user just tried to get the page rather than submit data to it, 
     # then we're just going to render to them an empty form. 
     return render(request, "tasks/add.html", {
         "form": NewTaskForm()  # Create a empty form

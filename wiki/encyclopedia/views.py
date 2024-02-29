@@ -86,7 +86,6 @@ def create(request):
             })
     
     # print(EntryForm())  # You can print "EntryForm()" to see exactly what it is.
-
     return render(request, "encyclopedia/create.html", {
         "create_form": EntryForm()
     })
@@ -109,10 +108,9 @@ def edit(request, title):
             return render(request, "encyclopedia/edit.html", {
                 "edit_form": edit_form
             })
-      
-    # Set initial values for the required fields by giving an initial data dictionary to "EntryForm".
-    # Note that it should be a dictionary that maps the names of fields to their respective initial values. 
-    edit_form = EntryForm({"title": title, "content": util.get_entry(title)})
+          
     return render(request, "encyclopedia/edit.html", {
-        "edit_form": edit_form
+        # Set initial values for the required fields by giving an initial data dictionary to "EntryForm".
+        # Note that it should be a dictionary that maps the names of fields to their respective initial values. 
+        "edit_form": EntryForm({"title": title, "content": util.get_entry(title)})
     })
