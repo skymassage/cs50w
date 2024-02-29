@@ -37,7 +37,7 @@ def add(request):
     if request.method == "POST":
 
         # If I just use NewTaskForm without arguments, that will create a empty form.
-        # If the argument is request.POST, where request.POST contains all of the data that the user submitted when they submitted the form. 
+        # If the argument is "request.POST" which contains all of the data that the user submitted when they submitted the form. 
         # So I create a form variable by taking all of that data and fill it into this new task form, which will contain now all of the data the user submitted.
         # That is, take in the data the user submitted and save it as form.
         form = NewTaskForm(request.POST)

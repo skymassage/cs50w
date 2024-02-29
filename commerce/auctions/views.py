@@ -1,3 +1,37 @@
+'''
+QuerySet refers to a collection for database query. 
+QuerySet is a suitable choice when you need to obtain a set of data that meets certain conditions from the database, 
+or when you need to perform database query operations (such as filtering, ordering, etc.). For example:
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=100)
+all_books = Book.objects.all()  # Query all books
+specific_author_books = Book.objects.filter(author="J.K. Rowling") # Query books whose author is a specific value
+other_authors_books = Book.objects.exclude(title="Harry Potter")   # Exclude books whose title is a specific value
+sorted_books = Book.objects.order_by(author="J.K. Rowling")        # Sort books alphabetically by author
+specific_book = Book.objects.get(title="Harry Potter")             # Get a single book that meets the conditions
+'''
+
+'''
+Instance refers to a single object of a specific database model. 
+In other words, an instance of the model corresponds to a row of table in the database. 
+By creating instances of model classes, you can manipulate and access data in database. 
+Use instance when you need to perform CRUD (Create, Read, Update, Delete) operations on a single row in the database.
+For example:
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=100)
+book_instance = Book.objects.create(title="Harry Potter", author="J.K. Rowling") # Create a Book instance
+single_book = Book.objects.get(title="Harry Potter")                             # Get a single instance
+'''
+
+'''
+QuerySet is used to perform database query operations and return a collection of data, 
+while instance is used to operate on a single database record. 
+Depending on the requirements, one or a combination of both can be used.
+'''
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -60,7 +94,7 @@ def register(request):
 
 
 
-def index(request):    
+def index(request):
     return render(request, "auctions/index.html", {
         "title": "All Listings",
         "category_name": "All Listings",
@@ -108,6 +142,24 @@ def watchlist(request):
     }) 
 
 
+# "login_required(login_url=<URL_Name>): If the user isn't logged in, redirect to the URL with the <URL_Name> name. If the user is logged in, execute the view normally.
+@login_required(login_url="login") # Add the "@login_required" decorator over the view function to ensure that only logged-in users can access the view.
+def create(request):
+    if request.method == "POST":
+        form = ListingForm(request.POST)
+        if form.is_valid():
+            form.instance.seller = request.user  # Use "instance" to set the "seller" field value.
+            new_listing = form.save()            # Save a new created object from form and assign it to a variable.
+            return redirect("listing", listing_id=new_listing.pk)
+        else:
+            return render(request, "auctions/creat.html", {
+                "form": form
+            })
+
+    return render(request, "auctions/creat.html", {
+        "form": ListingForm(),
+    })
+
 
 def listing(request, listing_id):
     
@@ -115,23 +167,3 @@ def listing(request, listing_id):
         "title": Listing.objects.get(pk=listing_id)
     })
 
-
-# "login_required(login_url=<URL_Name>): If the user isn't logged in, redirect to the URL with the <URL_Name> name. If the user is logged in, execute the view normally.
-@login_required(login_url="login") # Add the "@login_required" decorator over the view function to ensure that only logged-in users can access the view.
-def create(request):
-    if request.method == "POST":
-        form = ListingForm(request.POST)
-        if form.is_valid:
-            
-            return redirect("listing", )
-        
-        else:
-            return render(request, "auctions/creat.html", {
-                "form": form
-            })
-
-    # print(ListingForm())
-    return render(request, "auctions/creat.html", {
-        "form": ListingForm(),
-        "categories": Category.objects.all().order_by("name")
-    })

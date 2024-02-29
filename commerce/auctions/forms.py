@@ -22,7 +22,7 @@ class ListingForm(forms.ModelForm):
             "name": forms.TextInput(attrs={"autofocus":True, "placeholder":"Enter your listing name", "class": "form-control"}),
             "description": forms.Textarea(attrs={"rows":"4", "placeholder":"Describe your listing", "class":"form-control"}),
             "img": forms.URLInput(attrs={"placeholder":"Enter your listing URL", "class": "form-control"}),
-            "starting_price": forms.NumberInput(attrs={"placeholder":"Enter your starting price", "class": "form-control"}),
+            "starting_price": forms.NumberInput(attrs={"min":0, "placeholder":"Enter your starting price", "class": "form-control"}),
             "category": forms.Select(attrs={"class": "form-control"})
         }
 
@@ -30,19 +30,16 @@ class ListingForm(forms.ModelForm):
         labels = {
             "img": "Image URL"
         }
-
     
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self, *args, **kwargs):  # Note that this is not inside the "Meta" class.
         super(ListingForm, self).__init__(*args, **kwargs)
 
         # Sort the form's category field in alphabetical order.
         self.fields["category"].queryset = self.fields["category"].queryset.order_by("name")
-        
-        print(self.fields["category"].queryset)
-        # for choice in self.fields['category'].choices:
-        #    print(choice)
-        
-        # self.fields["category"].choices = [("", "Please select a side effect")]
+
+        # Change the first option (which is default ) from "---------" the following sentence.
+        self.fields["category"].empty_label = "Select category (leave it if no matching category)"
 
 class BidForm(forms.ModelForm):
     class Meta:
