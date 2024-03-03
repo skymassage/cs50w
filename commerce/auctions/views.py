@@ -41,7 +41,6 @@ from django.urls import reverse
 from .forms import ListingForm, BidForm, CommentForm
 from .models import User, Listing, Bid, Comment, Category
 
-
 from .models import User
 
 
@@ -92,8 +91,6 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
-
-
 def index(request):
     return render(request, "auctions/index.html", {
         "title": "All Listings",
@@ -122,7 +119,8 @@ def category(request):
     })
 
 
-@login_required(login_url="login")
+# "login_required(login_url=<URL_Name>): If the user isn't logged in, redirect to the URL with the <URL_Name> name. If the user is logged in, execute the view normally.
+@login_required(login_url="login") # Add the "@login_required" decorator over the view function to ensure that only logged-in users can access the view.
 def watchlist(request):
     user = request.user
     if request.method == "POST":
@@ -134,16 +132,17 @@ def watchlist(request):
         if request.POST.get("watch_id"):
             watched_listing = Listing.objects.get(pk=request.POST["watch_id"]).watch_by.add(user)
 
-        if request.POST.get("discard_id"):
-            Listing.objects.get(pk=request.POST["discard_id"]).watch_by.remove(user)
-
+        if request.POST.get("remove_id"):
+            Listing.objects.get(pk=request.POST["remove_id"]).watch_by.remove(user)
+    
+    # Here we still need the GET method, because the logged in users can access the waatchlist page by clicking its buttonon the navigation bar.
+    # So the following part shouldn't be moved to request.method == "POST".
     return render(request, "auctions/watchlist.html", {
-        "listings": user.watchlist.all()
+        "listings": user.watchlist.all()   # You still can see the closed listing in the watchlist.
     }) 
 
 
-# "login_required(login_url=<URL_Name>): If the user isn't logged in, redirect to the URL with the <URL_Name> name. If the user is logged in, execute the view normally.
-@login_required(login_url="login") # Add the "@login_required" decorator over the view function to ensure that only logged-in users can access the view.
+@login_required(login_url="login") 
 def create(request):
     if request.method == "POST":
         form = ListingForm(request.POST)
@@ -160,10 +159,113 @@ def create(request):
         "form": ListingForm(),
     })
 
+from django.db.models import Max
 
 def listing(request, listing_id):
-    
-    return render (request, "auctions/listing.html", {
-        "title": Listing.objects.get(pk=listing_id)
+    listing = Listing.objects.get(pk=listing_id)
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "bid_form": BidForm(),
+        "comment_form": CommentForm(),
+        "comments": listing.listing_comments.all()
     })
 
+
+@login_required(login_url="login")
+def comment(request, listing_id):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        listing = Listing.objects.get(pk=listing_id)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.instance.listing = listing
+            form.save()
+            return redirect("listing", listing_id=listing.id)
+        else:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "bid_form": BidForm(),
+                "comment_form": form,
+                "comments": listing.listing_comments.all()
+            })
+
+
+@login_required(login_url="login")
+def bid(request):
+    if request.method == "POST":
+        form = BidForm(request.POST)
+        listing = Listing.objects.get(pk=request.POST["bid_listing_id"])
+        if form.is_valid():
+            form.instance.bidder = request.user
+            form.instance.listing = listing
+            if listing.listing_bids.all().count() == 0:
+                if form.instance.amount >= listing.starting_price:
+                    form.save()
+                    return redirect("listing", listing_id=listing.id)
+                else:
+                    return render(request, "auctions/error.html", {
+                        "message": "Your bid should not be lower than the starting price."
+                    })
+            else:
+                if form.instance.amount > listing.current_price():
+                    form.save()
+                    return redirect("listing", listing_id=listing.id)
+                else:
+                    return render(request, "auctions/error.html", {
+                        "message": "Your bid should be higher than the current bid."
+                    })
+        else:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "bid_form": form,
+                "comment_form": CommentForm(),
+                "comments": listing.listing_comments.all()
+            })
+
+
+@login_required(login_url="login")
+def close(request):
+    if request.method == "POST":
+        listing_id = request.POST["close_listing_id"]
+        Listing.objects.filter(pk=listing_id).update(active=False) 
+        listing = Listing.objects.get(pk=listing_id)    
+        return redirect("listing", listing_id=listing.id)
+
+'''Method: .filer and .get
+1. Return value
+.get: An instance of a model class, called "instance" (also an object)
+.filter: A collection object called "QuerySet". It can be used for iteration, but it's not a list.
+         In the html template, we cannot use the QuerySet returned to obtain its attributes, 
+         otherwise we will get None. We should use a for loop to obtain its attributes.
+
+
+2. Error
+.get: Only return a single search result (instance), so an error will occur if multiple results are found.
+.filter: Return more than one search result (QuerySet), it returns None if not found (no results).
+
+
+3. Make changes to tables with .save and .update 
+.save: It can only be used with .get, .filter doesn't has the .save method.
+       For example:
+          user = User.objects.get(pk=user_id)
+          user.username, user.email ="David", "david@example.com"
+          user.save()
+        
+       .save can not only update existing records in the table, but also insert new records.
+       For example:
+           user = User(username="David", email="david@example.com")
+           user.save()
+           # Also, you can use .creata to insert a new record as below:
+           User.objects.create(username="David", email="david@example.com")
+
+.update: It can only be used with .filter, errors will occur if used with .get.
+        .update can only be used to update existing object and can update multiple records at the same time.
+
+         Note that it will be errors if use .update like this: 
+            user = User.objects.filter(pk=user_id)
+            user.update(username="David", email="david@example.com")
+         You use .update like this :                                 
+            User.objects.filter(pk=id).update(username="David", email="david@example.com")
+
+.update is suitable for updating the existing records, and .save is suitable for inserting new records.
+'''

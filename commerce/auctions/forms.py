@@ -16,22 +16,20 @@ class ListingForm(forms.ModelForm):
         # Use "fields" to specify which fields in the model should be displayed in the template.
         # If we want all fields in the model should be used in the template, We can set: fields = "__all__".
         fields = ["name", "description", "img", "starting_price", "category"]
+
+        # Use "labels" to change the titles of fields like in Django Forms.
+        labels = {"img": "Image URL"}
         
         # Like in Django Forms, using "widgets" you can specify a dictionary of values to customize the ModelForm's widget class for a particular field.
         widgets = {
             "name": forms.TextInput(attrs={"autofocus":True, "placeholder":"Enter your listing name", "class": "form-control"}),
-            "description": forms.Textarea(attrs={"rows":"4", "placeholder":"Describe your listing", "class":"form-control"}),
+            # In models.py we have limited the maximum length of some fields, but for "Textarea" we still need to limit it again.
+            "description": forms.Textarea(attrs={"maxlength":1000, "rows":4, "placeholder":"Describe your listing", "class":"form-control"}),
             "img": forms.URLInput(attrs={"placeholder":"Enter your listing URL", "class": "form-control"}),
             "starting_price": forms.NumberInput(attrs={"min":0, "placeholder":"Enter your starting price", "class": "form-control"}),
             "category": forms.Select(attrs={"class": "form-control"})
         }
-
-        # Use "labels" to change the titles of fields like in Django Forms.
-        labels = {
-            "img": "Image URL"
-        }
     
-
     def __init__(self, *args, **kwargs):  # Note that this is not inside the "Meta" class.
         super(ListingForm, self).__init__(*args, **kwargs)
 
@@ -44,11 +42,20 @@ class ListingForm(forms.ModelForm):
 class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
-        fields= ["listing", "amount"]
-        widgets = {}
+        fields= ["amount"]
+        labels = {"amount": ""}
+
+        widgets = {
+            "amount": forms.NumberInput(attrs={"min":0, "placeholder":"Enter your bid", "class": "form-control"})
+        }
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields= ["message"]
-        widgets = {}
+        labels = {"message": ""}
+
+        widgets = {
+            "message": forms.Textarea(attrs={"maxlength":1000, "rows":4, "placeholder":"Leave a comment on the listing", "class": "form-control"})
+        }
+        

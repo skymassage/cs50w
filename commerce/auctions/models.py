@@ -2,6 +2,7 @@
 # and then "python3 manage.py migrate" to migrate those changes to your database.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Max
 
 # The User class inherits from "AbstractUser", so it will already have fields for a username, email, password, and you can add new fields to the User class.
 class User(AbstractUser):
@@ -40,7 +41,7 @@ class Listing(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sales_listings")
     name = models.CharField(max_length=100)     # "CharField" must use "max_length" to specify a maximum length,
     description = models.TextField()            # but "TextField" doesn't necessarily need "max_length".
-    img = models.CharField(max_length=10000)      
+    img = models.CharField(max_length=1000)      
     starting_price = models.DecimalField(max_digits=6, decimal_places=2) # "decimal_places" is the number of decimal places to store with the number.
                                                                          # "max_digits" is the maximum number of digits allowed in the number. 
                                                                          # Note that this number must be greater than or equal to "decimal_places".
@@ -50,19 +51,38 @@ class Listing(models.Model):
     # "SET_DEFAULT" means that when the ForeignKey is deleted, the object containing the ForeignKey will be set the default value.
 
     active = models.BooleanField(default=True)   
-    bid = models.ForeignKey("Bid", on_delete=models.CASCADE, blank=True, null=True, related_name="what_to_bid")
     watch_by = models.ManyToManyField(User, blank=True, related_name="watchlist") 
     # "null" has no effect on "ManyToManyField" since there is no way to require a relationship at the database level, so we don't set it.
     
-    creation_time = models.DateTimeField(auto_now_add=True) # "DateTimeField" automatically sets the field to now when the object is first created. N
-                                                            # Note that the current date is always used; it's not just a default value that you can override.
+    time = models.DateTimeField(auto_now_add=True) # "DateTimeField" automatically sets the field to now when the object is first created. N
+                                                   # Note that the current date is always used; it's not just a default value that you can override.
     def __str__(self):
-        return f"{self.name} listed by {self.seller}"
+        return f"{self.name}"
+
+    def bidder_num(self):
+        return self.listing_bids.all().count()
+
+    def current_price(self):
+        # "aggregate" performs statistical calculations on a set of values ​​(such as a field of QuerySet) 
+        # and returns the results in dictionary format. "aggregate" support the statistical calculations 
+        # including AVG, COUNT, MAX, MIN, SUM, etc.
+        # Note that the return of "aggregate" is a dict, and the key is "amount__max" here.
+        bid_highest  = self.listing_bids.all().aggregate(Max("amount"))["amount__max"] 
+        if self.bidder_num() > 0 and bid_highest > self.starting_price:
+            return bid_highest
+        else:
+            return self.starting_price
+
+    def winner(self):
+        if self.bidder_num() > 0:
+            return self.listing_bids.get(amount=self.current_price()).bidder
+        else:
+            return None 
 
 class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listing_bids")
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_bids")
-    amount = models.DecimalField(max_digits=4, decimal_places=2)
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -2,6 +2,8 @@ Note that when you create a new app, you must go to "settings.py" to add your ap
 Note that when you create or change the models, you need to run two command: "python3 manage.py makemigrations" and "python3 manage.py migrate".
 After changeing models or admin settings, you should close the web by "Ctrl + C" in the terminal and run "python3 manage.py runserver" again so that it won't get an error.
 
+=========================================================================================================================
+
 In this project, our own "User" class in /auctions/models.py we created conflicts with the "User" class that comes with Django.
 We must add the line "AUTH_USER_MODEL = '<Your_App_Name>.<Your_Class_Name>'" to the setting.py file to tell Django we use the customized model class.
 <Your_App_Name>: This is the name of the app that will have the User Model.
@@ -18,7 +20,27 @@ DATABASES = {
     }
 }
 '''
+=========================================================================================================================
+Django Humanize is a built-in Django module that provides a set of template filters to make data more human-readable. 
+It offers various filters that help format values in a way that is easier for humans to understand.
+The Humanize module can be used to format numbers, dates, times, file sizes, and other types of data. 
+It allows you to present data in a more user-friendly manner, enhancing the readability and usability of your Django application.
 
+To use the Humanize filters, you should do the following first:
+1. To install Django Humanize, add 'django.contrib.humanize' to the "INSTALLED_APPS" list in setting.py:
+    INSTALLED_APPS = [
+                .
+                .
+                .
+                .
+                .
+                .
+        'django.contrib.humanize',
+    ]
+
+2. In the template where you want to use the humanization filter, load the template tags: {% load humanize %}
+
+=========================================================================================================================
 Superuser: super
 Email address: super@example.com
 Password: hellosuper

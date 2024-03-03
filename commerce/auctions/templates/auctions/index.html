@@ -28,11 +28,13 @@
                         <div class="card-body">
                             <h5 class="card-title text-truncate">{{ listing.name }}</h5>
                             <p class="card-text text-truncate">{{ listing.description }}</p>
-                            <p class="card-text">$ {{ listing.starting_price }}</p>
-                            <form action="{% url 'watchlist' %}" method="post">
-                                {% csrf_token %}
-                                <button name="watch_id" value="{{ listing.id }}" class="btn btn-success">Add to Wtchlist</button>
-                            </form>
+                            <p class="card-text"><strong>$ {{ listing.current_price }}</strong></p>
+                            {% if not listing.seller == request.user %}
+                                <form action="{% url 'watchlist' %}" method="post">
+                                    {% csrf_token %}
+                                    <button name="watch_id" value="{{ listing.id }}" class="btn btn-success">Add to Wtchlist</button>
+                                </form>
+                            {% endif %}
                         </div>
                     </a>    
                 </div>

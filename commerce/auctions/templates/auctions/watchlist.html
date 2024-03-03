@@ -7,7 +7,7 @@
 
 <div class="container">
     <div class="row row-cols-1 row-cols-md-4 g-4">
-        {% for listing in listings %} {% if listing.active %} 
+        {% for listing in listings %} 
             <div class="col mb-4">
                 <div class="card h-100">
                     <a href="{% url 'listing' listing_id=listing.id %}" class="text-decoration-none">
@@ -15,19 +15,30 @@
                         <div class="card-body">
                             <h5 class="card-title text-truncate">{{ listing.name }}</h5>
                             <p class="card-text text-truncate">{{ listing.description }}</p>
-                            <p class="card-text">$ {{ listing.starting_price }}</p>
+                            <p class="card-text">$ {{ listing.current_price }}</p>
                             <form action="{% url 'watchlist' %}" method="post">
                                 {% csrf_token %}
-                                <button name="discard_id" value="{{ listing.id }}" class="btn btn-success">Discard</button>
+                                <div class="flex-header" style="display: flex;">
+                                    <button type="submit" name="remove_id" value="{{ listing.id }}" class="btn btn-warning">Remove</button>
+                                    {% if not listing.active %}
+                                        <hr/>
+                                        <p class="text-muted">Closed</p>
+                                    {% endif %}
+                                </div>
                             </form>
                         </div>
                     </a>    
                 </div>
             </div>
-    
-        {% endif %} {% endfor %}
+        {% endfor %}
     </div>
 </div>
+
+{% if not listings %}
+<div class="text-center">
+    <h3>No watching listing</h3>
+</div>
+{% endif %}
 
 <div class="text-center">
     <a href="{% url 'index' %}" class="btn btn-primary">Back to All Listings</a>

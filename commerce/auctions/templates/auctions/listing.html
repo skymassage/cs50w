@@ -1,7 +1,130 @@
 {% extends "auctions/layout.html" %}
+{% load humanize %} <!-- Load this tags to use the "humanize" filter, "naturaltime", in this template. -->
 
 {% block title %}Auctions - Listing: {{ title }}{% endblock %}
 
 {% block body %}
+<h2 class="text-center title">{{ listing.name }}</h2>
 
+<div class="container">
+    <div class="text-center">
+        <img src="{{ listing.img }}" style="height:400px;" class="img-fluid">
+    </div>
+
+    <br/>
+
+    <p >{{ listing.description }}</p>
+    
+    <br/>
+
+    <h4>Details</h4>
+    <ul>
+        <li>Seller: {{ listing.seller }}</li>
+        <li>Ceartion time: {{ listing.time }}</li>
+        {% if listing.category %}
+            <li>Category: {{ listing.category }}</li>
+        {% else %}
+            <li>Category: Others</li>
+        {% endif %}
+    </ul>
+
+    <br/>
+
+    {% if not listing.seller == request.user %}
+        {% if request.user in listing.watch_by.all %} <!-- Note that the template cannot parse the parenthesis "()", so we use ".all" instead of ".all()" -->
+            <div class="text-right">
+                <form action="{% url 'watchlist' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="remove_id" value="{{ listing.id }}" class="btn btn-warning">Remove from watchlist</button>
+                </form>
+            </div>
+            <br/>
+        {% else %}
+            {% if listing.active %}
+                <div class="text-right">
+                    <form action="{% url 'watchlist' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="watch_id" value="{{ listing.id }}" class="btn btn-success">Add to Wtchlist</button>
+                    </form>
+                </div>
+                <br/>
+            {% endif%}
+        {% endif %}
+    {% endif %}
+
+    <div class="flex-header" style="display: flex;">
+        {% if not listing.active %}
+            {% if not listing.winner %}  <!-- Listing closed but no bidders. -->
+                <h4>Cuurent Price: $ {{ listing.current_price }}</h4> <!-- Note that the method in templates don't use parenthesis. -->
+            {% elif listing.winner == request.user and request.user.is_authenticated %}
+                <h4>You won the listing for ${{ listing.current_price }}</h4>
+            {% else %}
+                <h4>The listing has been won for $ {{ listing.current_price }}</h4>
+            {% endif %}
+        {% else %}
+            <div>
+                <h4 style="display: inline-block;">Cuurent Price: $ {{ listing.current_price }}</h4> 
+                <h6>Number of Bidders: {{ listing.bidder_num }}</h6>
+            </div>   
+            <hr/>
+            {% if request.user.is_authenticated and request.user == listing.seller %}
+                <form action="{% url 'close' %}" method="post">
+                    {% csrf_token %}
+                    <button name="close_listing_id" value="{{ listing.id }}" type="submit" class="btn btn-danger">Close Listing</button>
+                </form>
+            {% else %}
+                <form action="{% url 'bid' %}" method="POST">
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <th style="padding-right: 5px">{{ bid_form }}</th>
+                            <th style="padding-left: 5px"><button name="bid_listing_id" value="{{ listing.id }}" type="submit" class="btn btn-primary">Place bid</button></th>
+                        </tr>
+                    </table>
+                </form>
+            {% endif %}
+        {% endif %}            
+    </div>
+    
+    <br/>
+
+    <h4>Comments</h4>
+    {% if request.user.is_authenticated and listing.active %}
+        <form action="{% url 'comment' listing_id=listing.id %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ comment_form }}
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-info">Add comment</button>
+            </div>
+        </form>
+    {% else %}
+        {% if not listing.active  %}
+            <p class="text-muted">Listing has been closed.</p>
+        {% else %}
+            <p class="text-muted">Please <strong><a href="{% url 'login' %}" class="text-muted">sign in</a></strong> to add a comment.</p>
+        {% endif %}
+    {% endif %}
+
+    <br/>
+
+    {% for comment in comments %}
+        <div class="row border bg-light py-2 mx-0 mb-3">
+            <div class="col-6">
+                <strong>{{ comment.author }}</strong>
+            </div>
+            <div class="col-6 text-right text-muted">
+                <small><em>{{ comment.time | naturaltime }}</em></small>
+                <!-- The "naturaltime" filter can return a string indicating how long ago or how long after.
+　　　　　　　　　　　 For example (now is 17 Feb 2007 16:30:00): 17 Feb 2007 16:30:00 -> now.
+                                                                17 Feb 2007 16:25:35 -> 4 minutes ago.
+                                                                18 Feb 2007 16:31:29 -> 1 day from now. -->
+            </div>
+            <div class="col-xl-12 pt-1">
+                {{ comment.message }}
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}
