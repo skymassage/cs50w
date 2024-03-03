@@ -101,7 +101,12 @@ def index(request):
 
 
 def category(request):
-    category_name = request.GET["category_name"]
+    # We can use request.GET["key_name"] or request.GET.get("key_name") to access the submitted data.
+    # If the key doesn't exist, request.GET["key_name"] will return KeyError and request.GET.get("key_name") will return None.
+    # Therefore, if you are not certain if the key exists, you can use request.GET.get("key_name").
+    # Here it is better to use request.GET.get("key_name"), because we receive no value when submitting the placeholder "Select Category".
+    # You still can use request.POST["key_name"], but you should use "try" and "except" statement to avoid the error.    
+    category_name = request.GET.get("category_name")  
     if category_name == "others":
         return render(request, "auctions/index.html", {
             "title": "Category: Others",
@@ -109,6 +114,9 @@ def category(request):
             "listings": Listing.objects.filter(category=None).filter(active=True),
             "categories": Category.objects.all().order_by("name")
         })
+
+    elif category_name is None:
+        return redirect("index")
 
     category = Category.objects.get(name=category_name)
     return render(request, "auctions/index.html", {
@@ -124,11 +132,8 @@ def category(request):
 def watchlist(request):
     user = request.user
     if request.method == "POST":
-        # We can use request.POST["key_name"] or request.POST.get("key_name") to access the submitted data.
-        # But it is better to use request.POST.get("key_name") here. 
-        # If the key doesn't exist, request.POST["key_name"] will return KeyError and request.POST.get("key_name") will return None.
-        # So if you are not certain if the key exists, you can use request.POST.get("key_name").
-        # Here you still can use request.POST["key_name"], but you should use "try" and "except" statement to avoid the error.
+        # We are not sure which one of request.POST["watch_id"] and request.POST["remove_id"] can receive the value,
+        # so it is better to use request.POST.get("key_name") here.
         if request.POST.get("watch_id"):
             watched_listing = Listing.objects.get(pk=request.POST["watch_id"]).watch_by.add(user)
 

@@ -45,3 +45,8 @@ Superuser: super
 Email address: super@example.com
 Password: hellosuper
 
+The testing accounts:
+Username    Password       Email
+alice       helloalice     alice@example.com
+bob         hellobob       bob@example.com
+colt        hellocolt      colt@example.com

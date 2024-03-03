@@ -58,6 +58,8 @@
                 <h4>Cuurent Price: $ {{ listing.current_price }}</h4> <!-- Note that the method in templates don't use parenthesis. -->
             {% elif listing.winner == request.user and request.user.is_authenticated %}
                 <h4>You won the listing for ${{ listing.current_price }}</h4>
+            {% elif listing.seller == request.user and request.user.is_authenticated %}
+                <h4>{{ listing.winner }} has been won for $ {{ listing.current_price }}</h4>
             {% else %}
                 <h4>The listing has been won for $ {{ listing.current_price }}</h4>
             {% endif %}
