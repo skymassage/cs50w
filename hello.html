@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hello</title>
+        <script>
+
+            function hello() {
+                const heading = document.querySelector('h1'); // It will be erros if "heading" gets changed because it is const.
+                /* In JS, we use "===" as a stronger comparison between two items which also checks that the objects are of the same type. 
+                   We typically want to use "===" whenever possible. "==" checks if the values ​​are the same, but does not check the type. */ 
+                if (heading.innerHTML === 'Hello!') {
+                    heading.innerHTML = 'Goodbye!';
+                } else {
+                    heading.innerHTML = 'Hello!';
+                }
+            }
+            
+        </script>
+    </head>
+    <body>
+        <h1>Hello!</h1>
+        <button onclick="hello()">Click Here</button>
+    </body>
+</html>
