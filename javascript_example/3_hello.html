@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Hello</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('form').onsubmit = function() {
+                const name = document.querySelector('#name').value;
+                alert(`Hello, ${name}`);
+            };
+
+            // You can also use the following code to do the same thing, but note that here is 'submit' instaed of 'onsubmit'.
+            document.querySelector('form').addEventListener('submit', function() {
+                const name = document.querySelector('#name').value;
+                alert(`Hello, ${name}`);
+            });
+        });
+    </script>
+</head>
+<body>
+    <form>
+        <input autofocus id="name" placeholder="Name" type="text">
+        <input type="submit">
+    </form>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Counter</title>
+        <script>
+
+            // var: used to define a variable globally.
+            var age = 20;
+
+            // const: used to define a value that will not change.
+            const PI = 3.14;
+
+            // let: used to define a variable that is limited in scope to the current block such as a function or loop.
+            let counter = 0;
+
+            function count() {
+                counter++;      // JS also supports <variable>++.
+                document.querySelector('h1').innerHTML = counter;
+
+                if (counter % 10 === 0) {
+                    /* Template literals, also called template strings, use backticks (``) to define strings 
+                       and use the dollar sign ($) to perform string interpolation. */
+                    alert(`Count is now ${counter}`);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                /* It will be an error if we don't include the following code inside of "addEventListener".
+                   Because when JS searched for an element using "document.querySelector('button')"",
+                   it didn't find anything. This is because it takes a small bit of time for the page to load,
+                   and our JS code ran before the button had been rendered. To account for this, 
+                   we specify that code will run only after the page has loaded using the addEventListener function. */
+
+                /* Note that we don't actually call this function. It's not "count()", 
+                   which means executing the "count" function, then taking its return value and using it as the value of "onclick". 
+                   We just set "onclick" equal to the "count" function itself, rather than actually calling the function. 
+                   What it does is, this "count" function is actually run when you click the button. 
+                   We don't run the "count" function until the button is actually clicked. */
+                document.querySelector('button').onclick = count;
+                // You can also use the following line to do the same thing, 
+                // but note that here is 'click' instaed of 'onclick' and <button> element doesn't have the "click" attribute.
+                // document.querySelector('button').addEventListener('click', count); 
+            });
+
+
+            /* In addition to the traditional function notation we've seen already, 
+               JS also gives us the ability to use Arrow Functions where we have an input 
+               (or parentheses when there’s no input) followed by "=>" followed by some code to be run. 
+               For example, we can the above code as: */
+            count = () => {  // Here we change "function count() {...}" to "count = () => {...}".
+                counter++;      
+                document.querySelector('h1').innerHTML = counter;
+                if (counter % 10 === 0) {
+                    alert(`Count is now ${counter}`);
+                }
+            }
+            document.addEventListener('DOMContentLoaded', () => { // Here we change "function () {...}" to "() => {...}".
+                document.querySelector('button').onclick = count;
+            });
+            
+        </script>
+    </head>
+    <body>
+        <h1>0</h1>
+        <button onclick>Count</button>
+    </body>
+</html>

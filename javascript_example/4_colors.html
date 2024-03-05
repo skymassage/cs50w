@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <title>Colors</title>
+     <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            /* "querySelectorAll" gets an Node List (similar to a Python list or a JavaScript array) 
+               with all elements that match the query. */
+            /* "<array>.forEach" accepts a function, and applies that function to each element in a list or array (<array>). */
+            document.querySelectorAll('button').forEach(function(button) {
+                button.onclick = function() {
+                    // Use "dataset.<SOMETHING>" to access the element whose attribute is "data-<SOMETHING>".
+                    document.querySelector("#hello_1").style.color = button.dataset.textcolor;
+                }
+            });
+         });
+
+         /* The console is a useful tool for testing out small bits of code and debugging. 
+            You can write and run JS code in the console, which can be found by inspecting element in your web browser and then clicking console. 
+            (The exact process may change frome browser to browser.) One useful tool for debugging is printing to the console, 
+            which you can do using the "console.log" function. For example, you can try to run the following code: 
+            // "console.log" is the equivalent of printing something out in Python where it just shows up in the Python terminal. 
+            // Here, "console.log" is going to show up in the JS console. 
+            console.log(document.querySelectorAll('button'));   
+            console.log(document.querySelector('button'));
+            document.querySelector("#hello_1").style.color = 'orange'; */
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            /* We can detect changes in a select element using the onchange attribute.
+               There are many events we can detect in JS like: onclick, onsubmit, onmouseover, onkeydown, onkeyup, onload, onblur. */
+            document.querySelector('select').onchange = function() {
+                /* "this" is a keyword that changes based on the context in which it’s used. In the case of an event handler, 
+                   "this" refers to the object that triggered the event. Here "this" represents <select> because of "document.querySelector('select')" */
+                document.querySelector('#hello_2').style.color = this.value;
+            }
+        });
+     </script>
+</head>
+<body>
+    <h1 id="hello_1">Hello</h1>
+    <!-- The "data-<SOMETHING>"" attribute assigns data to an HTML element. 
+         We can later access that data in JavaScript using the element's "dataset" property. -->
+    <button data-textcolor="red">Red</button>
+    <button data-textcolor="blue">Blue</button>
+    <button data-textcolor="green">Green</button>
+
+
+    <h1 id="hello_2">Hello</h1>
+    <select>
+        <option value="black">Black</option>
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+    </select>
+</body>
+</html>
