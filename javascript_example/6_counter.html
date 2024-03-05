@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Counter</title>
+        <script>
+            let counter = 0;
+
+            count = () => {  
+                counter++;      
+                document.querySelector('h1').innerHTML = counter;
+            }
+
+            /* In addition to specifying that functions run when an event is triggered, 
+               we can also set functions to run after a set amount of time. 
+               To do this, we use the "setInterval" function, which takes as argument a function to be run, 
+               and a time (in milliseconds) between function runs. */
+            document.addEventListener('DOMContentLoaded', () => { 
+                document.querySelector('button').onclick = count;
+                setInterval(count, 1000); // Use "setInterval" to run "count" every 1 second.
+            });
+            
+        </script>
+    </head>
+    <body>
+        <h1>0</h1>
+        <button onclick>Count</button>
+    </body>
+</html>

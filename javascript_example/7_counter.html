@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Counter</title>
+        <script>
+            /* One thing to notice about all of our sites so far is that every time we reload the page, 
+               all of our information is lost , e.g., the counter goes back to 0.
+               Sometimes this is what we intend, but other time’s we'll want to be able to store information 
+               that we can use when a user returns to the site.
+            
+               One way we can do this is by using Local Storage, or storing information on the user's web browser 
+               that we can access later. This information is stored as a set of key-value pairs, 
+               almost like a Python dictionary. In order to use local storage, we'll employ two key functions:
+               localStorage.getItem(key): This function searches for an entry in local storage with a given key, and returns the value associated with that key.
+               localStorage.setItem(key, value): This function sets and entry in local storage, associating the key with a new vlaue. */            
+            if (!localStorage.getItem('counter')) { // Check if there is already a vlaue in local storage.
+                                                    // The exclamation mark (!) symbol is the logical "not" operator.
+                localStorage.setItem('counter', 0); // If not, set the counter to 0 in local storage
+            }
+                    
+            function count() {
+                let counter = localStorage.getItem('counter'); // Retrieve counter value from local storage.
+                counter++;
+                document.querySelector('h1').innerHTML = counter;
+                localStorage.setItem('counter', counter);  // Store counter in local storage.
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelector('h1').innerHTML = localStorage.getItem('counter'); // Set heading to the current value inside local storage.
+                document.querySelector('button').onclick = count;
+            });
+            /* We can actually see the value inside of localStorage. 
+               Again, go into Chrome's inspector and click "Application" on the tab, 
+               and see "Local Storage option" and get into it. We can see that we have a value for the key "counter". */
+
+            // If you want to restart the count, you should clear the cache or open a new incognito window for this page.
+        </script>
+    </head>
+    <body>
+        <h1>0</h1>
+        <button onclick>Count</button>
+    </body>
+</html>

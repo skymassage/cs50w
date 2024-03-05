@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Tasks</title>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+                const submit = document.querySelector('#submit');
+                const newTask = document.querySelector('#task');
+
+                submit.disabled = true; // Disable submit button by default.
+
+                newTask.onkeyup = () => {   // The "onkeyup" event occurs when the user releases a key on the keyboard.
+                    if (newTask.value.length > 0) {  // "length" to find the length of objects such as strings and arrays.
+                        submit.disabled = false;
+                    }
+                    else {
+                        submit.disabled = true;
+                    }
+                }
+
+                document.querySelector('form').onsubmit = () => {
+                    const task = newTask.value;
+
+                    const li = document.createElement('li'); // Use "createElement" create HTML elements.
+                    li.innerHTML = task;
+
+                    document.querySelector('#tasks').append(li);  // Use "append" to add the elements to the DOM.
+                    // document.querySelector('#tasks').innerHTML += `<li>${li.innerHTML}</li>`; // This line has the same result.
+
+                    newTask.value = '';  // Clear out input field.
+                    
+                    submit.disabled = true; // Disable the submit button again.
+
+                    return false; // This prevents the default submission of the form, 
+                                  // which involves either reloading the current page or redirecting to a new one.
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Tasks</h1>
+        <ul id="tasks"></ul>
+        <form>
+            <input id="task" placeholder = "New Task" type="text">
+            <input id="submit" type="submit">
+        </form>
+    </body>
+</html>
