@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Currency Exchange</title>
+        <script>
+            /*
+                https://www.exchangerate-api.com/
+                https://cs50.stackexchange.com/questions/43839/problem-in-using-api-link-in-fetch-command-for-ajax
+                https://api.apilayer.com/exchangerates_data/latest?apikey=cjUP2T7CmZ3DFUWWRCWOcA2lQekDDogW&base=USD
+                https://exchangeratesapi.io/documentation/#latestrates
+            */
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Send a GET request to the URL
+                fetch('https://api.exchangeratesapi.io/latest?base=USD')
+                // Put response into json form
+                .then(response => response.json())
+                .then(data => {
+
+                    // Get rate from data
+                    const rate = data.rates.EUR;
+
+                    // Display message on the screen
+                    document.querySelector('body').innerHTML = `1 USD is equal to ${rate.toFixed(3)} EUR.`;
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <form>
+            <input id="currency" placeholder="Currency" type="text">
+            <input type="submit" value="Convert">
+        </form>
+        <div id="result"></div>
+    </body>
+</html>
