@@ -41,22 +41,6 @@
                 // but note that here is 'click' instaed of 'onclick' and <button> element doesn't have the "click" attribute.
                 // document.querySelector('button').addEventListener('click', count); 
             });
-
-
-            /* In addition to the traditional function notation we've seen already, 
-               JS also gives us the ability to use Arrow Functions where we have an input 
-               (or parentheses when there’s no input) followed by "=>" followed by some code to be run. 
-               For example, we can the above code as: */
-            count = () => {  // Here we change "function count() {...}" to "count = () => {...}".
-                counter++;      
-                document.querySelector('h1').innerHTML = counter;
-                if (counter % 10 === 0) {
-                    alert(`Count is now ${counter}`);
-                }
-            }
-            document.addEventListener('DOMContentLoaded', () => { // Here we change "function () {...}" to "() => {...}".
-                document.querySelector('button').onclick = count;
-            });
             
         </script>
     </head>

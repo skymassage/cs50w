@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Arrow function</title>
+        <script>
+            /* In addition to the traditional function notation we've seen already, 
+               JS also gives us the ability to use Arrow Functions where we have an input 
+               (or parentheses when there's no input) followed by "=>" followed by some code to be run. */
+
+            // Regular function
+            var callSomeone = function(someone) {
+                return 'Hi, ' + someone;
+            }
+            
+            // Change regular function to arrow function: leave out the keyword "function".
+            var callSomeone = (someone) => {
+                return 'Hi, ' + someone;
+            }
+
+            // Simplification: Single line statements do not require "{}" and also leave out "return" because of no "{}".
+            var callSomeone = (someone) => 'Hi, ' + someone;
+
+            // Neglect "()" if only one argument.
+            var callSomeone = someone => 'Hi, ' + someone;
+
+            // There must be "()" if no argument.
+            // var callSomeone = function() {return 'Hi, ' + 'David';} // Original function without argument.
+            // var callSomeone = () => 'Hi, ' + 'David';  
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelector('form').onsubmit = () => {
+                    alert(callSomeone(document.querySelector('#name').value));
+                };
+            });
+
+
+            /* The handling of "this" is also different in arrow functions compared to regular functions. 
+               In short, with arrow functions there are no binding of "this". 
+               In regular functions the "this" keyword represented the object that called the function, 
+               which could be the window, the document, a button or whatever. 
+               With arrow functions the "this" keyword always represents the object that defined the arrow function. */
+            // First example: regular function
+            let hello_1 = '';
+            hello_1 = function() {  // Here "this" represents different objects depending on how the function was called.
+                document.getElementById('demo_1').innerHTML += this;
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                window.addEventListener('load', hello_1);
+                document.getElementById('btn_1').addEventListener('click', hello_1); // Click the button to execute "hello_1", and you will see that "this" represents the button object.
+            });
+
+            // Second example: arrow function
+            let hello_2 = '';
+            hello_2 = () => {  // Here "this" represents the object that owns the function, no matter who calls the function.
+                document.getElementById('demo_2').innerHTML += this;
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                window.addEventListener('load', hello_2);
+                document.getElementById('btn_2').addEventListener('click', hello_2);  // Click the button to execute "hello_2", and you will see that "this" still represents the window object.
+            });
+
+            /* The result will show that the first example returns two different objects (window and button), 
+               and the second example returns the window object twice, because the window object is the "owner" of the function. */
+
+        </script>
+    </head>
+    <body>
+        <h1>Arrow Function</h1>
+        <form>
+            <input autofocus id="name" placeholder="Name" type="text">
+            <input type="submit">
+        </form>
+        
+        <h1>Arrow Function for "this"</h1>
+
+        <h2>First example: regular function</h2>
+        <p id="demo_1"></p>
+        <button id="btn_1">Click</button>
+        
+        <h2>Second example: arrow function</h2>
+        <p id="demo_2"></p>
+        <button id="btn_2">Click</button>
+    </body>
+</html>

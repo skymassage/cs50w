@@ -3,7 +3,7 @@
     <head>
         <title>JavaScript Objects</title>
         <script>
-            // A JavaScript Object is very similar to a Python dictionary, as it allows us to store key-value pairs.
+            // A JS object is very similar to a Python dictionary, as it allows us to store key-value pairs.
             let person = {
                 first: 'Harry',
                 last: 'Potter'
@@ -14,12 +14,15 @@
             person.first;                 // 'Harry'
             person.last = "Ron";          // 'Ron'
             person;                       // {first: 'Harry', last: 'Ron'}
+            // Note that you can only use key to access the valuein the JS object. Using propeties will return the "undefined" value.
+            property = "first"; // 'Harry
+            person[property];   // undefined
             // You can also use "console.log()" to print them out in the console.
 
             /* One way in which JS objects are really useful is in transferring data from one site to another, particularly when using APIs.
                An API, or Application Programming Interface, is a structured form communication between two different applications.
                For example, we may want our application to get information from Google Maps, Amazon, or some weather service. 
-               We can do this by making calls to a service’s API, which will return structured data to us, 
+               We can do this by making calls to a service's API, which will return structured data to us, 
                often in JSON (JavaScript Object Notation) form. For example, a flight in JSON form might look like this: */
             // {
             //     "origin": "New York",

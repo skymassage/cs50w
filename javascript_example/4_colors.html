@@ -30,8 +30,8 @@
             /* We can detect changes in a select element using the onchange attribute.
                There are many events we can detect in JS like: onclick, onsubmit, onmouseover, onkeydown, onkeyup, onload, onblur. */
             document.querySelector('select').onchange = function() {
-                /* "this" is a keyword that changes based on the context in which it’s used. In the case of an event handler, 
-                   "this" refers to the object that triggered the event. Here "this" represents <select> because of "document.querySelector('select')" */
+                /* "this" is a keyword that changes based on the context in which it's used. In the case of an event handler, 
+                   "this" refers to the object that triggered the event. Here "this" represents "document.querySelector('select')". */
                 document.querySelector('#hello_2').style.color = this.value;
             }
         });

@@ -3,26 +3,108 @@
     <head>
         <title>Currency Exchange</title>
         <script>
-            /*
-                https://www.exchangerate-api.com/
-                https://cs50.stackexchange.com/questions/43839/problem-in-using-api-link-in-fetch-command-for-ajax
-                https://api.apilayer.com/exchangerates_data/latest?apikey=cjUP2T7CmZ3DFUWWRCWOcA2lQekDDogW&base=USD
-                https://exchangeratesapi.io/documentation/#latestrates
-            */
+            /* Example of creating a promise object:
+                   let <promise> = new Promise(function(resolve, reject) {
+                       <code_if_success>
+                       resolve(<value>); // if the job is finished successfully, with result value.
+
+                       <code_if_failure>
+                       reject(<error>); // if an error has occurred, error is the error object.
+                   });
+               "Promise" itself is a constructor function and note that the beginning of it is capitalized. 
+               When the Promise constructor function is established, it must receive a function, called executor function, 
+               as argument. The executor function includes two argements: "resolve" and "reject" 
+               which return the results representing success and failure respectively. 
+               Only one of these "resolve" and "reject" can be returned, and then it means that this Promise event has ended. 
+               "resolve" and "reject" are pre-defined by the JavaScript engine, so we don't need to create them. 
+               The names of "resolve" and "reject" can be customized, but most developers are accustomed to maintaining this name. 
+               So the first argument ("resolve") of the executor function is necessary and means success, 
+               the secomd one ("reject") is optional and means failure.
+               The "new" operator lets developers create an instance of a user-defined object type 
+               or of one of the built-in object types that has a constructor function.
+
+               While a promise object is "pending", the result is "undefined".
+               When a promise object is "fulfilled", the result is a value.
+               When a promise object is "rejected", the result is an error object.
+
+               Promise has a method called ".then()" which also returns a promise object and receive the arguments: 
+               callback functions for the fulfilled and rejected cases of the promise, like this:
+                   <promise>
+                   .then(function(value) {     // necearry
+                       <code_if_fullfilled>
+                   }, function(<error>) {      // optional
+                       <code_if_rejected>
+                   });
+               The first argement handling the fulfilled case is necessary, and the second one handling the rejected case is optional.
+               Besides, Promise has a ".catch()" method to handle the rejected case, so the last example can be written as:
+                   <promise>
+                   .then(function(value) {      // skip this section if rejected
+                       <code_if_fullfilled>
+                   })
+                   .catch(function(error) {     // skip this section if fulfilled
+	                   <code_if_rejected>
+                   });
+               The former example can use ".then()" to handle both fulfuilled and rejected cases, 
+               and the latter one will skip one of "then()" and "catch()". */
 
             document.addEventListener('DOMContentLoaded', function() {
-                // Send a GET request to the URL
-                fetch('https://api.exchangeratesapi.io/latest?base=USD')
-                // Put response into json form
-                .then(response => response.json())
-                .then(data => {
+                document.querySelector('form').onsubmit = function() {
+                    /* We'll use AJAX (Asynchronous JavaScript And XML), which allows us to access information 
+                       from external pages even after our page has loaded. In order to do this, we'll use the "fetch" function
+                       which will allow us to send an HTTP request. "fetch" returns a promise which we can think of as a value 
+                       that will come through at some point, but not necessarily right away. We deal with promises 
+                       by giving them the ".then()" method describing what should be done when we get a fulfilled response,
+                       and the ".catch()" method describing what should be done when we get a rejected response,.
+                       Note that the argument of ".then()" and ".catch()" is always a function. */
 
-                    // Get rate from data
-                    const rate = data.rates.EUR;
+                    /* Notice this URL containing "apikey=<...>" which means you need the API key <...>.
+                       You can find many exchage rate APIs online, but generally you must register their websites to get the API keys.
+                       And follow the different sites's URL formats and fill in the corrsponding api keys to use their exchage rate APIs.
+                       Here is another URL I found online and we can test this api by visiting this URL.
+                       When you visit this page, you'll see the current exchange rate between the U.S. Dollar and many other currencies,
+                       written in JSON format which looks like the content of the "currency.json" file in this folder.
+                       If someday the following URL doesn't work, you can change it to 'currency.json' 
+                       which we previously stored the JSON format content of that URL into this file before,
+                       but the exchange rate is the one at the time of storing, not the current one. */
+                    fetch('https://api.apilayer.com/exchangerates_data/latest?apikey=cjUP2T7CmZ3DFUWWRCWOcA2lQekDDogW&base=USD')
+                    .then(response => response.json())  // Put response into json form using ".json()". Note that here is no ';' at the end because this field is for arguments.
+                    .then(data => {                     
+                        const currency = document.querySelector('#currency').value.toUpperCase(); // Get currency from user input and convert to upper case.
+                        const rate = data.rates[currency]; // Get the exchange rate from data. Note that "currency" is a variable, so "data.rates.currency" will return "undefined".
 
-                    // Display message on the screen
-                    document.querySelector('body').innerHTML = `1 USD is equal to ${rate.toFixed(3)} EUR.`;
-                });
+                        /* In JS, both "undefined" and "null" represent the absence of a meaningful value, but they are used in slightly different contexts.
+                           undefined: When a variable is declared but not initialized, or when a function does not return a value, 
+                                      the variable or the functions result is undefined. For example:
+                                        let x; // The variable "x" is declared but not initialized, so its value is "undefined"
+                                      Accessing an object property or array element that does not exist also results in undefined, for example:
+                                        let obj = {}; // The value of obj.<property> is "undefined".
+                                        function doSomething() {
+                                            // If no return statement inside of the function, the function will return "undefined".
+                                        }
+                           null: It is a deliberate assignment that represents the absence of any object value, for example:
+                                    let y = null; // The variable "y" intentionally set to "null" 
+                                 It is often used to explicitly indicate that a variable or object property should have no value or no reference to any object.
+                                    let obj = { <property>: null }; // The value of obj.<property> is "null".
+                           1. undefined and null are Falsy value (they are false using if statement).
+                           2. null == undefined  // true
+                              null === undefined // false
+                           3. When we define a variable to "undefined" then we are trying to convey that the variable does not exist. 
+                              When we define a variable to "null" then we are trying to convey that the variable is empty. */
+                        // "!==" means that not equal value or not equal type, i.e, "!==" is the inversion of the result of "===".
+                        if (rate !== undefined) { 
+                            // ".toFixed(<number>)" rounds the string to the specified <number> of decimal places.
+                            document.querySelector('#result').innerHTML = `1 USD is equal to ${rate.toFixed(3)} ${currency}.`; 
+                        }
+                        else {
+                            document.querySelector('#result').innerHTML = 'Invalid Currency.';
+                        }
+                    })
+                    .catch(error => {   // Catch any errors and log them to the console.
+                        console.log('Error:', error);
+                    });
+                    
+                    return false; // Prevent default submission.
+                }
             });
         </script>
     </head>
