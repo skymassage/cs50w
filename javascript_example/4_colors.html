@@ -6,7 +6,8 @@
          document.addEventListener('DOMContentLoaded', function() {
             /* "querySelectorAll" gets an Node List (similar to a Python list or a JavaScript array) 
                with all elements that match the query. */
-            /* "<array>.forEach" accepts a function, and applies that function to each element in a list or array (<array>). */
+            /* "<array>.forEach()" accepts a function, and take applies this function to each element in a list or array (<array>).
+               And this function only receives the only one argument that is the corresponding element in <array>. */
             document.querySelectorAll('button').forEach(function(button) {
                 button.onclick = function() {
                     // Use "dataset.<SOMETHING>" to access the element whose attribute is "data-<SOMETHING>".
@@ -24,7 +25,6 @@
             console.log(document.querySelectorAll('button'));   
             console.log(document.querySelector('button'));
             document.querySelector("#hello_1").style.color = 'orange'; */
-
 
         document.addEventListener('DOMContentLoaded', function() {
             /* We can detect changes in a select element using the onchange attribute.

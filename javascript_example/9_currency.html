@@ -30,9 +30,9 @@
                Promise has a method called ".then()" which also returns a promise object and receive the arguments: 
                callback functions for the fulfilled and rejected cases of the promise, like this:
                    <promise>
-                   .then(function(value) {     // necearry
+                   .then(function(<retuned_value_from_promise>) {     // necearry
                        <code_if_fullfilled>
-                   }, function(<error>) {      // optional
+                   }, function(<retuned_error_from_promise>) {        // optional
                        <code_if_rejected>
                    });
                The first argement handling the fulfilled case is necessary, and the second one handling the rejected case is optional.

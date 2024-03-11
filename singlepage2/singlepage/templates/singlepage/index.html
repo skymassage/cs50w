@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Single Page</title>
+        <style>
+        </style>
+        <script>
+            /* One disadvantage of the "singlepage1" project is that the URL is less informative,
+               because the URL remains the same even when we switch from section to section.
+               We can solve this problem using the JavaScript History API.
+               This API allows us to push information to our browser history and update the URL manually. */
+
+               /* "window.onpopstate" specifies what we should do when the user clicks the back arrow button. 
+                  "window.onpopstate" means when we pop something off of the history, like go back in our history, 
+                  we have the ability to take some event as an argument. In this case, we want to show the previous "/section<number>" 
+                  (the page I visited previously) when the back arrow button is pressed. */
+            window.onpopstate = function(event) { // When back arrow button on the browser is clicked, show the previous "/section<number>".
+                console.log(event.state.section);
+                showSection(event.state.section);
+            }
+
+            function showSection(section) {
+                fetch(`/sections/${section}`)
+                .then(response => response.text())
+                .then(text => {
+                    console.log(text);
+                    document.querySelector('#content').innerHTML = text;
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('button').forEach(button => {
+                    button.onclick = function() {
+                        const section = this.dataset.section;
+
+                        /* "history.pushState" adds a new element to our browsing history based on three arguments:
+                           1. Any data associated with the state. Here we're storing a JS object representing 
+                              what section number is being represented. 
+                           2. This parameter exists for historical reasons, and cannot be omitted; 
+                              passing an empty string "" is safe against future changes to the method.
+                           3. What should be displayed in the URL. Here is something like section followed by the section number, 
+                              for example /section1 or /section2 or /section3, 
+                              and those will appear in the URL bar when I click on a different page.  */
+                        history.pushState({section: section}, "", `section${section}`); // Add the current state to the history
+                        showSection(section);
+                    };
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Hello!</h1>
+        <button data-section="1">Section 1</button>
+        <button data-section="2">Section 2</button>
+        <button data-section="3">Section 3</button>
+        <div id="content">
+        </div>
+    </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Single Page</title>
+        <style>
+        </style>
+        <script>
+            /* In many cases, it will be inefficient to load the entire contents of every page when we first visit a site, 
+               so we will need to use a server to access new data. For example, when you visit a news site, 
+               it would take far too long for the site to load if it had to load every single article it has available when you first visit the page.
+               We are going to take advantage of AJAX to make a request to the server to gain the text of a particular section and display it on the screen. */ 
+            function showSection(section) {
+                fetch(`/sections/${section}`)
+                .then(response => response.text())  // Turn the response to the text format.
+                .then(text => {
+                    console.log(text);
+                    document.querySelector('#content').innerHTML = text;
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('button').forEach(button => {
+                    button.onclick = function() { // Note that we cannot use the arrow functon here.
+                        showSection(this.dataset.section);
+                    };
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Hello!</h1>
+        <button data-section="1">Section 1</button>
+        <button data-section="2">Section 2</button>
+        <button data-section="3">Section 3</button>
+        <div id="content">
+        </div>
+    </body>
+</html>

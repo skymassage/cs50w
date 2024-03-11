@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Single Page</title>
+        <style>
+            /* A User Interface is how visitors to a web page interact with that page. 
+               Our goal as web developers is to make these interactions as pleasant as possible for the user, 
+               and there are many methods we can use to do this. */
+            /* Previously, if we wanted a website with multiple pages, we would accomplish that using different routes in our Django application. 
+               Now, we have the ability to load just a single page and then use JavaScript to manipulate the DOM. 
+               One major advantage of doing this is that we only need to modify the part of the page that is actually changing.
+               For example, if we have a Nav Bar that doesn’t change based on your current page, 
+               we wouldn’t want to have to re-render that Nav Bar every time we switch to a new part of the page. */
+            div {
+                display: none; /* none: The element is completely removed. 
+                                  block: Displays an element as a block element.*/
+            }
+        </style>
+        <script>
+            function showPage(page) {
+                document.querySelectorAll('div').forEach(div => {
+                    div.style.display = 'none';
+                });
+                document.querySelector(`#${page}`).style.display = 'block';
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('button').forEach(button => {
+                    button.onclick = function() { // Note that here you cannot use the arrow functon because we want "this" to represent the object that is executing the current piece of code.
+                        showPage(this.dataset.page);
+                    }
+                })
+            });
+        </script>
+    </head>
+    <body>
+        <button data-page="page1">Page 1</button>
+        <button data-page="page2">Page 2</button>
+        <button data-page="page3">Page 3</button>
+        <div id="page1">
+            <h1>This is page 1</h1>
+        </div>
+        <div id="page2">
+            <h1>This is page 2</h1>
+        </div>
+        <div id="page3">
+            <h1>This is page 3</h1>
+        </div>
+    </body>
+</html>
