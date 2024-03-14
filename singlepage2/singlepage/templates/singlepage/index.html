@@ -10,13 +10,16 @@
                We can solve this problem using the JavaScript History API.
                This API allows us to push information to our browser history and update the URL manually. */
 
-               /* "window.onpopstate" specifies what we should do when the user clicks the back arrow button. 
-                  "window.onpopstate" means when we pop something off of the history, like go back in our history, 
-                  we have the ability to take some event as an argument. In this case, we want to show the previous "/section<number>" 
-                  (the page I visited previously) when the back arrow button is pressed. */
+            /* The "popstate" (or "window.onpopstate") event is fired automatically by the browser when a user navigates 
+               between history states that a developer has set. 
+               This event is important to handle when you push to history object and then later retrieve information 
+               whenever the user presses the back/forward button of the browser.
+               "window.onpopstate" can specifie what we should do when the user clicks the back/forward arrow button. 
+               In this case, we want to show the previous "/section<number>" (the page I visited previously) 
+               when the back arrow button is pressed. */
             window.onpopstate = function(event) { // When back arrow button on the browser is clicked, show the previous "/section<number>".
-                console.log(event.state.section);
-                showSection(event.state.section);
+                console.log(event.state.section); // The ".state" read-only property of the "popstate" event represents the state stored when the event was created (or "popstate" is fired).
+                showSection(event.state.section); // "event.state" is an object containing a copy of the history entries.
             }
 
             function showSection(section) {
