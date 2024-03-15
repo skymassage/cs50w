@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Animate</title>
+        <style>
+            /* In addition to providing styling, CSS makes it easy for us to animate HTML elements. For example:
+                   @keyframes <animation_name> {
+                       from {
+                           <some_styling_for_the_start>
+                       }  
+
+                       to {
+                           <some_styling_for_the_end>
+                       }
+                   } 
+               The "@keyframes" rule specifies the animation code.
+               The animation is created by gradually changing from one set of CSS styles to another.
+               During the animation, you can change the set of CSS styles many times.
+               We can create the animation by specifing the starting and ending styles with the keywords "from" and "to". */ 
+            @keyframes move_1 {
+                from {
+                    left: 0%;
+                }
+                to {
+                    left: 50%;
+                }
+            }
+
+            @keyframes grow {
+                from {
+                    font-size: 20px;
+                }
+                to {
+                    font-size: 100px;
+                }
+            }
+
+            /* We can create the animation by using percentage to specify styles at different stages in the duration, 
+               For example: 0% and 100%, where 0% is the beginning of the animation and 100% is when the animation is complete. */
+            @keyframes move_2 {
+                0% {
+                    left: 0%;
+                }
+                50% {
+                    left: 50%;
+                }
+                100% {
+                    left: 0%;
+            }
+            }   
+
+            #heading_1 {
+                position: relative; 
+                animation-name: move_1;   /* "animation-name" specifies a name for the @keyframes animation. */
+                animation-duration: 2s; /* "animation-duration" defines how long an animation should take to complete one cycle. */
+                animation-fill-mode: forwards; 
+                /* "animation-fill-mode" specifies a style for the element when the animation is not playing (before it starts, after it ends, or both).
+                   none: Default value. Animation will not apply any styles to the element before or after it is executing.
+                   forward: The element will retain the style values that is set by the last keyframe. */
+            }
+
+            #heading_2 {
+                animation-name: grow; 
+                animation-duration: 2s; 
+                animation-fill-mode: forwards;
+            }
+
+            #heading_3 {
+                position: relative;
+                animation-name: move_2;
+                animation-duration: 2s; 
+                animation-fill-mode: forwards;
+                animation-iteration-count: 2; 
+                /* "animation-iteration-count" specifies the number of times an animation should be played. 
+                   infinite: endless animation. */
+            }
+
+            #heading_4 {
+                position: relative;
+                animation-name: move_2;
+                animation-duration: 2s; 
+                animation-fill-mode: forwards;
+                animation-iteration-count: infinite; 
+            }
+        </style>
+        <script>
+            /* In addition to CSS, we can use JavaScript to further control our animations.
+               Here we can use button to control the movement of the element. */
+            document.addEventListener('DOMContentLoaded', function() {
+                const heading_4 = document.querySelector('#heading_4');
+
+                /* The "animation-play-state" property in CSS specifies whether the animation is "running" or "paused". 
+                   In JS, "animation-play-state" is written to "animationPlayState" based on the camel-case. */
+                heading_4.style.animationPlayState = 'paused';
+
+                document.querySelector('button').onclick = () => {
+                    if (heading_4.style.animationPlayState == 'paused') { 
+                        heading_4.style.animationPlayState = 'running';
+                    }
+                    else {
+                        heading_4.style.animationPlayState = 'paused';
+                    }
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <button>Click Here!</button>
+        <h1 id="heading_1">Welcome!</h1>
+        <h1 id="heading_3">Welcome!</h1>
+        <h1 id="heading_4">Welcome!</h1>
+        <h1 id="heading_2">Welcome!</h1>
+    </body>
+</html>
