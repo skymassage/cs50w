@@ -31,8 +31,10 @@ function add_post(contents) {  // Add a new post with given contents to DOM.
     document.querySelector('#posts').append(post);  // Add post to DOM.
 };
 
-// Here is the DOM to be clicked, so we don't need to include the following code inside of 
-// "document.addEventListener('DOMContentLoaded', <the_following_function>)".
+/* Here is the DOM to be clicked, so we don't need to include the following code inside of 
+   "document.addEventListener('DOMContentLoaded', <the_following_function>)". */
+/* The function the event listener ("addEventListener") takes in can take as an optional argument the event itself, 
+   which is a JavaScript object that contains information about the event that happened. */
 document.addEventListener('click', event => {
     const element = event.target; // Find what was clicked on. The ".target" property returns the element where the event occured, and it is read-only.
 
@@ -41,6 +43,6 @@ document.addEventListener('click', event => {
         element.parentElement.addEventListener('animationend', () => {  // The "animationend" event occurs when a CSS animation has completed.
             element.parentElement.remove();     // The "".remove()"" method removes an element (or node) from the document.
         });
-    }
-    
+    }    
 });
+// We could also use another way to attach an event listener to each of the Hide buttons.
