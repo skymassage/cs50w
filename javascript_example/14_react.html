@@ -109,11 +109,12 @@
 
             function AppCount() {
                 /* The React "useState" hook allows us to track state in a function component,
-                   where hooks allow function components to have access to state and other React features,
-                   and because of this, class components are generally no longer needed.
+                   where state means the data stored inside of the component itself,
+                   and hooks allow function components to have access to state and other React features,
+                   because of this, class components are generally no longer needed.
                    The argument to "useState" is the initial value of the state, which we'll set to "0".
                    "useState" returns both a variable ("count") representing the state
-                   and a function ("setCount") that allows us to update the state. */
+                   and a function ("setCount") that allows us to set the value for the state. */
                 const [count, setCount] = React.useState(0);
 
                 function updateCount() {
