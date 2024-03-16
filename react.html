@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- We can mitigate how much code we actually need to write by employing a JavaScript framework, 
+             just as we employed Bootstrap as a CSS framework to cut down on the amount of CSS we actually had to write. 
+             One of the most popular JavaScript frameworks is a library called "React". 
+            
+             We've been using imperative programming methods, where we give the computer a set of statements to execute. 
+             For example, to update the counter in an HTML page we might have code that looks like this:
+                View (HTML): <h1>0</h1>
+                Logic (JS): let num = parseInt(document.querySelector("h1").innerHTML);
+                            num += 1;
+                            document.querySelector("h1").innerHTML = num;
+             
+             React allows us to use declarative programming, which will allow us to simply write code explaining 
+             what we wish to display and not worry about how we’re displaying it. 
+             In React, a counter might look a bit more like this:
+                View (HTML): <h1>{num}</h1>
+                Logic (JS): num += 1;
+
+             The React framework is built around the idea of components, each of which can have an underlying state. 
+             A component would be something you can see on a web page like a post or a navigation bar, 
+             and a state is a set of variables associated with that component. 
+             The beauty of React is that when the state changes, React will automatically change the DOM accordingly.
+
+             There are a number of ways to use React, but here we'll focus on getting started directly in an HTML file. 
+             To do this, we'll have to import three JavaScript Packages:
+             React: Defines components and their behavior.
+             ReactDOM: Takes React components and inserts them into the DOM.
+             Babel: When we're writing React code, we're not actually going to be writing JavaScript. 
+                    We're going to be writing in an extension to JavaScript known as "JSX".
+                    JSX is an extension to JS that looks a lot like JavaScript, but has some additional features. 
+                    In particular, it effectively allows us to represent HTML inside ofJS code in a way 
+                    that is more readable and convenient to deal with. However, browsers don't understand JSX automatically, 
+                    so we use "Babel" to convert that code into plain JS code that browsers can understand. -->
+
+        <!-- Import the three JS libraries above. -->
+        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <title>Hello</title>
+    </head>
+    <body>
+        <!-- We almost always want to leave <div> with the "app" id empty, and fill it in the react code below. -->
+        <div id="app_1"></div>
+        <div id="app_2"></div>
+        <div id="app_3"></div>
+        <div id="app_4"></div>
+        <div id="app_count"></div>
+
+        <!--  We're not going to be writing JS, but rather JSX. So we include a script tag where we specify that type="text/babel". 
+              This signals to the browser that the following script needs to be translated using Babel. -->
+        <script type="text/babel">
+            /* All of the React applications are going to be composed of components, 
+               where a component is just some part of the web application's user interface. 
+               Components in React can be represented by JS functions.
+               To describe a component, we can create a component called "App_1" which is a JS function. 
+               The "App" component returns what we would like to render to the DOM. 
+               In this case, we simply return "<div>Hello!</div>". */
+            function App_1() {
+                const x = 1, y = 2;
+                return (
+                    <div>Hello, world!</div>
+                );
+            }
+
+            function App_2() {
+                const x = 1, y = 2;
+                return (
+                    // Rather than just render some text, we can use curly braces to plug in the value of some JS expression. 
+                    <div>x + y = { x + y }</div>
+                );
+            }
+            /* React can also render components within other components. First, create the "Hello_1" component. */
+            function Hello_1(props) {
+                return (
+                    <h1>Hello</h1>
+                );
+            }
+            /* Render three "Hello_1" components inside of the "App_3" component. */
+            function App_3() {
+                const x = 1, y = 2;
+                return (
+                    <div>
+                        <Hello_1 />
+                        <Hello_1 />
+                        <Hello_1 />
+                    </div>
+                );
+            }
+            
+            /*  We can make components more flexible by adding additional properties (props in React terms) to them. 
+                We can provide the people's names in a method that looks similar to HTML attributes. */
+            function App_4() {
+                return (
+                    <div>
+                        <Hello_2 name="Harry" />
+                        <Hello_2 name="Ron" />
+                        <Hello_2 name="Hermione" />
+                    </div>
+                );
+            }
+            /* Access "props" using "props.<PROP_NAME>". We can then insert this into JSX using curly brace. */
+            function Hello_2(props) {
+                return (
+                    <h1>Hello, {props.name}!</h1>
+                );
+            }
+
+            function AppCount() {
+                /* The React "useState" hook allows us to track state in a function component,
+                   where hooks allow function components to have access to state and other React features,
+                   and because of this, class components are generally no longer needed.
+                   The argument to "useState" is the initial value of the state, which we'll set to "0".
+                   "useState" returns both a variable ("count") representing the state
+                   and a function ("setCount") that allows us to update the state. */
+                const [count, setCount] = React.useState(0);
+
+                function updateCount() {
+                    /* It's good to use "setCount(prev => prev + 1)" instead of "setCount(count + 1)".
+                       For "setCount(count + 1)", the count will be based on the current value at the time
+                       that render occurred due to the "closure" in the function.
+                       "setCount(prev => prev + 1)" always uses the latest value for the increment.
+                       Because "closures" are a complicated topic, you can test the following two examples to compare the difference.
+                       Ex1 (count increments twice): 
+                           setCount(prev => prev + 1);
+                           setCount(prev => prev + 1);
+                       Ex2 (count increments only once):
+                           setCount(count + 1);
+                           setCount(count + 1); */
+                    setCount(prev => prev + 1);
+                }
+
+                return (
+                    // Use the onClick attribute to handle when the button is clicked.
+                    <div>
+                        <h1>{count}</h1>
+                        <button onClick={updateCount}>Count</button>
+                    </div>
+                );
+            }
+
+            /* "ReactDOM.render" render the component into the page, and it takes two arguments:
+               1. A component to render, and the component here should be put inside of "<... />" like HTML elements.
+               2. An element in the DOM inside of which the component should be rendered. */
+            ReactDOM.render(<App_1 />, document.querySelector("#app_1"));
+            ReactDOM.render(<App_2 />, document.querySelector("#app_2"));
+            ReactDOM.render(<App_3 />, document.querySelector("#app_3"));
+            ReactDOM.render(<App_4 />, document.querySelector("#app_4"));
+            ReactDOM.render(<AppCount />, document.querySelector("#app_count"));
+
+            /* This is where the power of JSX really starts to come in.
+               Here we can write HTML-like syntax inside of the JS code, and JSX is going to be able to understand it.*/
+        </script>
+    </body>
+</html>
