@@ -30,19 +30,21 @@
         <div id="app"></div>
 
         <script type="text/babel">
-
+            /* You score 5 points and win if you correctly answer two randomly generated integers from 1 to 10. */
             function App() {
-
+                /* You can access the properties of the state like "state.num1", "state.response" and so on. */
                 const [state, setState] = React.useState({
-                    num1: 1,
-                    num2: 1,
-                    response: "",
-                    score: 0,
+                    num1: 1,            // The first number to be added.
+                    num2: 1,            // The second number to be added.
+                    response: "",       // What the user has typed in into this text field.
+                    score: 0,           // How many questions the user has answered correctly.
                     incorrect: false
                 });
 
                 function updateResponse(event) {
+                    /* We need to use "setState" to change the state so as to set a new value for "response". */
                     setState({
+                        /*  */
                         /* "..." is the spread operator that allows us to quickly copy all or part of an existing array 
                            or object into another array or object. For example:
                                const numbersOne = [1, 2, 3], numbersTwo = [4, 5, 6];
@@ -64,7 +66,6 @@
                            (the base in mathematical numeral systems). */
                         const answer = parseInt(state.response);
                         if (answer === state.num1 + state.num2) {
-                            // User got question right
                             setState({
                                 ...state,
                                 score: state.score + 1,
@@ -76,35 +77,47 @@
                                         Math.floor(Math.random() * 10);       // Returns a random integer from 0 to 9.
                                         Math.floor(Math.random() * 100) + 1;  // Returns a random integer from 1 to 100.
                                         Math.ceil(Math.random() * 10);        // Returns a random integer from 1 to 10.
-                                        Math.ceil(Math.random() * 10) + 1;    // Returns a random integer from 2 to 101. */
+                                        Math.ceil(Math.random() * 100) + 1;    // Returns a random integer from 2 to 101. */
                                 num1: Math.ceil(Math.random() * 10),
-                                num2: Math.ceil(Math.random() * 10)
+                                num2: Math.ceil(Math.random() * 10),
+                                incorrect: false
                             });
                         } else {
-                            // User got question wrong
                             setState({
                                 ...state,
                                 score: state.score - 1,
-                                response: ""
+                                response: "",
+                                incorrect: true
                             })
                         }
                     }
                 }
 
-                if (state.score === 10) {
+                if (state.score === 5) {
                     return (
                         <div id="winner">You won!</div>
                     );
-                } else {
-                    return (
-                        <div>
-                            <div>{state.num1} + {state.num2}</div>
-                            <input onKeyPress={inputKeyPress} onChange={updateResponse} value={state.response} />
-                            <div>Score: {state.score}</div>
-                        </div>
-                    );
                 }
+                
+                return (
+                    // Use "className" in React instead of "class" because "class" is a keyword in JS.
+                    /* The conditional (ternary) operator is the only JavaScript operator that takes three operands: 
+                        a condition followed by a question mark (?), then an expression to execute if the condition is truthy followed by a colon (:),
+                        and finally the expression to execute if the condition is falsy.  */
+                    // Note that in React we use "onKeyPress" and "onChange" instead of "onkeypress" and "onchange".
+                    /* When attributes immediately following the '=' sign and it's not a string, use curly braces following '='.
+                       Forexampple, value={num} will read the num variable, but value="{num}" will pass the string "{num}".
+                       That's why curly braces are used for the "autoFocus" attribute of <input>. */
+                    <div>
+                        <div className={state.incorrect ? "incorrect" : ""} id="problem">
+                            {state.num1} + {state.num2}
+                        </div>
+                        <input onKeyPress={inputKeyPress} onChange={updateResponse} autoFocus={true} value={state.response} />
+                        <div>Score: {state.score}</div>
+                    </div>
+                );
             }
+
             ReactDOM.render(<App />, document.querySelector("#app"));
         </script>
     </body>

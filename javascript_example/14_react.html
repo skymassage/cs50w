@@ -100,7 +100,7 @@
                     </div>
                 );
             }
-            /* Access "props" using "props.<PROP_NAME>". We can then insert this into JSX using curly brace. */
+            /* Access "props" using "props.<PROP_NAME>". Use curly braces to insert this into JSX when rendering. */
             function Hello_2(props) {
                 return (
                     <h1>Hello, {props.name}!</h1>
@@ -118,6 +118,8 @@
                 const [count, setCount] = React.useState(0);
 
                 function updateCount() {
+                    /* Here you cannot use "count = count + 1;". In React, whenever we use "useState", if I want to change the state, 
+                       we have to use this "setCount" function that "useState" provides to us for whenever we want to set the new value of the state. */
                     /* It's good to use "setCount(prev => prev + 1)" instead of "setCount(count + 1)".
                        For "setCount(count + 1)", the count will be based on the current value at the time
                        that render occurred due to the "closure" in the function.
@@ -133,7 +135,8 @@
                 }
 
                 return (
-                    // Use the onClick attribute to handle when the button is clicked.
+                    /* Use the "onClick" attribute to handle when the button is clicked.
+                       It's a convention in React to use a captial C for "onClick" instead of "onclick" in HTML. */
                     <div>
                         <h1>{count}</h1>
                         <button onClick={updateCount}>Count</button>
