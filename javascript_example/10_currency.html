@@ -18,8 +18,8 @@
                Only one of these "resolve" and "reject" can be returned, and then it means that this Promise event has ended. 
                "resolve" and "reject" are pre-defined by the JavaScript engine, so we don't need to create them. 
                The names of "resolve" and "reject" can be customized, but most developers are accustomed to maintaining this name. 
-               So the first argument ("resolve") of the executor function is necessary and means success, 
-               the secomd one ("reject") is optional and means failure.
+               So the first argument "resolve) of the executor function is necessary and means success, 
+               the second one "reject" is optional and means failure.
                The "new" operator lets developers create an instance of a user-defined object type 
                or of one of the built-in object types that has a constructor function.
 
@@ -71,6 +71,7 @@
                     .then(data => {                     
                         const currency = document.querySelector('#currency').value.toUpperCase(); // Get currency from user input and convert to upper case.
                         const rate = data.rates[currency]; // Get the exchange rate from data. Note that "currency" is a variable, so "data.rates.currency" will return "undefined".
+                        // const rate = data["rates"][currency]; This also works.
 
                         /* In JS, both "undefined" and "null" represent the absence of a meaningful value, but they are used in slightly different contexts.
                            undefined: When a variable is declared but not initialized, or when a function does not return a value, 

@@ -1,4 +1,4 @@
-Note that it is normal to see 404 error at the homepage, because we don't set anything for it.
+Note that it is normal to see 404 error at the homepage, if we don't set anything for it.
 Note that when you create a new app, you must go to "settings.py" to add your app name to the "INSTALLED_APPS" list.
 
 Note that run "python3 manage.py migrate" in the terminal after colpmeling the "tasks" app's code, 

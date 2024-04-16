@@ -23,7 +23,7 @@ def david(request):
 def greet(request, name):
     # Here the third argument is passed into "render" which is called context. 
     # In this context, we can provide information that we would like to have available within the HTML files. 
-    # This context takes the form of a Python dictionary, and the variable must be consistent with the template variable (here is "name"). 
+    # This context takes the form of a Python dictionary, and the variable must be consistent with the template variable (here is "name").
     return render(request, "hello/greet.html", {
         "name": name.capitalize()
     })

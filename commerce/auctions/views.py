@@ -6,7 +6,7 @@ or when you need to perform database query operations (such as filtering, orderi
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
-all_books = Book.objects.all()  # Query all books
+all_books = Book.objects.all()                                     # Query all books
 specific_author_books = Book.objects.filter(author="J.K. Rowling") # Query books whose author is a specific value
 other_authors_books = Book.objects.exclude(title="Harry Potter")   # Exclude books whose title is a specific value
 sorted_books = Book.objects.order_by(author="J.K. Rowling")        # Sort books alphabetically by author
@@ -104,7 +104,7 @@ def category(request):
     # We can use request.GET["key_name"] or request.GET.get("key_name") to access the submitted data.
     # If the key doesn't exist, request.GET["key_name"] will return KeyError and request.GET.get("key_name") will return None.
     # Therefore, if you are not certain if the key exists, you can use request.GET.get("key_name").
-    # Here it is better to use request.GET.get("key_name"), because we receive no value when submitting the placeholder "Select Category".
+    # Here it is better to use request.GET.get("key_name"), because we will receive no value when submitting the placeholder "Select Category".
     # You still can use request.POST["key_name"], but you should use "try" and "except" statement to avoid the error.    
     category_name = request.GET.get("category_name")  
     if category_name == "others":
@@ -139,9 +139,7 @@ def watchlist(request):
 
         if request.POST.get("remove_id"):
             Listing.objects.get(pk=request.POST["remove_id"]).watch_by.remove(user)
-    
-    # Here we still need the GET method, because the logged in users can access the waatchlist page by clicking its buttonon the navigation bar.
-    # So the following part shouldn't be moved to request.method == "POST".
+
     return render(request, "auctions/watchlist.html", {
         "listings": user.watchlist.all()   # You still can see the closed listing in the watchlist.
     }) 
@@ -164,15 +162,13 @@ def create(request):
         "form": ListingForm(),
     })
 
-from django.db.models import Max
 
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "bid_form": BidForm(),
-        "comment_form": CommentForm(),
-        "comments": listing.listing_comments.all()
+        "comment_form": CommentForm()
     })
 
 
@@ -191,7 +187,6 @@ def comment(request, listing_id):
                 "listing": listing,
                 "bid_form": BidForm(),
                 "comment_form": form,
-                "comments": listing.listing_comments.all()
             })
 
 
@@ -224,7 +219,6 @@ def bid(request):
                 "listing": listing,
                 "bid_form": form,
                 "comment_form": CommentForm(),
-                "comments": listing.listing_comments.all()
             })
 
 
@@ -236,9 +230,9 @@ def close(request):
         listing = Listing.objects.get(pk=listing_id)    
         return redirect("listing", listing_id=listing.id)
 
-'''Method: .filer and .get
+'''Method: .filer, .get, .save and .update
 1. Return value
-.get: An instance of a model class, called "instance" (also an object)
+.get: An instance of a model class, called "instance" (also an object).
 .filter: A collection object called "QuerySet". It can be used for iteration, but it's not a list.
          In the html template, we cannot use the QuerySet returned to obtain its attributes, 
          otherwise we will get None. We should use a for loop to obtain its attributes.
@@ -260,7 +254,7 @@ def close(request):
        For example:
            user = User(username="David", email="david@example.com")
            user.save()
-           # Also, you can use .creata to insert a new record as below:
+           # Also, you can use ".creata" to insert a new record as below:
            User.objects.create(username="David", email="david@example.com")
 
 .update: It can only be used with .filter, errors will occur if used with .get.

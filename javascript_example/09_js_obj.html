@@ -13,11 +13,21 @@
             person["first"];              // 'Harry'
             person.first;                 // 'Harry'
             person.last = "Ron";          // 'Ron'
-            person;                       // {first: 'Harry', last: 'Ron'}
-            // Note that you can only use key to access the valuein the JS object. Using propeties will return the "undefined" value.
-            property = "first"; // 'Harry
-            person[property];   // undefined
-            // You can also use "console.log()" to print them out in the console.
+            // Note that when you can use key to access the value in the JS object, the key should be a string. 
+            property = "first";
+            person[property];   // 'Harry'
+            person.property;    // undefined
+
+            // Keys could also be strings.
+            let people = {
+                "one": 'H',
+                "two": 'P'
+            };
+            people["one"];  // 'H'
+            people.one;     // 'H'
+            // So the keys must be strings when using keys to access the values of JSON objects,
+            // but it's unnecessary for using properties to access the values of JS object.
+
 
             /* One way in which JS objects are really useful is in transferring data from one site to another, particularly when using APIs.
                An API, or Application Programming Interface, is a structured form communication between two different applications.

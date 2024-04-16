@@ -18,8 +18,8 @@ def index(request):
 
 
 def enter(request, title):
-    # Because "title" is from urls, if "title" contain spaces, they will be replaced "%20".
-    # But when "title" is passed to the view functiotn, "%20" will be converted back into spaces.
+    # Because "title" is from urls, if "title" contain blank space characters in the URL, they will be replaced "%20".
+    # But when "title" is passed to the view functiotn, "%20" will be converted back into blank space characters.
     title = title.strip() # Remove the leading and trailing spaces of "title".
     content = util.get_entry(title)
     if content is None:
@@ -29,9 +29,11 @@ def enter(request, title):
         })
     else:
         return render(request, "encyclopedia/entry.html", {
-            "entry_title": title, # URLs cannot contain spaces. URL encoding normally replaces a space with a plus (+) sign or with "%20".
+            "entry_title": title, # URLs cannot contain spaces. URL encoding normally replaces a space with a plus ('+') sign or with a "%20".
                                   # Here spaces in "title" of the url will be replaced by "%20" when rendering the template.
-            "content": markdown(content, safe_mode=True) # "safe_mode=True" means to ensure that the converted HTML is safe.
+            "content": markdown(content, safe_mode=True) # "markdown()" converts Markdown syntax into HTML.
+                                                         # If you are using Markdown on a web system which will transform text provided by untrusted users, 
+                                                         # "safe_mode=True" ensures that the user's HTML tags are either replaced, removed or escaped.
         })
 
 
@@ -52,14 +54,13 @@ def search(request):
             "entries": results
         })
 
-def random_page(request): # Don't use "random" for the function name, because we are using the "random" package.
+def random_page(request): # Don't use "random" as the function (view) name, because we are using the "random" package.
     # "HttpResponseRedirect" only supports hard-coded urls, that's why we need "reverse".
     # You can use "args" in "reverse" to pass the parameters for urls.
     return HttpResponseRedirect(reverse("wiki:entry", args=[random.choice(util.list_entries())])) # Note that use "[]" for agrs.
     
     # We can also use the "redirect" function, there are two way to use it.
-    # Pass the name of a view and optionally some positional or keyword arguments, 
-    # and the URL will be reverse resolved using "reverse()":
+    # Pass the name of a view and optionally some positional or keyword arguments:
     # return redirect("wiki:entry", title=random.choice(util.list_entries())) 
     # Pass a hardcoded url to "redirect":
     # return redirect(reverse("wiki:entry", args=[random.choice(util.list_entries())])) 

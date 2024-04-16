@@ -54,7 +54,7 @@
 
     <div class="flex-header" style="display: flex;">
         {% if not listing.active %}
-            {% if not listing.winner %}  <!-- Listing closed but no bidders. -->
+            {% if not listing.winner %}  <!-- Listing closed but no bidder wins the listing. -->
                 <h4>Cuurent Price: $ {{ listing.current_price }}</h4> <!-- Note that the method in templates don't use parenthesis. -->
             {% elif listing.winner == request.user and request.user.is_authenticated %}
                 <h4>You won the listing for ${{ listing.current_price }}</h4>
@@ -111,7 +111,7 @@
 
     <br/>
 
-    {% for comment in comments %}
+    {% for comment in listing.listing_comments.all %}
         <div class="row border bg-light py-2 mx-0 mb-3">
             <div class="col-6">
                 <strong>{{ comment.author }}</strong>

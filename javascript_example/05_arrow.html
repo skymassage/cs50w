@@ -17,7 +17,7 @@
                 return 'Hi, ' + someone;
             }
 
-            // Simplification: Single line statements do not require "{}" and also leave out "return" because of no "{}".
+            // Simplification: Single line statements don't require "{}" and also leave out "return" because of no "{}".
             var callSomeone = (someone) => 'Hi, ' + someone;
 
             // Neglect "()" if only one argument.
@@ -42,21 +42,21 @@
             // First example: regular function
             let hello_1 = '';
             hello_1 = function() {  // Here "this" represents different objects depending on how the function was called.
-                document.getElementById('demo_1').innerHTML += this;
+                document.querySelector('#demo_1').innerHTML += this;
             }
             document.addEventListener('DOMContentLoaded', () => {
                 window.addEventListener('load', hello_1);
-                document.getElementById('btn_1').addEventListener('click', hello_1); // Click the button to execute "hello_1", and you will see that "this" represents the button object.
+                document.querySelector('#btn_1').addEventListener('click', hello_1); // Click the button to execute "hello_1", and you will see that "this" represents the button object.
             });
 
             // Second example: arrow function
             let hello_2 = '';
             hello_2 = () => {  // Here "this" represents the object that owns the function, no matter who calls the function.
-                document.getElementById('demo_2').innerHTML += this;
+                document.querySelector('#demo_2').innerHTML += this;
             }
             document.addEventListener('DOMContentLoaded', () => {
                 window.addEventListener('load', hello_2);
-                document.getElementById('btn_2').addEventListener('click', hello_2);  // Click the button to execute "hello_2", and you will see that "this" still represents the window object.
+                document.querySelector('#btn_2').addEventListener('click', hello_2);  // Click the button to execute "hello_2", and you will see that "this" still represents the window object.
             });
 
             /* The result will show that the first example returns two different objects (window and button), 
@@ -65,13 +65,13 @@
         </script>
     </head>
     <body>
-        <h1>Arrow Function</h1>
+        <h1>1. Arrow Function</h1>
         <form>
             <input autofocus id="name" placeholder="Name" type="text">
             <input type="submit">
         </form>
         
-        <h1>Arrow Function for "this"</h1>
+        <h1>2. Arrow Function for "this":</h1>
 
         <h2>First example: regular function</h2>
         <p id="demo_1"></p>

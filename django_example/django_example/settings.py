@@ -47,9 +47,9 @@ INSTALLED_APPS = [
 ]
 
 # One of those is the CSRF view middleware, this feature of Django that allows it to make sure that our requests, 
-# whenever we're submitting data via post, something that has the potential to change the state of the application in some way, 
+# whenever we're submitting data via POST, something that has the potential to change the state of the application in some way, 
 # that we need to have CSRF validation. We need to add some sort of token to our form to make sure that Django is able to 
-# authenticate the validity of this form to make sure they know the form actually came from the web application itself. 
+# authenticate the validity of this form to make sure they know the form actually coming from the web application itself. 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

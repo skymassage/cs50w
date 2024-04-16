@@ -12,20 +12,20 @@ urlpatterns = [
     # 2. A function from "views.py" that we wish to call when this URL is visited. 
     #    That is, what view should be rendered when this URL is visited. 
     # 3. A name for that path or URL. This argument is optional. 
-    #    Giving the name of the view to a particular URL pattern makes it easy to reference it from other parts of the application.
+    #    Giving the name of the view to a particular URL pattern makes it easy to reference it from other parts of the app.
     # So if I want to render my "index" view (the "index" function in "views.py"). 
     # Then what I want to render when someone visits this URL (the empty URL) is going to be views.index. 
     path("", views.index, name="index"),           # Add "/hello" to the url of the home page to see the result.
-                                                   # When you go to the root URL (homepage), you will encounter 404.
-                                                   # This is because we have only defined the URL "localhost:8000/hello", 
-                                                   # but we haven't defined the URL "localhost:8000" with nothing added to the end.
+                                                   # When you go to the root URL (homepage), you will encounter 404,
+                                                   # because we don't set "path('', include("<APP_NAME>.urls"))" for the root URL 
     
     path("hey/david", views.david, name="david"), # Add "/hello/hey/david" to the url of the home page to see the result.
 
     # Use angle brackets "<>" to capture the values from the URL and pass them to the second arugment as the parameter to this function.
-    # The captured value can optionally include the type. If the type isn't specifed, the captured value type will be string by default. 
+    # "str" inside of "<>" specify the type of the captured value "name".
+    # If the type isn't specifed, the captured value type will be string by default. 
     # If the captured value is to be used as other types, its type can be converted from string to that type.
-    # Note that the captured value must be named as the parameter of the called function so as to pass it to that funciton.
-    # Here means that we capture the value "name" from the URL and convert it to a string, then this value is passed to the "greet" function in views.py as its parameter "name"
+    # Note that the captured value must be named as the parameter of the called function so as to pass it to that funciton in views.py.
+    # So here means that we capture the value "name" from the URL and convert it to a string, then this value is passed to the "greet" function in views.py as its parameter "name"
     path("<str:name>", views.greet, name="greet"), # Add "/hello/<name>" to the url of the home page to see the result, where "<name>" you can type anything you want.
 ]

@@ -23,6 +23,7 @@ class PassengerAdmin(admin.ModelAdmin):
 admin.site.register(Flight, FlightAdmin) # When I register "Flight", and in the second argument I can specify these particular settings when you view the admin interface.
 admin.site.register(Airport)
 admin.site.register(Passenger, PassengerAdmin)
+# After changeing the admin settings, you should run "python3 manage.py runserver" again so that it won't get an error.
 
 # When we enter to the model Airports in the admin interface, because we don't customize it here, 
 # each item on the table looks like "<city> (<code>)" which we have defined "__str__" for the class Airport in models.py.

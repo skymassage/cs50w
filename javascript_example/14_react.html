@@ -13,7 +13,7 @@
                             document.querySelector("h1").innerHTML = num;
              
              React allows us to use declarative programming, which will allow us to simply write code explaining 
-             what we wish to display and not worry about how we’re displaying it. 
+             what we wish to display and not worry about how we're displaying it. 
              In React, a counter might look a bit more like this:
                 View (HTML): <h1>{num}</h1>
                 Logic (JS): num += 1;
@@ -21,27 +21,25 @@
              The React framework is built around the idea of components, each of which can have an underlying state. 
              A component would be something you can see on a web page like a post or a navigation bar, 
              and a state is a set of variables associated with that component. 
-             The beauty of React is that when the state changes, React will automatically change the DOM accordingly.
+             The beauty of React is that when the state changes, React will automatically change the DOM accordingly. -->
 
-             There are a number of ways to use React, but here we'll focus on getting started directly in an HTML file. 
-             To do this, we'll have to import three JavaScript Packages:
+        <!-- There are a number of ways to use React, but here we'll focus on getting started directly in an HTML file. 
+             To do this, we import three JavaScript Packages as below:
              React: Defines components and their behavior.
              ReactDOM: Takes React components and inserts them into the DOM.
              Babel: When we're writing React code, we're not actually going to be writing JavaScript. 
                     We're going to be writing in an extension to JavaScript known as "JSX".
                     JSX is an extension to JS that looks a lot like JavaScript, but has some additional features. 
-                    In particular, it effectively allows us to represent HTML inside ofJS code in a way 
+                    In particular, it effectively allows us to represent HTML inside of JS code in a way 
                     that is more readable and convenient to deal with. However, browsers don't understand JSX automatically, 
-                    so we use "Babel" to convert that code into plain JS code that browsers can understand. -->
-
-        <!-- Import the three JS libraries above. -->
+                    so we use "Babel" to convert that code into plain JS code that browsers can understand.-->
         <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
         <title>Hello</title>
     </head>
     <body>
-        <!-- We almost always want to leave <div> with the "app" id empty, and fill it in the react code below. -->
+        <!-- We almost always want to leave <div> here empty, and fill it in the react code below. -->
         <div id="app_1"></div>
         <div id="app_2"></div>
         <div id="app_3"></div>
@@ -58,7 +56,6 @@
                The "App" component returns what we would like to render to the DOM. 
                In this case, we simply return "<div>Hello!</div>". */
             function App_1() {
-                const x = 1, y = 2;
                 return (
                     <div>Hello, world!</div>
                 );
@@ -71,6 +68,7 @@
                     <div>x + y = { x + y }</div>
                 );
             }
+
             /* React can also render components within other components. First, create the "Hello_1" component. */
             function Hello_1(props) {
                 return (
@@ -79,7 +77,6 @@
             }
             /* Render three "Hello_1" components inside of the "App_3" component. */
             function App_3() {
-                const x = 1, y = 2;
                 return (
                     <div>
                         <Hello_1 />
@@ -100,7 +97,7 @@
                     </div>
                 );
             }
-            /* Access "props" using "props.<PROP_NAME>". Use curly braces to insert this into JSX when rendering. */
+            /* Access "props" using "props.<PROP_NAME>" and use curly braces to insert this into JSX when rendering. */
             function Hello_2(props) {
                 return (
                     <h1>Hello, {props.name}!</h1>
@@ -112,7 +109,7 @@
                    where state means the data stored inside of the component itself,
                    and hooks allow function components to have access to state and other React features,
                    because of this, class components are generally no longer needed.
-                   The argument to "useState" is the initial value of the state, which we'll set to "0".
+                   The argument for ".useState" is the initial value of the state, which we'll set to "0".
                    "useState" returns both a variable ("count") representing the state
                    and a function ("setCount") that allows us to set the value for the state. */
                 const [count, setCount] = React.useState(0);
@@ -120,7 +117,7 @@
                 function updateCount() {
                     /* Here you cannot use "count = count + 1;". In React, whenever we use "useState", if I want to change the state, 
                        we have to use this "setCount" function that "useState" provides to us for whenever we want to set the new value of the state. */
-                    /* It's good to use "setCount(prev => prev + 1)" instead of "setCount(count + 1)".
+                    /* It's good to use "setCount(prev => prev + 1)" (set new variable "pre" inside of "setCount") instead of "setCount(count + 1)".
                        For "setCount(count + 1)", the count will be based on the current value at the time
                        that render occurred due to the "closure" in the function.
                        "setCount(prev => prev + 1)" always uses the latest value for the increment.
@@ -131,7 +128,7 @@
                        Ex2 (count increments only once):
                            setCount(count + 1);
                            setCount(count + 1); */
-                    setCount(prev => prev + 1);
+                           setCount(prev => prev + 1);
                 }
 
                 return (

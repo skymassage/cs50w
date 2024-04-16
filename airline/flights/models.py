@@ -21,7 +21,7 @@ from django.db import models
 # And we'll also notice that we will create a file called "db.sqlite3" in our project's directory.
 
 '''
-Create your models here.
+# Create your models here.
 class Flight(models.Model):
     origin = models.CharField(max_length=64) # The max length of this field doexn't exceed 64 characters.
     destination = models.CharField(max_length=64)
@@ -42,7 +42,7 @@ In [4]: Flight.objects.all()                                               # Que
 Out[4]: <QuerySet [<Flight: Flight object (1)>]>                           # The output
 
 The above output shows "Flight object (1)" that is not very informative.
-We can fix that by defining a "__str__" function in the "Flight" class of  models.py:
+We can fix that by defining a "__str__" function in the "Flight" class of models.py:
 def __str__(self):
     return f"{self.id}: {self.origin} to {self.destination}"
 
@@ -79,7 +79,7 @@ class Flight(models.Model):
     # By entering "Airport" as our first argument, we are specifying the type of object this field refers to.
     # "on_delete" gives instructions for what should do if an object referenced by a ForeignKey is deleted.
     # "models.CASCADE" means that when the ForeignKey is deleted, the object containing the ForeignKey is also deleted.
-    # Here means that when an airport (ForeignKey) is deleted, all flights associated with it should also be deleted.
+    # Here means that when a certain airport (ForeignKey) is deleted, all flights associated with it should also be deleted.
     # "related name" is a way of accessing a relationship in the reverse order. For example, if we have an airport, 
     # and I want to know all of the flights that have that airport as their origin, the reasonable name for "related_name" can be "departures". 
     # So we can access all of the departures, which gets me all of the flights that are leaving from that airport. 
@@ -138,11 +138,9 @@ class Passenger(models.Model):
     # and a flight may have multiple passengers. So we describe in Django using "ManyToManyField".
     # The first argument in this field is the class of objects that this one is related to.
     # So every passenger could be associated with many flights. Note that we're in the "Passenger" class.
-    # If True, the field is allowed to be blank. Default is False. Here means a passenger can have no flights.
+    # blank=True means the field is allowed to be blank, and the default is False. So here means a passenger can have no flights.
     # related_name="passengers" will allow us to find all passengers on a given flight.
     flights = models.ManyToManyField(Flight, blank=True, related_name="passengers") 
-    # This is the relation that
-    # Passenger object corresponds to 
     
     def __str__(self):
         return f"{self.first} {self.last}"

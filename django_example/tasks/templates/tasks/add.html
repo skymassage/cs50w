@@ -19,7 +19,7 @@
         <!-- This line adds a hidden input field with the CSRF token provided by Django.  
              So if we inspect this page's source code, we'll notice that a new input field has been added.
              and this input whose type is hidden, meaning we won't be able to see it normally, whose name is CSRF middleware token.
-             You can see a long string of characters that Django has generated for me, such that when I submit this form, 
+             We can see a long string of characters that Django has generated for us, such that when we submit this form, 
              it's going to check to make sure this token is valid. If it doesn't find this token, 
              it is not going to accept my form submission; if someone else goes to this website, 
              they are going to see a different token presented to them as well. 

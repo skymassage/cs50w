@@ -10,8 +10,8 @@
 
                 submit.disabled = true; // Disable submit button by default.
 
-                newTask.onkeyup = () => {   // The "onkeyup" event occurs when the user releases a key on the keyboard.
-                    if (newTask.value.length > 0) {  // "length" to find the length of objects such as strings and arrays.
+                newTask.onkeyup = () => {           // The "onkeyup" event occurs when the user releases a key on the keyboard.
+                    if (newTask.value.length > 0) { // "length" to find the length of objects such as strings and arrays.
                         submit.disabled = false;
                     }
                     else {
@@ -21,8 +21,8 @@
 
                 document.querySelector('form').onsubmit = () => {
                     const task = newTask.value;
-
-                    const li = document.createElement('li'); // Use "createElement" create HTML elements.
+                    
+                    const li = document.createElement('li'); // Use ".createElement" to create HTML elements.
                     li.innerHTML = task;
 
                     document.querySelector('#tasks').append(li);  // Use "append" to add the elements to the DOM.

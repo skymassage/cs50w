@@ -5,6 +5,9 @@ from django.db import models
 from django.db.models import Max
 
 # The User class inherits from "AbstractUser", so it will already have fields for a username, email, password, and you can add new fields to the User class.
+# The "User" class here conflicts with the "User" class that comes with Django.
+# And we must add the line "AUTH_USER_MODEL = '<App_Name>.<lass_Name>'" to the setting.py file to tell Django we use the customized model class.
+# So add this line "AUTH_USER_MODEL = 'auctions.User'" to our setting.py file.
 class User(AbstractUser):
     pass
 
@@ -23,12 +26,12 @@ class Listing(models.Model):
 
     # There are four cases:
     # 1) null=False, blank=False: 
-    #    This is the default condition for modal fields. It means the value is required in both the database and the models.
+    #    This is the default condition for model fields. It means the value is required in both the database and the models.
     # 2) null=False, blank=True:
     #    This is contradictory. "null=False" means the field must have a value in the database, while "blank=True" means the field can be left blank in forms.
     #    This configuration means that you do not accept the value provided by the form for the field, but you can still have to provide a value for the field in some ways. 
     # 3) null=True, blank=False:
-    #    It means the forms don't require a value, but the field does. This configuration is rarely used.
+    #    It means the fields in the database don't require a value, but the fields in the form does. This configuration is rarely used.
     # 4) null=True, blank=True:
     #    It means to allow NULL values in the database and also permit empty form submissions. This combination offers maximum flexibility.
 
@@ -38,7 +41,7 @@ class Listing(models.Model):
     # One exception is when a CharField has both "unique=True" and "blank=True" set. In this situation, 
     # "null=True" is required to avoid unique constraint violations when saving multiple objects with blank values.
 
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sales_listings")
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)     # "CharField" must use "max_length" to specify a maximum length,
     description = models.TextField()            # but "TextField" doesn't necessarily need "max_length".
     img = models.CharField(max_length=1000)      
@@ -47,14 +50,15 @@ class Listing(models.Model):
                                                                          # Note that this number must be greater than or equal to "decimal_places".
     category = models.ForeignKey("Category", on_delete=models.SET_DEFAULT, blank=True, null=True, default="", related_name="category_listings")
     # If you need to create a relationship on a model that has not yet been defined, 
-    # you can put the name of the model within "...", rather than the model object itself.
+    # you can put the class name of the model within "...", rather than the model object itself.
+    # That is, we haven't created the Category class yet, so put the Category inside of "".
     # "SET_DEFAULT" means that when the ForeignKey is deleted, the object containing the ForeignKey will be set the default value.
 
     active = models.BooleanField(default=True)   
     watch_by = models.ManyToManyField(User, blank=True, related_name="watchlist") 
     # "null" has no effect on "ManyToManyField" since there is no way to require a relationship at the database level, so we don't set it.
     
-    time = models.DateTimeField(auto_now_add=True) # "DateTimeField" automatically sets the field to now when the object is first created. N
+    time = models.DateTimeField(auto_now_add=True) # "DateTimeField" automatically sets the field to now when the object is first created.
                                                    # Note that the current date is always used; it's not just a default value that you can override.
     def __str__(self):
         return f"{self.name}"
@@ -81,7 +85,7 @@ class Listing(models.Model):
 
 class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listing_bids")
-    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_bids")
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     time = models.DateTimeField(auto_now_add=True)
 
@@ -90,7 +94,7 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listing_comments")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comments")
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField(max_length=1000)
     time = models.DateTimeField(auto_now_add=True)
 

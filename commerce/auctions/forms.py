@@ -1,5 +1,5 @@
 # If you're building a database-driven app, chances are you'll have forms that map closely to Django models. 
-# In this case, it would be redundant to define the field types in your form, because you’ve already defined the fields in your model.
+# In this case, it would be redundant to define the field types in your form, because you've already defined the fields in your model.
 # For this reason, Django provides a nested class that lets you create a Form class from a Django model.
 from django import forms
 from .models import Listing, Bid, Comment, Category
@@ -10,14 +10,14 @@ class ListingForm(forms.ModelForm):
     # that way you can have a model field in your form without that interfering with the configuration. 
     # In other words, by using class Meta: you get a nested namespace used just to configure the ModelForm in relation to the model.
     class Meta:
-        # Set the name of the model to be bound to the form.
+        # Set the name of "model" to be bound to the form.
         model = Listing
 
         # Use "fields" to specify which fields in the model should be displayed in the template.
         # If we want all fields in the model should be used in the template, We can set: fields = "__all__".
         fields = ["name", "description", "img", "starting_price", "category"]
 
-        # Use "labels" to change the titles of fields like in Django Forms.
+        # Use "labels" to change the titles of the fields like in Django Forms.
         labels = {"img": "Image URL"}
         
         # Like in Django Forms, using "widgets" you can specify a dictionary of values to customize the ModelForm's widget class for a particular field.
@@ -30,7 +30,8 @@ class ListingForm(forms.ModelForm):
             "category": forms.Select(attrs={"class": "form-control"})
         }
     
-    def __init__(self, *args, **kwargs):  # Note that this is not inside the "Meta" class.
+    # Note that here is not inside the "Meta" class.
+    def __init__(self, *args, **kwargs):
         super(ListingForm, self).__init__(*args, **kwargs)
 
         # Sort the form's category field in alphabetical order.

@@ -12,14 +12,15 @@ class NewTaskForm(forms.Form):
     # Inside of this class, I need to define all of the fields I would like for this form to have, 
     # all of the inputs that I would like the user to provide. 
     # So I want them to provide the name called "task" which will be a character field, or a "CharField", 
-    # meaning I want the user to type in characters. Here I can give this a label, call it "New Task" which will display.
+    # meaning I want the user to type in characters. Here I can give this a label, call it "New Task" which will display on the site.
     task = forms.CharField(label="New Task")
 
     # If we want to add new fields to the form, we can simply add them in views.py without typing additional HTML.
     priority = forms.IntegerField(label="Priority", min_value=1, max_value=10)
+
     # Django automatically performs client-side validation, or validation local to the user's machine, 
     # meaning it will not allow a user to submit their form if it is incomplete.
-    # You can try that if neither fields is not typed in or the "priority" field is not 1~10, the remainder will pop up.
+    # You can try that if neither fields is not typed in or the "priority" field is not "min_value" ~ "max_value", the remainder will pop up.
 
 def index(request):
     # We don't want to create the list "tasks" as a global variable and store the submitted data in it, 
@@ -33,7 +34,7 @@ def index(request):
     })
 
 def add(request):
-    # Django provides simple server-side validation, or validation that occurs once form data has reached the server
+    # Django provides simple server-side validation, or validation that occurs once form data has reached the server.
     if request.method == "POST":
 
         # If I just use NewTaskForm without arguments, that will create a empty form.
@@ -42,11 +43,11 @@ def add(request):
         # That is, take in the data the user submitted and save it as form.
         form = NewTaskForm(request.POST)
 
-        # Check if form data is valid (server-side). That is, are they providing all the necessary data in the right format?
+        # Check if form data is valid (server-side). That is, are they providing all the necessary data in the right format.
         if form.is_valid():  
             
-            # We can use "cleaned_data["key_name"]" to access the submitted data whose key is called "task".
-            # If the key doesn't  exist, it will return KeyError.
+            # We can use ".cleaned_data["key_name"]" to access the submitted data whose key is called "task".
+            # If the key doesn't exist, it will return KeyError.
             task = form.cleaned_data["task"] # Note that here we use square brackets "[]".
             # Also, we can use "cleaned_data.get("key_name")" to access the submitted data.
             # If the key doesn't exist, it will return None. So you can use this way if you are not sure whether the key exists.
@@ -69,10 +70,7 @@ def add(request):
         else:
             # If the form is invalid, re-render the page with existing information.
             return render(request, "tasks/add.html", {
-                # When I render "add.html", I need to add some context and say, 
-                # give this template access to a variable called "form" which will just be a new task form. 
-                # So I'm going to create a new task form, pass it into the "add.html" template.
-                "form": form
+                "form": form  # "form" displays error information.
             })
             # You can go to this page to fill out the "New Task" field and type a number between "min_value" and "max_value" in the "Priority" field.
             # Then change "min_value" or "max_value" in this file such that this number is not in the previous range, and go back to the page to submit. 
@@ -82,5 +80,5 @@ def add(request):
     # The default method is GET. That is, the user just tried to get the page rather than submit data to it, 
     # then we're just going to render to them an empty form. 
     return render(request, "tasks/add.html", {
-        "form": NewTaskForm()  # Create a empty form
+        "form": NewTaskForm()  # Create a empty form.
     })
