@@ -6,4 +6,4 @@ javascript_example
 singlepage1
 singlepage2
 scroll_hide
-email
+emailbox
