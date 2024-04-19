@@ -6,5 +6,4 @@ javascript_example
 singlepage1
 singlepage2
 scroll_hide
-
-創建新的folder，不要用下載project3做，其Django版本舊
+email
