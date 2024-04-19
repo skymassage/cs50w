@@ -39,16 +39,13 @@
 	   document.getElementById("demo").innerHTML = obj.name; */
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    // Use buttons to toggle between views
     document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
     document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
     document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
     document.querySelector('#compose').addEventListener('click', compose_email);
     document.querySelector('#compose-form').addEventListener('submit', send_email);
 
-    // By default, load the inbox
-    load_mailbox('inbox');
+    load_mailbox('inbox'); // By default, load the inbox
 
 });
 
@@ -56,10 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function compose_email() {
     // Show compose view and hide other views
     document.querySelector('#emails-view').style.display = 'none';
-    document.querySelector('#email-content-view').style.display = 'none';
     document.querySelector('#compose-view').style.display = 'block';
 
-    // Clear out composition fields
     document.querySelector('#compose-recipients').value = '';
     document.querySelector('#compose-subject').value = '';
     document.querySelector('#compose-body').value = '';
@@ -93,23 +88,18 @@ function send_email (e) {
 
 
 function load_error(error) {
-    document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#emails-view').style.display = 'block'; // none
     document.querySelector('#compose-view').style.display = 'none';
-    document.querySelector('#email-content-view').style.display = 'block';
     
-    document.querySelector('#email-content-view').innerHTML += error;
+    document.querySelector('#emails-view').innerHTML += error;
 }
 
 
 function load_mailbox(mailbox) {
-  
-    // Show the mailbox and hide other views
     document.querySelector('#emails-view').style.display = 'block';
     document.querySelector('#compose-view').style.display = 'none';
-    document.querySelector('#email-content-view').style.display = 'none';
 
-    // Show the mailbox name
-    document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+    document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`; // Show the mailbox name
     // ".charAt(index)" returns the character at a specified <index> (position) in a string.
     // ".slice(start, end)" returns a new array selected from the start to the end (not inclusive) and doesn't change the original array.
 
@@ -145,16 +135,15 @@ function load_mailbox(mailbox) {
 
 
 function load_email(email_id) {
-    document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#emails-view').style.display = 'block';
     document.querySelector('#compose-view').style.display = 'none';
-    document.querySelector('#email-content-view').style.display = 'block';
 
     fetch(`/emails/${email_id}`)
     .then(response => response.json())
     .then(email => {
         console.log(email);
 
-        content = document.querySelector('#email-content-view');
+        content = document.querySelector('#emails-view');
 
         email.body = email.body.replaceAll('\n', '<br/>');
         content.innerHTML = `
@@ -201,7 +190,6 @@ function archive_email(email_id, archived) {
 
 function reply_email(email_id) {
     document.querySelector('#emails-view').style.display = 'none';
-    document.querySelector('#email-content-view').style.display = 'none';
     document.querySelector('#compose-view').style.display = 'block';
 
     fetch(`/emails/${email_id}`)
@@ -210,6 +198,7 @@ function reply_email(email_id) {
         document.querySelector('#compose-recipients').value = email.sender;
         // ".substr(i, len)" extracts a substring of length len from the i-th position of the string.
         document.querySelector('#compose-subject').value = (email.subject.substr(0, 4) === 'Re: ') ? email.subject : 'Re: ' + email.subject;
-        document.querySelector('#compose-body').value = '\r\n\r\n' + `------------------------------------------On ${email.timestamp} ${email.sender} wrote: `+ '\r\n' + email.body;
+        document.querySelector('#compose-body').value = '\r\n\r\n------------------------------------------------------------------------------------------\r\n' 
+        + `On ${email.timestamp} ${email.sender} wrote: `+ '\r\n' + email.body;
     });
 }
