@@ -2,7 +2,7 @@
 
 {% block body %}
     <h1>Add Task:</h1>
-    <form action="{% url 'tasks:add' %}" method="post">
+    <form action="{% url 'tasks:add' %}" method="post"> <!-- Use {% csrf_token %} when method="post". -->>
 
         <!-- Here the method of this form is "post", this means the form data is sensitive.
              So Django requires a token to prevent Cross-Site Request Forgery (CSRF) Attack. 

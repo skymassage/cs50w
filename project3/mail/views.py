@@ -65,6 +65,7 @@ def index(request):
 
 @login_required
 def mailbox(request, mailbox): # Display corresponding mail items when entering different mailboxes.
+    # We must first filter to identify emails related to the logged in user, so each filter requires "user==request.user".
     if mailbox == "inbox":
         emails = Email.objects.filter(
             user=request.user, recipients=request.user, archived=False
@@ -115,6 +116,11 @@ def compose(request): # Store email information in the database when sending ema
             "error": "At least one recipient required."
         }, status=400)
 
+    if request.user.email in emails:
+        return JsonResponse({
+            "error": "You cannot send the email to yourself."
+        }, status=400)
+
     # "emails" is a list containing recipient addresses, and these addresses are just strings.
     # We need to create another list containg the same the recipients, but they are the User class objects.
     recipients = []
@@ -152,7 +158,7 @@ def compose(request): # Store email information in the database when sending ema
     # This means if the sender sends an email to N other recipients, 
     # we will create N rows in the database's email model.
     # For these rows, all fields except "user" and read"" are the same.
-    # The "user" field contains only one value which would be the address of sender or recipients
+    # The "user" field contains only one value which would be the email address of sender or recipients.
     # And the "read" field would be True if the "user" field is same as the "sender" field 
     # ,i.e., user and sender ((request.user)) are the same.
 

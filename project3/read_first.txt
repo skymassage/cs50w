@@ -17,6 +17,12 @@ So we need to set "LOGIN_URL = '/login'" in setting.py.
 
 =========================================================================================================================
 
+Note that run the following commands when creating and changing the model in the "mail" app:
+1. python3 manage.py makemigrations mail: make migrations for the mail app.
+2. python3 manage.py migrate: apply migrations to your database.
+
+=========================================================================================================================
+
 Superuser: super
 Email address: super@example.com
 Password: hellosuper

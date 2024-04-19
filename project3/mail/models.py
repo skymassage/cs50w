@@ -20,8 +20,7 @@ class Email(models.Model):
         return {
             "id": self.id,
             "sender": self.sender.email,
-            # "recipients": [recipient.email for recipient in self.recipients.all()], 
-            "recipients": [user.email for user in self.recipients.all()], # One mail can be sent to multiple people.
+            "recipients": [recipient.email for recipient in self.recipients.all()], # Note that one mail can be sent to multiple people.
             # Here we don't set a username for the user (instead we set a email as the username), so use email to represent the user. That's why "user.email" is used.
             # Note that each element in "self.recipients.all()" is a User class object.
             "subject": self.subject,

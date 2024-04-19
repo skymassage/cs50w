@@ -1,34 +1,33 @@
 只用JS, HTML, CSS, 並只在inbox.js中完成single email page app (只考慮 inbox.js評分)
+=============================================
 
 1. Send Mail
-當提交email composition form時，新增JS代碼以發送電子郵件. 發送後，載入使用者的sent mailbox.
-(您可能想要向/emails發出POST請求，傳入recipients, subject, and body的值)
+當提交email composition form時，新增JS代碼以發送電子郵件，發送後，載入使用者的sent mailbox.
 
 2. Mailbox
-當使用者存取其Inbox, Sent, Archive的mailbox時，請載入對應的mailbox. 
-當存取mailbox時，app應先查詢 API 以取得該mailbox中的最新email.
-當訪問mailbox 時，mailbox的名稱應該出現在頁面頂部(this part is done for you).
-Each email should then be rendered in its own box (e.g. as a <div> with a border),並顯示email的寄件者,subject line及timestamp.
+當使用者存取其Inbox, Sent, Archive的mailbox時，請載入對應的mailbox.
+Each email should then be rendered in its own box (e.g. as a <div> with a border),並顯示email的sender, subject line及timestamp.
 如果email未讀，則它應顯示為白色背景。 如果email已被閱讀，它應該顯示為灰色背景。
+當存取mailbox時，app應先查詢 API 以取得該mailbox中的最新email.
+當訪問mailbox 時，mailbox的名稱應該出現在頁面頂部(這部分已為你完成).
 (您可能需要向/emails/<mailbox>發出 GET 請求以要求特定mailbox的email.)
 
 3. View Email
 當按下email時，將使用者帶到可看到該email內容的檢視
 您的app應顯示email的sender, recipients, subject, timestamp, and body.
-點擊email 後，您應該將email標記為已讀 (可以向/emails/<email_id>發送 PUT 請求來更新email是否已閱讀)
+點擊email後，您應該將email標記為已讀 (可以向/emails/<email_id>發送PUT 請求來更新email是否已閱讀)
 (可能需要向/emails/<email_id>發出GET請求來要求emails)
 (請參閱Hints部分中的提示，以了解如何將event listener新增至你已新增至DOM的HTML元素.)
 (可能需要在inbox.html中新增一個額外的<div> (除了emails-view和compose-view)來顯示email, 請務必更新您的代碼，以便在點擊navigation options時隱藏和顯示正確的views.)
 
 4. Archive and Unarchive
-允許使用者archive與unarchive他們收到的emails (您可以向/emails/<email_id>發送 PUT 請求，將email標記為archived 或unarchived.)
-archived或unarchived後，載入使用者的inbox
 查看Inbox的email時，顯示按鈕可archive。 當查看archived的email，顯示按鈕可unarchived，但不適用於Sent mailbox中的email
+允許使用者archive與unarchive他們收到的emails (向/emails/<email_id>發送 PUT 請求，將email標記為archived 或unarchived.)
+archived或unarchived後，載入使用者的inbox
+
 
 5. Reply
 查看email時，顯示Reply按鈕，讓他們回覆email，當點擊Reply按鈕時，被帶到email composition form.
-預先填寫composition form，並將收件者欄位設定為原始email的傳送者.
+預先填寫composition form，並將recipient欄位設定為原始email的傳送者.
 預先填寫subject line: 如果原始email的subject line為foo，則新的subject line應為Re: foo (如果subject line已經以Re:開頭，則無需再次添加)
 在body中預先填寫一行如 “On Jan 1 2020, 12:00 AM foo@example.com write:”，後面為email的原始內容
-
-=============================================
