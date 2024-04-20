@@ -13,6 +13,9 @@ class Tests(unittest.TestCase):  # A class containing all of our tests
         """Check that 1 is not prime."""
         
         # There are many different assertions you can make including "assertTrue", "assertFalse", "assertEqual", "assertGreater", etc.
+        # If the test value is false, "assertFalse" will return true, otherwise it will return false. It accepts two arguments as input:
+        # The first arguent is a boolean value which can be the return of the function.
+        # The second is optional which is the string message when the test case fails.
         self.assertFalse(is_prime(1))
 
     def test_2(self):

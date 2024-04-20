@@ -12,11 +12,15 @@ python3 manage.py startapp <APP_NAME>: Create an application with some additiona
 python3 manage.py runserver: Open a development server, which you can access by visiting the URL provided.
 
 python3 manage.py makemigrations: Create some Python files that will create or edit our database to be able to store what we have in our models.
-python3 manage.py makemigrations <APP_NAME>: By default, migrations are global. If you want to migrations for the specific app, add the app name to the end.
-python3 manage.py makemigrations <APP_NAME> <FILE_NAME>: If you want to migrations for a certain file exactly.
+python3 manage.py makemigrations <APP_Name>: By default, migrations are global. If you want to migrations for the specific app, add the app name to the end.
+python3 manage.py makemigrations <APP_Name> <File_Name>: If you want to migrations for a certain file exactly.
 
 python3 manage.py migrate: Create all of the default tables inside of Django's database.
 
 python3 manage.py shell: Enter Django's shell.
 
 python3 manage.py createsuperuser: create a superuser account that can access Django's admin interface.
+
+python3 manage.py test: Run all the "tests.py" files in the current project.
+python3 manage.py test <APP_Name>: Run the "tests.py" file in the <APP_Name> app
+python3 manage.py test <APP_Name>.<Test_File_Name>: Run the <Test_File_Name> file in the <APP_Name> app.

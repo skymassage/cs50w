@@ -11,3 +11,6 @@ singlepage2
 scroll_hide
 emailbox
 
+tests
+ariline0
+selenium

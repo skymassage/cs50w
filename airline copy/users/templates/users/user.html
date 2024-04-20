@@ -1,0 +1,13 @@
+{% extends "users/layout.html" %}
+
+{% block body %}
+    <!-- Because the authentication system is hooked into the request object and we always pass the "request" object to the template when rendering,
+         the "request" variable here automatically correspond to the passed "request" object and we don't need to pass the "request" object again. -->
+    <h1>Welcome, {{ request.user.first_name }}</h1>
+    <ul>
+        <li>Username: {{ request.user.username }}</li>
+        <li>Email: {{ request.user.email }}</li>
+    </ul>
+
+    <a href="{% url 'logout' %}">Log Out</a>
+{% endblock %}
