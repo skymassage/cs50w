@@ -1,9 +1,13 @@
+search
 django_example
 wiki
+
 airline
 commerce
+
 javascript_example
 singlepage1
 singlepage2
 scroll_hide
 emailbox
+
