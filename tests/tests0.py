@@ -7,7 +7,7 @@ def test_prime(n, expected):
 
 # Go into the python interpreter (enter the current directory and run "python3" in the terminal) to test out the following code:
 '''
->>> from test import test_prime
+>>> from tests0 import test_prime
 >>> test_prime(5, True)
 >>> test_prime(10, False)
 >>> test_prime(25, False)
