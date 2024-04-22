@@ -12,5 +12,5 @@ scroll_hide
 emailbox
 
 tests
-ariline0
+ariline_test
 selenium

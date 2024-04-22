@@ -18,8 +18,6 @@
     </ul>
 
     <h2>Add Passenger</h2>
-    <!-- Generally speaking, anytime you want to manipulate the state of something, 
-         especially manipulating the database, that should be inside of a "POST" request. -->
     <form action="{% url 'flights:book' flight_id=flight.id %}" method="post">
         {% csrf_token %}
         <select name="passenger" id="">
