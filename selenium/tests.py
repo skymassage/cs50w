@@ -33,7 +33,7 @@ import os
 import pathlib
 import unittest
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 
 # In order to target a specific page, we need the file's URI which is a unique string that represents that resource.
 # "file_uri" takes a file and get its URI, and we need the URI to be able to open it up.
@@ -48,21 +48,31 @@ def file_uri(filename):
     # "as_uri" represents the path as a file URI. ValueError is raised if the path isn't absolute.
     return pathlib.Path(os.path.abspath(filename)).as_uri() 
 
-driver = webdriver.Chrome()  # Use "webdriver.Chrome" to create a Chrome browser object
+chrome_options = webdriver.ChromeOptions() # Use "webdriver.ChromeOptions" to create a ChromeOptions object.
+# "add_argument" adds a command-line argument to use when starting Chrome.
+chrome_options.add_argument('--headless') # No need to open visual pages (i.e. browser). 
+                                          # If the system does not support visualization under Linux, 
+                                          # it will fail when testing if you do not add this.
+                                          # Because we cannot open the testing browser in WSL,
+                                          # this line is required to avoid errors.
+chrome_options.add_argument('--no-sandbox') # Cancel sandbox mode and execute the browser as root user,
+                                            # i.e., execute with highest privileges.
+chrome_options.add_argument('--disable-dev-shm-usage') # Use /tmp instead of /dev/shm as the staging area.
+chrome_options.add_argument('--disable-gpu') # Turn off GPU to avoid bugs.
+chrome_options.add_argument('blink-settings=imagesEnabled=false') # Don't load images, improve loading speed.
+driver = webdriver.Chrome(options=chrome_options) # Use "webdriver.Chrome" to create a Chrome browser object
 
-uri = file_uri("counter.html") # Find the URI of counter.html
-driver.get(uri)                # Use the URI by ".get" to open the web page.
-driver.title                   # Use ".title" to access the title of the current page
-driver.page_source             # Use ".page_source" to access the source code of the page
+uri = file_uri("counter.html")        # Find the URI of counter.html
+driver.get(uri)                       # Use the URI by ".get" to open the web page.
+print(driver.title)                   # Use ".title" to access the title of the current page
+print("--------------------------------------------------------")
+print(driver.page_source)             # Use ".page_source" to access the source code of the page
+print("--------------------------------------------------------")
 
-# find_element_by_tag_name: Select by tag element.
-# find_element_by_class_name: Select by class.
-# find_element_by_id: Selectid by id.
-# There is only one letter ('s') difference between find_element_by_<element_type> and find_elements_by_<element>. 
-# The former will only return the first element that meets the <element_type> condition. 
-# The latter returns all elements that meet the <element_type> condition in the form of a list.
-increase = driver.find_element_by_id("increase") # Find and store the increase buttons.
-decrease = driver.find_element_by_id("decrease")
+# "find_element" returns the first element found based on its argument and the attributes of the "BY" class (like BY.ID, BY.CLASS_NAME, BY.TAG_NAME).
+# "find_elements" returns all elements in the list that meet the conditions.
+increase = driver.find_element(By.ID, "increase") # Find and store the increase buttons.
+decrease = driver.find_element(By.ID, "decrease")
 
 increase.click() # Use ".click" to simulate user click operations.
 increase.click()
@@ -70,7 +80,6 @@ decrease.click()
 
 for i in range(25): # We can even include clicks within other Python constructs:
     increase.click()
-
 
 # Standard outline of testing class
 class WebpageTests(unittest.TestCase):
@@ -83,24 +92,34 @@ class WebpageTests(unittest.TestCase):
     def test_increase(self):
         """Make sure header updated to 1 after 1 click of increase button"""
         driver.get(file_uri("counter.html"))
-        increase = driver.find_element_by_id("increase")
+        increase = driver.find_element(By.ID, "increase")
         increase.click()
-        self.assertEqual(driver.find_element_by_tag_name("h1").text, "1")
+        self.assertEqual(driver.find_element(By.TAG_NAME, "h1").text, "1")
 
     def test_decrease(self):
         """Make sure header updated to -1 after 1 click of decrease button"""
         driver.get(file_uri("counter.html"))
-        decrease = driver.find_element_by_id("decrease")
+        decrease = driver.find_element(By.ID, "decrease")
         decrease.click()
-        self.assertEqual(driver.find_element_by_tag_name("h1").text, "-1")
+        self.assertEqual(driver.find_element(By.TAG_NAME, "h1").text, "-1")
 
     def test_multiple_increase(self):
         """Make sure header updated to 3 after 3 clicks of increase button"""
         driver.get(file_uri("counter.html"))
-        increase = driver.find_element_by_id("increase")
+        increase = driver.find_element(By.ID, "increase")
         for i in range(3):
             increase.click()
-        self.assertEqual(driver.find_element_by_tag_name("h1").text, "3")
+        self.assertEqual(driver.find_element(By.TAG_NAME, "h1").text, "3")
 
 if __name__ == "__main__":
     unittest.main()
+
+'''
+The following is the old version to locate the HTML element in Selenium
+find_element_by_tag_name: Select by tag element.
+find_element_by_class_name: Select by class.
+find_element_by_id: Selectid by id.
+There is only one letter ('s') difference between find_element_by_<element_type> and find_elements_by_<element>. 
+The former will only return the first element found based on its argument and the <element_type> condition. 
+The latter returns all elements (found based on its argument and the <element_type> condition) in the form of a list.
+'''

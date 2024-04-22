@@ -11,6 +11,7 @@ singlepage2
 scroll_hide
 emailbox
 
+assert.py
 tests
 ariline_test
 selenium
