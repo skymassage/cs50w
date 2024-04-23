@@ -1,0 +1,42 @@
+# Note that go to the Flight class in the "model.py" of the flights app to change the "is_valid_flight" to the wrong checkup,
+# and you can see 
+name: Testing
+on: push
+
+jobs:
+  test_project:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run Django unit tests
+      run: |
+        pip3 install --user django
+        python3 manage.py test
+
+
+# One popular tool used to help with continuous integration (CI) is known as GitHub Actions, 
+# which allows us to create workflows where we can specify certain actions to be performed every time someone pushes to a git repository.
+# For example, we might want to check with every push that a style guide is adhered to, or that a set of unit tests is passed.
+# In order to set up a GitHub action, we use a configuration language called YAML. 
+# YAML structures its data around key-value pairs (like a JSON object or Python Dictionary). 
+
+# A YAML file (which takes the form <name>.yml or <name>.yaml) that works with GitHub Actions. 
+# To do this, we create a ".github" directory in our repository, and then a "workflows" directory inside of that, and finally a "ci.yml" file within that. 
+
+# 1. First, we give the workflow a "name", which in this case is "Testing".
+# 2. Next, with the "on" key, we specify when the workflow should run. 
+#    In this case, "push" means every time someone pushes their code to the repository, we would like to run this workflow. 
+# 3. The rest of the file is contained within a "jobs" key, which indicates which jobs should be run at every push.
+#    In this case, we just define one job called "test_project", we can define the job name we want. 
+#    Every job must define two componenets: "runs-on" and "steps".
+# 3.1 The "runs-on" key specifies which of GitHub's virtual machines (VMs) we would like this job to be run on.
+# 3.2 The "steps" key provides the actions that should occur when this job is run.
+# 3.2.1 In the "uses" key we specify which GitHub action we wish to use. 
+#       "actions/checkout@v2" is an action written by GitHub that we can use.
+#       What this is going to do is it's going to check out our code in the Git repository, 
+#       and allow us to run programs that operate on that code.
+#       Besides, you can write your own GitHub actions if you would like. 
+# 3.2.2 The "name" key here allows us to proide a description of the action we're taking.
+#       And then we're going to run Django unit tests.
+# 3.2.3 In the "run" key, we give the commands we wish to run on GitHub's server.
+#       In our case we wish to install Django and then run the testing file.

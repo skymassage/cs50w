@@ -17,8 +17,8 @@ class Flight(models.Model):
 
     # The origin is not the same as the destination and the duration must be positive.
     def is_valid_flight(self):
-        # return self.origin != self.destination or self.duration > 0      # This is the wrong checkup, and you will see two failing tests.
-        return self.origin != self.destination and self.duration > 0   # This is the correct checkup, and you will see all tests passed.
+        return self.origin != self.destination or self.duration > 0      # This is the wrong checkup, and you will see two failing tests.
+        # return self.origin != self.destination and self.duration > 0   # This is the correct checkup, and you will see all tests passed.
 
 class Passenger(models.Model):
     first = models.CharField(max_length=64)
