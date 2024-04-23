@@ -24,5 +24,4 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),    # "/admin" takes us to the admin app, and you can log in to get Django's site administration interface.
     path("flights/", include("flights.urls")),
-    path("users/", include("users.urls"))
 ]
