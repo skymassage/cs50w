@@ -1,5 +1,10 @@
-# Note that go to the Flight class in the "model.py" of the flights app to change the "is_valid_flight" to the wrong checkup,
-# and you can see 
+# To starting using continue integration, we need to create another new repository in GitHub and copy this project there.
+# For automated testing, in that repository, we need to create a directory named ".github/workflows" and a .yml file like here we created.
+# Also, you can go to "Actions" on the tab bar of that repository to create a workflow and paste this code there.
+# Therefore, we can build an automated test that will test your push code every time it is pushed to that repository, 
+# you can see the testing result by going to "Actions" of that repository.
+# Note that if you want to see the failing test, you can go to the Flight class in the "model.py" of the flights app 
+# and change the "is_valid_flight" to the wrong checkup.
 name: Testing
 on: push
 
