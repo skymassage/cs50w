@@ -22,7 +22,8 @@ jobs:
 # One popular tool used to help with continuous integration (CI) is known as GitHub Actions, 
 # which allows us to create workflows where we can specify certain actions to be performed every time someone pushes to a git repository.
 # For example, we might want to check with every push that a style guide is adhered to, or that a set of unit tests is passed.
-# In order to set up a GitHub action, we use a configuration language called YAML. 
+# In order to set up a GitHub action, we use a configuration language called YAML, which is a human-readable data serialization language. 
+# YAML is commonly used for configuration files and in applications where data are being stored or transmitted.
 # YAML structures its data around key-value pairs (like a JSON object or Python Dictionary). 
 
 # A YAML file (which takes the form <name>.yml or <name>.yaml) that works with GitHub Actions. 

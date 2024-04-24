@@ -43,11 +43,21 @@ services:
 #          Here "Dockerfile" is in the same folder as the "docker-compose.yml" file, 
 #          that context will just be '.' to indicate the present folder (here we leave out the "context" and "dockerfile" keywords).
 #          That is, use the Dockerfile within the current directory.
-#   volumes:
-#   Use the specified path within the container.
-#   volumes - <directory1>:<directory2>: 將本機上的directory1掛載到container裡的directory2
-
+#   volumes: 
+#       - <directory1>:<directory2> 
+#           "volumes" mount <directory1> on the host to <directory2> in the container. 
+#           Mounting is a process by which a computer's operating system makes files and directories on a storage device 
+#           available for users to access via the computer's file system. "volumes" is a list.
+#           In YAML syntax, all members of a list are lines beginning at the same indentation level starting with a '-'. 
+#           Or you can use parentheses [] and single quotes ' to represent a list in YAML. For example:
+#               fruits:
+#                   - apple
+#                   - orange
+#                   - mango
+#           or
+#               fruits: ['Apple', 'Orange', 'Mango']
 #   ports: "ports" defines the port mapping relationship between the host and the container, 
-#          the format is "<host_port>":<container_port>". 
+#          the format is "<host_port>":<container_port>".
+#          "ports" is a list, so we user indentation and '-'.
 #          Here is the mapping between port8000 of the host and port:8000 of the container,
 #          i.e., link port 8000 within the container to port 8000 on our computer (host).
