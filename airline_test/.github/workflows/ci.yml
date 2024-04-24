@@ -27,7 +27,7 @@ jobs:
 
 # A YAML file (which takes the form <name>.yml or <name>.yaml) that works with GitHub Actions. 
 # To do this, we create a ".github" directory in our repository, and then a "workflows" directory inside of that, and finally a "ci.yml" file within that. 
-
+# The following is an explanation of the above code:
 # 1. First, we give the workflow a "name", which in this case is "Testing".
 # 2. Next, with the "on" key, we specify when the workflow should run. 
 #    In this case, "push" means every time someone pushes their code to the repository, we would like to run this workflow. 

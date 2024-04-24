@@ -1,0 +1,53 @@
+
+# In live applications with real users though, SQLite is almost never used, as it is not as easily scaled as other systems. 
+# Oftentimes, you want your database hosted elsewhere on some separate server to be able to handle its incoming requests and connections. 
+# We can simply add another Docker container, and run them together using a feature called Docker Compose. 
+# This will allow two different servers to run in separate containers, but also be able to communicate with one another. 
+# To specify this, we'll use a YAML file typically named "docker-compose.yml".
+# By default, all commands in Docker Compose operate based on the files named "docker-compose.yml" or "docker-compose.yaml" in the current directory.
+
+# Docker Compose allows us to compose multiple different services together, 
+# that we can run a web app in one container and a Postgres database in another container. 
+# But we want those containers to be able to communicate to each other, 
+# to be able to work together whenever I start up the application. 
+# Here we create two services, one called "db" for database, 
+# one called "web" for my web app. "db" and "web" are the names of two containers, respectively. 
+# The database is based on the Postgres Docker image, image that Postgres wrote. 
+# And the Docker file has been written for how to start up a Postgres container. 
+# The web app is built based on the Docker file in our current directory, i.e., the Docker file that we have written.
+# And then we just specify that our current directory should correspond to the app directory. 
+# Finally,  we specify when we're running this on our own computer, 
+# we want port 8000 on the container to correspond to port 8000 on my own computer 
+# so that I can access port 8000 in my browser and access port 8000 inside the container. 
+# It just lets our computer actually talk to the container so we can open up the web app in our web browser.
+
+version: '3'
+
+services:
+    db:
+        image: postgres
+
+    web:
+        build: .
+        volumes:
+            - .:/mnt/c/Main/Projects/GitHub/cs50w/airline_docker/container_1
+        ports:
+            - "8000:8000"
+
+# version: optional, version of docker compose. Here we specify the version 3 of Docker Compose.
+# service: Required, container related settings.
+# "db" sets up our database container based on an image already written by Postgres.
+# "web" sets up our server's container by instructing Docker to:
+#   build: Inside "build", we can use the "context" and "dockerfile" keywords to 
+#          specify the path of the dockerfile relative to docker-compose and the name of the dockerfile respectively.
+#          Here "Dockerfile" is in the same folder as the "docker-compose.yml" file, 
+#          that context will just be '.' to indicate the present folder (here we leave out the "context" and "dockerfile" keywords).
+#          That is, use the Dockerfile within the current directory.
+#   volumes:
+#   Use the specified path within the container.
+#   volumes - <directory1>:<directory2>: 將本機上的directory1掛載到container裡的directory2
+
+#   ports: "ports" defines the port mapping relationship between the host and the container, 
+#          the format is "<host_port>":<container_port>". 
+#          Here is the mapping between port8000 of the host and port:8000 of the container,
+#          i.e., link port 8000 within the container to port 8000 on our computer (host).
