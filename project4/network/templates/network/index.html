@@ -1,20 +1,55 @@
 {% extends "network/layout.html" %}
+<!-- {% load static %} -->
+
+<!-- {% block script %}<script src="{% static 'network/script.js' %}"></script>{% endblock %} -->
 
 {% block body %}
-
 <div class="container">
-<h2 >All Posts</h2>
+    <h2 >All Posts</h2>
 
-    <div class="card">
-        <div class="card-header">
-          <a href=""><strong>Alice</strong></a>
-          s
+    {% if request.user.is_authenticated %}
+        <div class="row row-cols-1 row-cols-md-1 g-4">
+            <div class="col mb-4"><div class="card">
+                    <div class="card-header"><h5>New Post</h5></div>
+                    <div class="card-body">
+                        <textarea class="form-control" rows="5"></textarea>
+                        <br/>
+                        <div class="text-right"><a href="#" class="btn btn-primary">Post</a></div>
+                    </div>
+            </div>
         </div>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Edit</a>
-        </div>
-      </div>
+    {% endif %}
+
+    {% for post in posts %}
+        <div class="col mb-4"><div id="postId_{{ post.id }}" class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <div class="text-start"><a href="{% url 'profile' user=post.poster.username %}"><h5>{{ post.poster }}</h5></a></div>
+                    <div class="text-end">{{ post.timestamp }}</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ post.content }}</p>
+                <hr/>
+                <div class="d-flex justify-content-between">
+                    <div class="text-left">
+                        Like
+                        <br/>
+                        <!-- The "id" attribute must not contain whitespaces. -->
+                        <a id="comment_postId_{{ post.id }}" class="comment_link" href="">Comment</a>
+                    </div>
+                    {% if post.poster == request.user %}
+                        <div class="text-right"><button class="btn btn-sm btn-outline-primary">Edit</button></div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card-footer comment postId_{{ post.id }}"></div>
+
+        </div></div>
+    {% endfor %}
+
 </div>
 {% endblock %}
+
+

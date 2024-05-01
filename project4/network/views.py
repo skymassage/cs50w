@@ -3,8 +3,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
-from .models import User
+from .models import User, Post, Comment
+from django.http import JsonResponse
 
 
 def login_view(request):
@@ -55,4 +55,14 @@ def register(request):
 
 
 def index(request):
-    return render(request, "network/index.html")
+    return render(request, "network/index.html", {
+        "posts": Post.objects.all(),
+        "comments": Comment.objects.all()
+    })
+
+def profile(request, user):
+    return render(request, "network/profile.html")
+
+def comment(request, post_id):
+    comments = Comment.objects.filter(post=Post.objects.get(pk=post_id)).order_by("-timestamp")
+    return JsonResponse([comment.serialize() for comment in comments], safe=False) 
