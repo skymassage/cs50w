@@ -3,15 +3,23 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+
 def index(request):
     # Django uses sessions and middleware to hook the authentication system into "request" objects.
     # These provide a "request.user" attribute and a "request.auser" async method on very request 
     # which represents the current user. If the current user has not logged in, 
     # this attribute will be set to an instance of AnonymousUser, otherwise it will be an instance of User.
     # You can tell them apart with ".is_authenticated".
-    if not request.user.is_authenticated:                  # If no user is signed in, return to login page.
+
+    # ".is_authenticated" doesn't check if a user is logged in.
+    # Every actual User object always returns True for ".is_authenticated", but an AnonymousUser object will return False. 
+    # If the user log out, then "request.user" will be the AnonymousUser instead of User, 
+    # and "request.user.is_authenticated == False".
+
+    if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("login"))
-    return render(request, "users/user.html")    
+    return render(request, "users/user.html")
+
 
 def login_view(request):
     if request.method == "POST":
@@ -27,8 +35,8 @@ def login_view(request):
         # User objects are the core of the authentication system. They typically represent the people interacting with 
         # your site and are used to enable things like restricting access, registering user profiles, 
         # associating content with creators etc. Only one class of users exists in Django’s authentication framework, 
-        # i.e., 'superusers' or admin 'staff' users are just user objects with special attributes set, 
-        # not different classes of user objects. The primary attributes of the default user are: username, password, email, first_name, last_name
+        # i.e., 'superusers' or admin 'staff' users are just User objects with special attributes set, 
+        # not different classes of User objects. The primary attributes of the default user are: username, password, email, first_name, last_name
         
         if user is not None:                                 
             # If you want to attach an authenticated user to the current session, use "login()""  to log a user in from a view.

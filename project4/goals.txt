@@ -7,7 +7,7 @@
    https://getbootstrap.com/docs/4.4/components/pagination/
    https://getbootstrap.com/docs/5.3/components/pagination/
 
-6. Edit Post 
+6. Edit Post (JS)
    用戶能夠點擊自己的貼文上的Edit按鈕來編輯該貼文。
    當點擊Edit時，其貼文內容替換為textarea，用戶能編輯其貼文的內容。
    用戶能Save編輯後的貼文，要用JS而無需重新載入整個頁面
@@ -37,3 +37,13 @@
 4. Following -> watchilist
    導覽列的Following將用戶帶到一個頁面，顯示用戶所追蹤其他人的所有貼文(只有登入的用戶可用)
    此頁面像All Posts頁面一樣，包含有限的貼文集
+
+
+6. Edit Post (JS)
+   用戶能夠點擊自己的貼文上的Edit按鈕來編輯該貼文。
+   當點擊Edit時，其貼文內容替換為textarea，用戶能編輯其貼文的內容。
+   用戶能Save編輯後的貼文，要用JS而無需重新載入整個頁面
+   為了安全起見，確保應用程式的設計使得用戶無法透過任何途徑編輯其他用戶的貼文。
+
+
+用戶可留言

@@ -1,0 +1,21 @@
+We may want to run commands within our Docker container to add database entries or run tests. 
+To do this, we can follow steps below:
+
+1. docker-compose up: Launch the services inside of new Docker containers.
+	    Here we start the app on port 8000, so we can go to "0.0.0.0:8000/flights/" to see the Flights page. 
+	    And this is running, not just on my own computer, but inside of a Docker container. 
+	    If there are no flights inside of this page because I haven't added anything to the database yet. 
+
+2. docker ps: Show all of the docker containers that are running.
+	    We can't run the Django commands inside the host directory the way I used to because it runs in the terminal on our host.
+	    So we need to go into the Docker container and run commands there.
+	    Run	"docker ps" and find the "CONTAINER ID" of the container (shown on the terminal) we wish to enter to run our commands.
+
+3. docker exec -it <CONTAINER_ID> bash -l: Move to the directory that has been set within the container.
+	    Here this command moves us to the "usr/src/app" directory we set up within our container.
+
+4. Now, we can run our commands inside that container. We can run "ls" to show all files inside the container, 
+   "python3 manage.py createsuperuser" to create a superuser, 
+   or "python3 manage.py migrate" if we want to migrate all of our migrations. 
+
+5. Exit the container by pressing CTRL-D.

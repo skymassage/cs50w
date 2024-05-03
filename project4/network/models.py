@@ -12,6 +12,9 @@ class User(AbstractUser):
     def follower_num(self):
         return self.followers.all().count()
 
+    def post_num(self):
+        return self.posts.all().count()
+
 class Post(models.Model):
     poster = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     content = models.TextField()

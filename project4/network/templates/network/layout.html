@@ -16,9 +16,12 @@
           
             <div>
               <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
+                <!-- Don't use "user.is_authenticated" here because "user" is an User object whose ".is_authenticated" is always True.
+                     Only when the user logs in, "request.user" is the User object and its ".is_authenticated" is True.
+                     If the user logs out, "request.user" is the AnonymousUser object its ".is_authenticated" is False.  -->
+                {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' user=request.user.username %}"><strong>{{ user.username }}</strong></a>
+                        <a class="nav-link" href="{% url 'profile' username=request.user.username %}"><strong>{{ request.user.username }}</strong></a>
                     </li>
                 {% endif %}
                 
@@ -26,7 +29,7 @@
                   <a class="nav-link" href="{% url 'index' %}">All Posts</a>
                 </li>
 
-                {% if user.is_authenticated %}
+                {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Following</a>
                     </li>

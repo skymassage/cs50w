@@ -88,7 +88,7 @@ def mailbox(request, mailbox): # Display corresponding mail items when entering 
     # Note that an API based on dict objects is more extensible, flexible, and makes it easier to maintain forwards compatibility.
     # Therefore, you should avoid using non-dict objects in JSON-encoded response.
     return JsonResponse([email.serialize() for email in emails], safe=False) 
-    # For example, if you send a GET request to "/emails/inbox", you might get a JSON response like the below (representing two emails):  
+    # For example, if you send a GET request to "/emails/inbox", you might get a JSON response like the below (representing two emails): 
     # [{"id": 100, "sender": "foo@example.com", "recipients": ["bar@example.com"], "subject": "Hello!", 
     #   "body": "Hello, world!", "timestamp": "Jan 2 2020, 12:00 AM", "read": false,"archived": false},
     #  {"id": 95, "sender": "baz@example.com", "recipients": ["bar@example.com"], "subject": "Meeting Tomorrow",

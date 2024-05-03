@@ -1,4 +1,4 @@
-Like the "commerce" project, add this line "AUTH_USER_MODEL = 'mail.User'" below the following code in the setting.py file:
+Like the "commerce" project, add this line "AUTH_USER_MODEL = "mail.User"" below the following code in the setting.py file:
 '''
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

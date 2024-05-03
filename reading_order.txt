@@ -1,18 +1,7 @@
-search
-django_example
-wiki
+Basic: search, django_example, wiki
 
-airline
-commerce
+Database: airline, commerce
 
-javascript_example
-singlepage1
-singlepage2
-scroll_hide
-emailbox
+User interface: javascript_example, singlepage1, singlepage2, scroll_hide, emailbox
 
-assert.py
-tests
-selenium
-airline_github_action
-airline_docker
+Testing: tests, selenium, airline_github_action, airline_docker

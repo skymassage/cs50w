@@ -22,6 +22,11 @@ and then "python3 manage.py migrate" to migrate those changes to your database.
 
 =========================================================================================================================
 
+Set the login route if the page requires login so that we just set "@login_required" instead of "@login_required(login_url=<Login_URL>)" in views.py.
+So we need to set "LOGIN_URL = '/login'" in setting.py.
+
+=========================================================================================================================
+
 Superuser: super
 Email address: super@example.com
 Password: hellosuper

@@ -12,34 +12,38 @@ class User(AbstractUser):
     pass
 
 class Listing(models.Model):
-    # null: If True, Django will store empty values as NULL in the database. A "Null" value represents the absence of data. 
-    #       When a field has null=True, it means it is optional and can be left empty.
-    #       Default is False which means the field must have a value in the database
-    # blank: If True, the field can be left blank in forms. Default is False which means the field will be required
+    # null: If True, Django will store an empty value as NULL in the database. A "Null" value represents the absence of data. 
+    #       Default is False which means the field must have a value (not include NULL) in the database
+    # blank: blank determines whether the field will be required in forms.
+    #        If True, the field can be left blank in forms. Default is False which means the field will be required
+    # To summarize, null is about the database, and blank is about forms.
     
-    # blank=True: Affects forms, allowing fields to be left blank. It is related to form validation and user input.
-    # null=True: Affects the database, allowing fields to have a "null" value, i.e., no value. It is related to how data is stored in the database.
-    # To summarize, null=True is about the database, and blank=True is about forms.
-    
-    # Best Practices: Use "null=True" for fields that represent optional data in the database. 
-    #                 Use "blank=True" for fields that can be left empty in forms.
-
-    # There are four cases:
-    # 1) null=False, blank=False: 
-    #    This is the default condition for model fields. It means the value is required in both the database and the models.
-    # 2) null=False, blank=True:
-    #    This is contradictory. "null=False" means the field must have a value in the database, while "blank=True" means the field can be left blank in forms.
-    #    This configuration means that you do not accept the value provided by the form for the field, but you can still have to provide a value for the field in some ways. 
-    # 3) null=True, blank=False:
-    #    It means the fields in the database don't require a value, but the fields in the form does. This configuration is rarely used.
-    # 4) null=True, blank=True:
-    #    It means to allow NULL values in the database and also permit empty form submissions. This combination offers maximum flexibility.
-
-    # Avoid using "null=True" on string-based fields such as CharField and TextField,
+    # The exception is CharFields and TextFields, which in Django are never saved as NULL. 
+    # Blank values in CharFields and TextFields are stored in the database as an empty string ('').
+    # So avoid using "null=True" on string-based fields such as CharField and TextField,
     # that means it has two possible values for "no data" (NULL), and the empty string (blank). In most cases, 
     # it's redundant to have two possible values for "no data"; the Django convention is to use the empty string, not NULL.
     # One exception is when a CharField has both "unique=True" and "blank=True" set. In this situation, 
     # "null=True" is required to avoid unique constraint violations when saving multiple objects with blank values.
+    
+    # There are four cases:
+    # 1) null=False, blank=False: 
+    #    This is the default configuration and means that the value is required in both the database and the models.
+    # 2) null=False, blank=True:
+    #    This means that the form doesn't require a value but the database does.
+    #    You don't accept the value provided by the form, but you can still have to provide a value for the database in some ways.
+    #    a. The most common use is for optional string-based fields. 
+    #       If NULL was also allowed you would end up with two different ways to indicate a missing value. 
+    #       (If the field is also unique, you'll have to use null=True to prevent multiple empty strings from failing the uniqueness check.)
+    #    b. Another common situation is that you want to calculate one field automatically based on the value of another.
+    #    c. Another use is when you want to indicate that a ManyToManyField is optional. 
+    #       Because this field is implemented as a separate table rather than a database column, null=True is meaningless. 
+    #       The value of blank will still affect forms, though, controlling whether or not validation will succeed when there are no relations.
+    # 3) null=True, blank=False:
+    #    This means that the form requires a value but the database doesn't. This may be the most infrequently used configuration
+    # 4) null=True, blank=True:
+    #    It means to allow NULL values in the database and also permit empty form submissions. 
+    #    This combination offers maximum flexibility, but this is not the recommended way to make string-based fields optional
 
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)     # "CharField" must use "max_length" to specify a maximum length,

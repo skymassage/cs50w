@@ -40,9 +40,13 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
+    // document.querySelector('#inbox').addEventListener('click', load_mailbox('inbox'));   // Same as the last line
     document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
     document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
+
+
     document.querySelector('#compose').addEventListener('click', compose_email);
+    // document.querySelector('#compose').addEventListener('click', () => compose_email);   // Same as the last line
     document.querySelector('#compose-form').addEventListener('submit', send_email);
 
     load_mailbox('inbox'); // By default, load the inbox
@@ -88,9 +92,9 @@ function send_email (e) {
 
 
 function load_error(error) {
-    document.querySelector('#emails-view').style.display = 'block'; // none
+    document.querySelector('#emails-view').style.display = 'block';
     document.querySelector('#compose-view').style.display = 'none';
-    
+
     document.querySelector('#emails-view').innerHTML += error;
 }
 

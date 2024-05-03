@@ -30,7 +30,7 @@ services:
     web:
         build: .
         volumes:
-            - .:/mnt/c/Main/Projects/GitHub/cs50w/airline_docker/container_1
+            - .:/usr/src/app
         ports:
             - "8000:8000"
 

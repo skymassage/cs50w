@@ -15,8 +15,8 @@
 # and binaries we wish to include in our container.
 
 FROM python:3
-COPY .  /mnt/c/Main/Projects/GitHub/cs50w/airline_docker
-WORKDIR /mnt/c/Main/Projects/GitHub/cs50w/airline_docker/container_1
+COPY .  /usr/src/app
+WORKDIR /usr/src/app
 RUN pip install -r requirements.txt
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 
