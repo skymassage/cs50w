@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-
 from .models import User, Email
 
 
@@ -106,20 +105,17 @@ def compose(request): # Store email information in the database when sending ema
     
     # Access the body of the request we sent by "<request>.body" which we have written inside of "fetch()" in the JS code.
     data = json.loads(request.body) # "json.loads()" parses a valid JSON string and convert it into a Python Dictionary.
+
     # Use ".get(<key>)" in Python to get the key value of the JSON object. If the key doesn't exist, ".get(<key>)" returns None. 
     # And we can add a second argument to specify what will be returned if the key is not found. 
-    # ".get(<key>, "Error")" will return a string "Error" if the key was not found.
+    # For example, ".get(<key>, "Error")" will return a string "Error" if the key was not found.
     # Note that data.get("recipients") is a string because it was converted into a string by ".stringify" in JS code.
     emails = [email.strip() for email in data.get("recipients").split(",")] # Split the string into a list using comma as a separator.
     if emails == [""]:
-        return JsonResponse({
-            "error": "At least one recipient required."
-        }, status=400)
+        return JsonResponse({"error": "At least one recipient required."}, status=400)
 
     if request.user.email in emails:
-        return JsonResponse({
-            "error": "You cannot send the email to yourself."
-        }, status=400)
+        return JsonResponse({"error": "You cannot send the email to yourself."}, status=400)
 
     # "emails" is a list containing recipient addresses, and these addresses are just strings.
     # We need to create another list containg the same the recipients, but they are the User class objects.
@@ -132,9 +128,7 @@ def compose(request): # Store email information in the database when sending ema
         # Django provides a DoesNotExist exception as an attribute of each model class to identify the class of object 
         # that could not be found, allowing you to catch exceptions for a particular model class. 
         except User.DoesNotExist: 
-            return JsonResponse({
-                "error": f"User with email {email} does not exist."
-            }, status=400)
+            return JsonResponse({"error": f"User with email {email} does not exist."}, status=400)
 
     subject = data.get("subject", "")
     body = data.get("body", "")

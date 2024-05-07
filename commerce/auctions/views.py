@@ -247,7 +247,7 @@ def close(request):
 .save: It can only be used with .get, .filter doesn't has the .save method.
        For example:
           user = User.objects.get(pk=user_id)
-          user.username, user.email ="David", "david@example.com"
+          user.username, user.email = "David", "david@example.com"
           user.save()
         
        .save can not only update existing records in the table, but also insert new records.

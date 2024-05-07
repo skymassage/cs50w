@@ -13,4 +13,5 @@ urlpatterns = [
 
     # API routes
     path("comment/<int:post_id>", views.comment, name="comment"),
+    path("edit", views.edit, name="edit"),
 ]

@@ -9,19 +9,18 @@
 
     <div class="row row-cols-1 row-cols-md-1 g-4">
         {% if request.user.is_authenticated %}
-                <div class="col mb-4"><div class="card">
-                    <div class="card-header"><h5>New Post</h5></div>
-                    <div class="card-body">
-                        <form action="{% url 'post' %}" method="post">
-                            {% csrf_token %}
-                            {% for field in form %}
-                                <div class="form-group">{{ field }}</div>
-                            {% endfor %}
-                            <div class="text-right"><button type="submit" class="btn btn-primary">Post</button></div>
-                        </form>
-                    </div>
+            <div class="col mb-4"><div class="card">
+                <div class="card-header"><h5>New Post</h5></div>
+                <div class="card-body">
+                    <form action="{% url 'post' %}" method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">{{ field }}</div>
+                        {% endfor %}
+                        <div class="text-right"><button type="submit" class="btn btn-primary">Post</button></div>
+                    </form>
                 </div>
-            </div>
+            </div></div>
         {% endif %}
 
         {% for post in posts %}
@@ -32,21 +31,41 @@
                         <div class="text-end">{{ post.timestamp }}</div>
                     </div>
                 </div>
+
                 <div class="card-body">
-                    <p class="card-text">{{ post.content }}</p>
-                    <hr/>
-                    <div class="d-flex justify-content-between">
-                        <div class="text-left">
-                            Like
-                            <br/>
-                            <a id="comment_postId_{{ post.id }}" class="comment_link" href="">Comment</a><!-- The "id" attribute must not contain whitespaces. -->
+
+                    <div id="content_postId_{{ post.id }}" style="display: block;">
+                        <p id="content_text_postId_{{ post.id }}" class="card-text">{{ post.content }}</p>
+                        <hr/>
+                        <div class="d-flex justify-content-between">
+                            <div class="text-left">
+                                Like
+                                <br/>
+                                <a id="comment_postId_{{ post.id }}" class="comment_link" href="">Comment</a><!-- The "id" attribute must not contain whitespaces. -->
+                            </div>
+                            {% if post.poster == request.user %}
+                                <div class="text-right"><button value="{{ post.id }}" class="edit_btn btn btn-sm btn-outline-primary">Edit</button></div>
+                            {% endif %}
                         </div>
-                        {% if post.poster == request.user %}
-                            <div class="text-right"><button class="btn btn-sm btn-outline-primary">Edit</button></div>
-                        {% endif %}
                     </div>
+                    
+                    {% if post.poster == request.user %}
+                        <div id="edit_postId_{{ post.id }}" style="display: none;">
+                            <h6>Edit your post</h6>
+
+                            <form>
+                                <div class="form-group">
+                                    <textarea rows="5" placeholder="Your post" id="edit_content_{{ post.id }}" class="form-control">{{ post.content }}</textarea>
+                                </div>
+                                <div class="text-right"><button value="{{ post.id }}" type="submit" class="submit_edit_btn btn btn-sm btn-outline-primary">Edit</button></div>
+                            </form>
+                        </div>
+                    {% endif %}
+
                 </div>
+
                 <div class="card-footer comment postId_{{ post.id }}" style="display: none;"></div>
+
             </div></div>
         {% endfor %}
     </div>
