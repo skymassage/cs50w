@@ -12,6 +12,7 @@ urlpatterns = [
     path("profile/<str:username>", views.profile, name="profile"),
 
     # API routes
-    path("comment/<int:post_id>", views.comment, name="comment"),
     path("edit", views.edit, name="edit"),
+    path("comment", views.comment, name="comment"),
+    path("show_comment/<int:post_id>", views.show_comment, name="show_comment"),
 ]

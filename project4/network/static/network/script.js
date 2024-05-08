@@ -15,14 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
        Note that we should declare the variable here, because executing JavaScript is 
        before the DOM tree rendering is completed (The "DOMContentLoaded" event is triggered).
        You can access ".comment_link" after "DOMContentLoaded". */
-    var click_check = {}, commentLinks = document.querySelectorAll('.comment_link');
-    for (var i = 0; i < commentLinks.length; i++) {
-        click_check[`clicked_${commentLinks[i].name}`] = false;
-        click_check[`submitted_${commentLinks[i].name}`] = false; 
+    var click_check = {}, comment_submit_btn = document.querySelectorAll('.comment_submit_btn');
+    for (var i = 0; i < comment_submit_btn.length; i++) {
+        click_check[`clicked_${comment_submit_btn[i].value}`] = false;
+        click_check[`submitted_${comment_submit_btn[i].value}`] = false; 
     }
     
     document.querySelectorAll('.comment_link').forEach(a_tag => {
-        a_tag.addEventListener('click', (e) => {
+        a_tag.addEventListener('click', e => {
             /* Note that the second argument of "addEventListener" should be a function, 
                and this function has only one parameter which is the event.
                If you don't want to submit the form or redirection.
@@ -30,7 +30,18 @@ document.addEventListener('DOMContentLoaded', function() {
                Then, use another function to complete main work. 
                So you can't pass the function to "addEventListener" to do the job and prevent redirection meanwhile. */
             e.preventDefault();
-            load_comment(a_tag.id, click_check);
+            load_comment(a_tag.id.slice(15), click_check);
+        });
+    });
+
+    document.querySelectorAll('.comment_submit_btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+
+            // Prevent the send the blank comment.
+            if (document.querySelector(`#leave_comment_postId_${btn.value}`).value) {
+                comment(btn.value, click_check);
+            }
         });
     });
 
@@ -42,9 +53,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.querySelectorAll('.submit_edit_btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', e => {
             e.preventDefault();
             edit(btn.value);
+            document.querySelector(`#content_postId_${btn.value}`).style.display = "block";
+            document.querySelector(`#edit_postId_${btn.value}`).style.display = "none";
+        });
+
+    });
+
+    document.querySelectorAll('.cancel_edit_btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
             document.querySelector(`#content_postId_${btn.value}`).style.display = "block";
             document.querySelector(`#edit_postId_${btn.value}`).style.display = "none";
         });
@@ -104,12 +124,28 @@ function edit(postId) {
 }
 
 
-// var _parts = [...parts]; // or _parts = Array.from(parts);
+function comment(postId, click_check) {
+    fetch('/comment', {
+        method: 'POST',
+        headers: {
+            "Content-type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: JSON.stringify({
+            post_id: postId,
+            comment_content: document.querySelector(`#leave_comment_postId_${postId}`).value
+        })
+    })
+    .then(response => response.json())
+    .then(comments => {
+        document.querySelector(`#leave_comment_postId_${postId}`).value = '';
 
-function load_comment(comment_postId, click_check) {
-    post_id = comment_postId.slice(15);
+    });
+}
 
-    fetch(`/comment/${post_id}`)
+
+function load_comment(post_id, click_check) {
+    fetch(`/show_comment/${post_id}`)
     .then(response => response.json())
     .then(comments => {
         /* In JS, we can select all tags with the "card-footer comment postId_{{ post.id }}" class name using
@@ -133,7 +169,7 @@ function load_comment(comment_postId, click_check) {
                     convert_to_html.innerHTML = `
                         <div class="d-flex justify-content-between">
                             <div class="text-start">
-                                <a class="text-dark" href="/profile/${comment.author}">${comment.author}</a>
+                                <a class="text-dark" href="/profile/${comment.author}"><strong>${comment.author}</strong></a>
                             </div>  
                             <div class="text-end">${comment.timestamp}</div>
                         </div>
