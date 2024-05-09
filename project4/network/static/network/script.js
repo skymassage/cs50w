@@ -7,20 +7,7 @@
    6. The page is loaded (The "load" event is triggered) */
 
 document.addEventListener('DOMContentLoaded', function() {
-    /* We need to declare two variables for each <a class="comment_link">. 
-       One is to check whether the API request to obtain the comment content has been submitted,
-       and the other is to check whether the comment should be shown or hidden. 
-       To access these variables in another function, we use the dictionary 
-       so that we can access these variables by the keys based on the post's ID.
-       Note that we should declare the variable here, because executing JavaScript is 
-       before the DOM tree rendering is completed (The "DOMContentLoaded" event is triggered).
-       You can access ".comment_link" after "DOMContentLoaded". */
-    var click_check = {}, comment_submit_btn = document.querySelectorAll('.comment_submit_btn');
-    for (var i = 0; i < comment_submit_btn.length; i++) {
-        click_check[`clicked_${comment_submit_btn[i].value}`] = false;
-        click_check[`submitted_${comment_submit_btn[i].value}`] = false; 
-    }
-    
+
     document.querySelectorAll('.comment_link').forEach(a_tag => {
         a_tag.addEventListener('click', e => {
             /* Note that the second argument of "addEventListener" should be a function, 
@@ -30,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
                Then, use another function to complete main work. 
                So you can't pass the function to "addEventListener" to do the job and prevent redirection meanwhile. */
             e.preventDefault();
-            load_comment(a_tag.id.slice(15), click_check);
+            load_comment(a_tag.id.slice(15));
         });
     });
 
@@ -40,11 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Prevent the send the blank comment.
             if (document.querySelector(`#leave_comment_postId_${btn.value}`).value) {
-                comment(btn.value, click_check);
+                comment(btn.value);
+                document.querySelector(`.card-footer.comment.postId_${btn.value}`).style.display = 'block';
             }
         });
     });
-
+    
     document.querySelectorAll('.edit_btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelector(`#content_postId_${btn.value}`).style.display = "none";
@@ -59,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector(`#content_postId_${btn.value}`).style.display = "block";
             document.querySelector(`#edit_postId_${btn.value}`).style.display = "none";
         });
-
     });
 
     document.querySelectorAll('.cancel_edit_btn').forEach(btn => {
@@ -68,7 +55,40 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector(`#content_postId_${btn.value}`).style.display = "block";
             document.querySelector(`#edit_postId_${btn.value}`).style.display = "none";
         });
+    });
 
+
+    document.querySelectorAll(".post-ratings-container").forEach(post => {
+        const ratings = post.querySelectorAll(".post-rating");
+        const likeRating = ratings[0];
+    
+        ratings.forEach(rating => {
+            const button = rating.querySelector(".logined.post-rating-button");
+            const count = rating.querySelector(".post-rating-count");
+    
+            button.addEventListener("click", async () => {
+                if (rating.classList.contains("post-rating-selected")) {
+                    return;
+                }
+    
+                count.textContent = Number(count.textContent) + 1;
+    
+                ratings.forEach(rating => {
+                    if (rating.classList.contains("post-rating-selected")) {
+                        const count = rating.querySelector(".post-rating-count");
+    
+                        count.textContent = Math.max(0, Number(count.textContent) - 1);
+                        rating.classList.remove("post-rating-selected");
+                    }
+                });
+    
+                rating.classList.add("post-rating-selected");
+    
+                const likeOrDislike = likeRating === rating ? "like" : "dislike";
+                const response = await fetch(`/posts/${postId}/${likeOrDislike}`);
+                const body = await response.json();
+            });
+        });
     });
 });
 
@@ -100,7 +120,7 @@ function getCookie(name){
        parts.pop().split(';').shift()        // '<csrftoken>'                                                   */
 }
 
-function edit(postId) {
+function edit(post_id) {
     fetch('/edit', {
         method: 'POST',
         // HTTP "headers" let the client and the server pass additional information with an HTTP request or response.
@@ -113,8 +133,8 @@ function edit(postId) {
             "X-CSRFToken": getCookie("csrftoken")
         },
         body: JSON.stringify({
-            post_id: postId,
-            content: document.querySelector(`#edit_content_${postId}`).value
+            post_id: post_id,
+            content: document.querySelector(`#edit_content_${post_id}`).value
         })
     })
     .then(response => response.json())
@@ -124,7 +144,7 @@ function edit(postId) {
 }
 
 
-function comment(postId, click_check) {
+function comment(post_id) {
     fetch('/comment', {
         method: 'POST',
         headers: {
@@ -132,41 +152,46 @@ function comment(postId, click_check) {
             "X-CSRFToken": getCookie("csrftoken")
         },
         body: JSON.stringify({
-            post_id: postId,
-            comment_content: document.querySelector(`#leave_comment_postId_${postId}`).value
+            post_id: post_id,
+            comment_content: document.querySelector(`#leave_comment_postId_${post_id}`).value
         })
     })
     .then(response => response.json())
     .then(comments => {
-        document.querySelector(`#leave_comment_postId_${postId}`).value = '';
-
+        document.querySelector(`#leave_comment_postId_${post_id}`).value = '';
+        document.querySelector(`.card-footer.comment.postId_${post_id}`).style.display = 'none'; 
+        load_comment(post_id);
     });
 }
 
 
-function load_comment(post_id, click_check) {
-    fetch(`/show_comment/${post_id}`)
-    .then(response => response.json())
-    .then(comments => {
-        /* In JS, we can select all tags with the "card-footer comment postId_{{ post.id }}" class name using
-           ".card-footer.comment" this part without considering postId_<post_id>,
-           where the whitespace of "card-footer comment" is replaceed by "."
-           And we can access the single tag using ".card-footer.comment.postId_<post_id>",
-           where we use "postId_<post_id>" to specify the tag. */
-        comment_div = document.querySelector(`.card-footer.comment.postId_${post_id}`);    
-        /* Note that we cannot assign the elements of the array to variables in this way 
-           to let the elements change as the variables change. */
-        if (!click_check[`clicked_${post_id}`]) {
-            click_check[`clicked_${post_id}`] = true;
-            comment_div.style = 'block';
-            if (!click_check[`submitted_${post_id}`]) {
+function load_comment(post_id) {
+    /* In JS, we can select all tags with the "card-footer comment postId_{{ post.id }}" class name using
+       ".card-footer.comment" this part without considering postId_<post_id>,
+       where the whitespace of "card-footer comment" is replaceed by "."
+       And we can access the single tag using ".card-footer.comment.postId_<post_id>",
+       where we use "postId_<post_id>" to specify the tag. */
+    let comment_div = document.querySelector(`.card-footer.comment.postId_${post_id}`);  
+    let comment_content_div = document.querySelector(`#comment_content_postId_${post_id}`);
+
+    comment_content_div.innerHTML = '';
+
+    if (comment_div.style.display == 'none') {
+        fetch(`/show_comment/${post_id}`)
+        .then(response => response.json())
+        .then(comments => {
+            /* Note that we cannot assign the elements of the array to variables in this way 
+            to let the elements change as the variables change. */
+            if (comment_div.style.display == 'none') {
+                comment_div.style.display = 'block';
+
                 comments.forEach(comment => {
-                    /* If we declare the rendering content as a string, 
-                       the results displayed on the page will have many tags
-                       (i.e., many '<', '>', '/', etc). Because this is a string not an HTML object.
-                       We can declare a <div> and have its "innerHTML" attribute be the rendering content. */
-                    let convert_to_html = document.createElement('div');
-                    convert_to_html.innerHTML = `
+                    /* If we declare the rendering content as a string,
+                    the results displayed on the page will have many tags (i.e., many '<', '>', '/', etc),
+                    because this is a string not an HTML object.
+                    We can declare a <div> and have its "innerHTML" attribute be the rendering content. */
+                    let each_comment = document.createElement('div');
+                    each_comment.innerHTML = `
                         <div class="d-flex justify-content-between">
                             <div class="text-start">
                                 <a class="text-dark" href="/profile/${comment.author}"><strong>${comment.author}</strong></a>
@@ -176,17 +201,14 @@ function load_comment(post_id, click_check) {
                         <p>${comment.message}</p>
                     `;
                     /* In JS, don't use {% url ... %} like <a class="text-dark" href="{% url 'profile' username=comment.author %}">.
-                       URL paths should be hardcoded in JS like <a class="text-dark" href="/profile/${comment.author}"> above. */
-    
-                    comment_div.append(convert_to_html);
+                    URL paths should be hardcoded in JS like <a class="text-dark" href="/profile/${comment.author}"> above. */
+        
+                    comment_content_div.append(each_comment);
                 });
-
-                document.querySelector(`#postId_${post_id}`).append(comment_div);
-                click_check[`submitted_${post_id}`] = true;
-            }
-        } else {
-            comment_div.style.display = 'none';
-            click_check[`clicked_${post_id}`] = false;
-        }
-    });
+                comment_div.append(comment_content_div);
+            } 
+        });
+    } else if (comment_div.style.display == 'block') {
+        comment_div.style.display = 'none';
+    }
 }

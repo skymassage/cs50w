@@ -103,17 +103,6 @@ def post(request):
     return redirect("index")
 
 
-def profile(request, username):
-    user = User.objects.get(username=username)
-    posts = Post.objects.filter(poster=user).order_by("-timestamp")
-    comments = [post.post_comments for post in posts]
-    return render(request, "network/profile.html", {
-        "user": user,
-        "posts": posts,
-        "comments": comments,
-    })
-
-
 @login_required
 def edit(request):
     if request.method == "POST":
@@ -128,22 +117,39 @@ def edit(request):
     return JsonResponse({"error": "POST request required."}, status=400) 
 
 
+@login_required
+def comment(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        comment_content = data.get("comment_content", "")
+        post = Post.objects.get(pk=data.get("post_id", ""))        
+        comment = Comment(author=request.user, post=post, message=comment_content)
+        comment.save()
+        
+        return JsonResponse({"Sucess": "Comment has been saved."}, status=200) 
+
+    return JsonResponse({"Error": "POST request required."}, status=400) 
+
+
 def show_comment(request, post_id):
     comments = Comment.objects.filter(post=Post.objects.get(pk=post_id)).order_by("-timestamp")
     return JsonResponse([comment.serialize() for comment in comments], safe=False) 
 
 
-def comment(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        comment_content = data.get("comment_content", "")
-        post = Post.objects.get(pk=data.get("post_id", ""))
-        
-        comment = Comment(author=request.user, post=post, message=comment_content)
-        comment.save()
+def profile(request, username):
+    user = User.objects.get(username=username)
+    posts = Post.objects.filter(poster=user).order_by("-timestamp")
+    comments = [post.post_comments for post in posts]
+    return render(request, "network/profile.html", {
+        "user": user,
+        "posts": posts,
+        "comments": comments,
+    })
 
-        comments = Comment.objects.filter(post=post).order_by("-timestamp")
-        
-        return JsonResponse([comment.serialize() for comment in comments], safe=False)
+
+@login_required
+def like(request):
+    # if request.method == "POST":
 
     return JsonResponse({"error": "POST request required."}, status=400) 

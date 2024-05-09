@@ -2,9 +2,11 @@
 
 {% block body %}
 <div class="container">
-    <h2 >All Posts</h2>
+    <!-- 用placeholder改標題 -->
+    <h2 >All Posts</h2> 
 
     <div class="row row-cols-1 row-cols-md-1 g-4">
+
         {% if request.user.is_authenticated %}
             <div class="col mb-4"><div class="card">
                 <div class="card-header"><h5>New Post</h5></div>
@@ -36,7 +38,26 @@
                         <hr/>
                         <div class="d-flex justify-content-between">
                             <div class="text-left">
-                                Like
+
+                                    <div id="rating_postId_{{ post.id }}" class="post-ratings-container">
+                                        <div class="post-rating">
+                                            {% if request.user.is_authenticated %}
+                                                <span class="logined post-rating-button material-icons">thumb_up</span>
+                                            {% else %}
+                                                <a href="{% url 'login' %}"><span class="unlogined post-rating-button material-icons">thumb_up</span></a>
+                                            {% endif %}
+                                            <span class="post-rating-count">0</span>
+                                        </div>
+                                        <div class="post-rating">
+                                            {% if request.user.is_authenticated %}
+                                                <span class="logined post-rating-button material-icons">thumb_down</span>
+                                            {% else %}
+                                                <a href="{% url 'login' %}"><span class="unlogined post-rating-button material-icons">thumb_down</span></a>
+                                            {% endif %}
+                                            <span class="post-rating-count">0</span>
+                                        </div>
+                                    </div>
+                                
                                 <br/>
                                 <!-- The "id" attribute must not contain whitespaces. -->
                                 <!-- <a> doesn't have the "value" attribute. -->
@@ -86,6 +107,8 @@
                             </form>
                         </div>
                     {% endif %}
+                    
+                    <div id="comment_content_postId_{{ post.id }}"></div>
                 </div>
 
             </div></div>

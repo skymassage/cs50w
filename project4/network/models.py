@@ -20,6 +20,7 @@ class Post(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, blank=True, related_name="liked_posts")
+    dislikes = models.ManyToManyField(User, blank=True, related_name="disliked_posts")
 
     def like_num(self):
         return self.likes.all().count()
