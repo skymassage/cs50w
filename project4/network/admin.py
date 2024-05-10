@@ -5,7 +5,7 @@ class UserAdmin(admin.ModelAdmin):
     filter_horizontal = ("following", "followers")
 
 class PostAdmin(admin.ModelAdmin):
-    filter_horizontal = ("likes",) 
+    filter_horizontal = ("likes", "dislikes") 
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment)

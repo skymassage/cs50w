@@ -7,6 +7,8 @@ class User(AbstractUser):
     followers = models.ManyToManyField("self", blank=True)
 
     def following_num(self):
+        # For the "ManyToManyField" field in the model, 
+        # use the ".all()" after the field attribute to access all objects of the field.
         return self.following.all().count()
 
     def follower_num(self):
@@ -24,6 +26,9 @@ class Post(models.Model):
 
     def like_num(self):
         return self.likes.all().count()
+
+    def dislike_num(self):
+        return self.dislikes.all().count()
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)

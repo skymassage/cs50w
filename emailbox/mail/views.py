@@ -109,6 +109,7 @@ def compose(request): # Store email information in the database when sending ema
     # Use ".get(<key>)" in Python to get the key value of the JSON object. If the key doesn't exist, ".get(<key>)" returns None. 
     # And we can add a second argument to specify what will be returned if the key is not found. 
     # For example, ".get(<key>, "Error")" will return a string "Error" if the key was not found.
+    # Or we can also use "[]" to retrieve the key value of the JSON object.
     # Note that data.get("recipients") is a string because it was converted into a string by ".stringify" in JS code.
     emails = [email.strip() for email in data.get("recipients").split(",")] # Split the string into a list using comma as a separator.
     if emails == [""]:
@@ -196,7 +197,5 @@ def email(request, email_id): # Get the email information based on the email ID 
         return HttpResponse(status=204)
 
     else:
-        return JsonResponse({
-            "error": "GET or PUT request required."
-        }, status=400)
+        return JsonResponse({"error": "GET or PUT request required."}, status=400)
 

@@ -108,13 +108,13 @@ def edit(request):
     if request.method == "POST":
         data = json.loads(request.body)
         new_content = data.get("content", "")
-        post = Post.objects.get(pk=data.get("post_id", ""))
+        post = Post.objects.get(pk=data["post_id"])
         post.content = new_content
         post.save()
         
         return JsonResponse({"content": new_content})
 
-    return JsonResponse({"error": "POST request required."}, status=400) 
+    return JsonResponse({"error": "POST request required."}, status=404) 
 
 
 @login_required
@@ -123,13 +123,13 @@ def comment(request):
         data = json.loads(request.body)
 
         comment_content = data.get("comment_content", "")
-        post = Post.objects.get(pk=data.get("post_id", ""))        
+        post = Post.objects.get(pk=data["post_id"])        
         comment = Comment(author=request.user, post=post, message=comment_content)
         comment.save()
         
-        return JsonResponse({"Sucess": "Comment has been saved."}, status=200) 
+        return JsonResponse({"Sucess": "Comment has been saved."}, status=201) 
 
-    return JsonResponse({"Error": "POST request required."}, status=400) 
+    return JsonResponse({"Error": "POST request required."}, status=404) 
 
 
 def show_comment(request, post_id):
@@ -149,7 +149,18 @@ def profile(request, username):
 
 
 @login_required
-def like(request):
-    # if request.method == "POST":
+def rate(request):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        post = Post.objects.get(pk=data["post_id"])
 
-    return JsonResponse({"error": "POST request required."}, status=400) 
+        
+
+        # post.likes = 
+        # post.dislikes = 
+        
+        post.save()
+
+        return JsonResponse({"Sucess": "Rates has been saved."}, status=204) 
+
+    return JsonResponse({"error": "PUT request required."}, status=404) 

@@ -15,5 +15,5 @@ urlpatterns = [
     path("edit", views.edit, name="edit"),
     path("comment", views.comment, name="comment"),
     path("show_comment/<int:post_id>", views.show_comment, name="show_comment"),
-    path("like", views.like, name="like")
+    path("rate", views.rate, name="rate")
 ]

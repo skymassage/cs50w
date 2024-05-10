@@ -39,5 +39,26 @@
 7. Like and Unlike
    用戶能點擊任何貼文上的按鈕或連結來切換他們是否Like該貼文。
    用JS非同步地讓伺服器更新Like數(透過fetch)，而不需重新載入頁面來更新貼文的Like數(參考emailbox中的route怎麼用fetch)
-   未登入點讚會被導向到登入頁面
    https://dcode.domenade.com/tutorials/how-to-create-like-dislike-buttons-with-html-css-javascript-tutorial
+
+user按(倒)讚後，再重新載入圖案不變，再按(倒)讚會取消，數字要跟著變
+原本倒讚，按讚後，取消倒讚變成讚，數字也跟著變，反之亦然
+未登入按讚會導向login
+
+
+"Number()" converts a value to a number. If the value cannot be converted, NaN is returned.
+
+"<element>.classList" returns a DOMTokenList (an array-like object with some properties and method) containing the classnames of <element>. 
+".add()" adds one or more tokens to the list and ".remove()" removes one or more tokens from the list.
+For example: "<div id="ex" class="first second third">" in HTML.
+In JS, "document.querySelector('#ex').classList" returns "['first', 'second', 'third']" and "document.querySelector('#ex').classList.remove('second', 'third')" leads to "<div id="ex" class="first">" in HTML.
+
+"<node_1>.contains(<node_2>)" returns true if <node_2> is a descendant of a <node_1>.
+
+".innerHTML" returns the text content of the element, including all spacing and inner HTML tags.
+".innerText" just returns the text content of the element and all its children, without CSS hidden text spacing and tags, except <script> and <style> elements.
+".textContent" returns the text content of the element and all descendaces, with spacing and CSS hidden text, but without tags.
+
+"Math.max()" returns the largest of the numbers given as input parameters, or "-Infinity" if there are no parameters. For example: Math.max(0, 150, 30, 20, 38); // 150
+
+For the "ManyToManyField" field in the model, use the ".all" after the field attribute to access all objects of the field.
