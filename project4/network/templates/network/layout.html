@@ -21,7 +21,7 @@
                      If the user logs out, "request.user" is the AnonymousUser object its ".is_authenticated" is False.  -->
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' username=request.user.username %}"><strong>{{ request.user.username }}</strong></a>
+                        <a id="userId_{{ request.user.id }}" class="userId nav-link" href="{% url 'profile' username=request.user.username %}"><strong>{{ request.user.username }}</strong></a>
                     </li>
                 {% endif %}
                 

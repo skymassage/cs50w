@@ -1,12 +1,9 @@
-3. Profile Page 
-   按username會載入使用者個人頁面，需包括:
-   用戶所有貼文(從最近的貼文開始)
-   用戶有多少個follower與follow多少人
-   對以登入的用戶，此頁面還應顯示follow或unfollow按鈕讓用戶切換是否追蹤其他用戶的貼文(自己不可follow自己)
+1. New Post: 
+   登入者能在textarea寫字並以button送出貼文(可參考在本專案說明頁面頂部的圖片如何設計)
 
-4. Following -> watchilist
-   導覽列的Following將用戶帶到一個頁面，顯示用戶所追蹤其他人的所有貼文(只有登入的用戶可用)
-   此頁面像All Posts頁面一樣，包含有限的貼文集
+2. All Posts (JS)
+   導覽列的All Posts可導向到顯示所有人的的貼文(從最近的貼文開始)
+   每則貼文包括張貼者的名稱,內容,張貼日期與時間,多少人按like(可用愛心或讚表示)
 
 
 5. Pagination
@@ -16,19 +13,6 @@
    https://docs.djangoproject.com/en/5.0/topics/pagination/
    使用Bootstrap的Pagination有助於在前端(HTML)顯示頁面
    https://getbootstrap.com/docs/4.4/components/pagination/
-   https://getbootstrap.com/docs/5.3/components/pagination/
-
-----------------------------------------------------------------------------------------
-
-1. New Post: 
-   登入者能在textarea寫字並以button送出貼文(可參考在本專案說明頁面頂部的圖片如何設計)
-
-2. All Posts (JS)
-   導覽列的All Posts可導向到顯示所有人的的貼文(從最近的貼文開始)
-   每則貼文包括張貼者的名稱,內容,張貼日期與時間,多少人按like(可用愛心或讚表示)
-
-
-
 
 6. Edit Post (JS)
    用戶能夠點擊自己的貼文上的Edit按鈕來編輯該貼文。
@@ -40,11 +24,27 @@
    用戶能點擊任何貼文上的按鈕或連結來切換他們是否Like該貼文。
    用JS非同步地讓伺服器更新Like數(透過fetch)，而不需重新載入頁面來更新貼文的Like數(參考emailbox中的route怎麼用fetch)
    https://dcode.domenade.com/tutorials/how-to-create-like-dislike-buttons-with-html-css-javascript-tutorial
+   user按(倒)讚後，再重新載入圖案不變，再按(倒)讚會取消，數字要跟著變
+   原本倒讚，按讚後，取消倒讚變成讚，數字也跟著變，反之亦然
+   未登入按讚會導向login
 
-user按(倒)讚後，再重新載入圖案不變，再按(倒)讚會取消，數字要跟著變
-原本倒讚，按讚後，取消倒讚變成讚，數字也跟著變，反之亦然
-未登入按讚會導向login
+----------------------------------------------------------------------------------------
 
+3. Profile Page 
+   按username會載入使用者個人頁面，需包括:
+   用戶所有貼文(從最近的貼文開始)
+   用戶有多少個follower與follow多少人
+   對以登入的用戶，此頁面還應顯示follow或unfollow按鈕讓用戶切換是否追蹤其他用戶的貼文(自己不可follow自己)
+
+4. Following -> watchilist
+   導覽列的Following將用戶帶到一個頁面，顯示用戶所追蹤其他人的所有貼文(只有登入的用戶可用)
+   此頁面像All Posts頁面一樣，包含有限的貼文集
+
+
+
+In the DOM, everything is a node. A node can be an element, attribute, text, comment, document, or any other type of DOM object. Nodes are organized in a tree-like structure, with the document node at the top and all other nodes branching off from it. Nodes have properties and methods that allow you to manipulate them and their child nodes. For example, you can use the appendChild() method to add a child node to an existing node.
+Elements are a specific type of node that represents an HTML element. Elements have all the properties and methods of a node, but they also have additional properties and methods that are specific to elements. For example, elements have a tagName property that specifies the name of the element, such as "div" or "span". 
+The main difference between Element and Node is that Element is a specific type of Node that represents an HTML or XML element. While all Elements are Nodes, not all Nodes are Elements. Some methods and properties behave differently depending on whether they are called on an Element or a Node.
 
 "Number()" converts a value to a number. If the value cannot be converted, NaN is returned.
 

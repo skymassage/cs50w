@@ -26,6 +26,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import User, Post, Comment
 from .forms import PostForm
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 
 def login_view(request):
@@ -75,14 +76,6 @@ def register(request):
         return render(request, "network/register.html")
 
 
-def index(request):
-    return render(request, "network/index.html", {
-        "posts": Post.objects.all().order_by("-timestamp"),
-        "comments": Comment.objects.all(),
-        "form": PostForm()
-    })
-
-
 @login_required
 def post(request):
     if request.method == "POST":
@@ -105,7 +98,7 @@ def post(request):
 
 @login_required
 def edit(request):
-    if request.method == "POST":
+    if request.method == "PUT":
         data = json.loads(request.body)
         new_content = data.get("content", "")
         post = Post.objects.get(pk=data["post_id"])
@@ -114,7 +107,7 @@ def edit(request):
         
         return JsonResponse({"content": new_content})
 
-    return JsonResponse({"error": "POST request required."}, status=404) 
+    return JsonResponse({"error": "PUT request required."}, status=404) 
 
 
 @login_required
@@ -137,6 +130,71 @@ def show_comment(request, post_id):
     return JsonResponse([comment.serialize() for comment in comments], safe=False) 
 
 
+@login_required
+def rate(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        post, user = Post.objects.get(pk=data["post_id"]), User.objects.get(pk=data["user_id"])
+        post.likes.add(user) if data["like"] else post.likes.remove(user)
+        post.dislikes.add(user) if data["dislike"] else post.dislikes.remove(user)
+        post.save()
+
+        return JsonResponse({"Sucess": "Rates has been saved."}, status=204) 
+
+    return JsonResponse({"error": "POST request required."}, status=404)
+
+def follow(request):
+    if request.method == "POST":
+
+        return JsonResponse({"Sucess": "You have followed."}, status=204) 
+
+    return JsonResponse({"error": "POST request required."}, status=404)
+
+def show_following(request):
+    return
+
+def index(request):
+    # Paginator(object_list, per_page): Under the hood, all methods of pagination use the Paginator class.
+    # "object_list" is required and is a list, tuple, QuerySet, or other sliceable object with a count() or __len__() method. 
+    # For consistent pagination, QuerySets should be ordered, e.g. with an order_by() clause or with a default ordering on the model.
+    # "per_page" is required and is the maximum number of items to include on a page.
+
+    # "<Paginator>.page_range" return a 1-based range iterator of page numbers.
+    # "1-based" means 1-based numbering that is the computational idea of ​​indexing an ordered data structure by starting with 1 instead of 0.
+    # "<Paginator>.get_page(<page_num>)" returns a Page object with the given 1-based index, while also handling out of range and invalid page numbers.
+    # <page_num> isn't a number, it returns the first page. And <page_num> is negative or greater than the number of pages, it returns the last page.
+    
+    # You usually won't construct Page objects by hand - you'll get them by iterating Paginator (<Paginator>.page_range), or by using <Paginator>.get_page().
+    # "<Page>.number" returns the 1-based page number for <Page> (i.e. the current page number).
+    # "<Page>.has_previous()" returns True if there's a previous page.
+    # "<Page>.has_next()" returns True if there's a next page.
+    # "<Page>.paginator" returns the associated Paginator object so as to use the method of the Paginator class.
+
+    if request.GET.get("page") is None:
+        page_number = int(1)
+    else:
+        page_number = request.GET.get("page")
+
+    all_post = Post.objects.all().order_by("-timestamp")
+    post_paginator = Paginator(all_post, 10)                # Show 10 posts per page.
+    post_objs = post_paginator.get_page(page_number)
+
+    # "<QuerySet>.none()" creates a queryset (an instance of EmptyQuerySet) 
+    # that never returns any objects and no query will be executed when accessing the results. 
+    comment_objs = Comment.objects.none()
+    for post in post_objs:
+        # Use '&' to take the intersection: <QuerySet1> & <QuerySet2>
+        # Use '|' to take the union: <QuerySet1>| <QuerySet2>
+        # User ".distinct()" to eliminate duplicate rows: (<QuerySet1> | <QuerySet2>).distinct()
+        comment_objs |= Comment.objects.filter(post=post)
+
+    return render(request, "network/index.html", {
+        "posts_per_page": post_objs,
+        "comments": comment_objs,
+        "form": PostForm()
+    })
+
+
 def profile(request, username):
     user = User.objects.get(username=username)
     posts = Post.objects.filter(poster=user).order_by("-timestamp")
@@ -146,21 +204,3 @@ def profile(request, username):
         "posts": posts,
         "comments": comments,
     })
-
-
-@login_required
-def rate(request):
-    if request.method == "PUT":
-        data = json.loads(request.body)
-        post = Post.objects.get(pk=data["post_id"])
-
-        
-
-        # post.likes = 
-        # post.dislikes = 
-        
-        post.save()
-
-        return JsonResponse({"Sucess": "Rates has been saved."}, status=204) 
-
-    return JsonResponse({"error": "PUT request required."}, status=404) 

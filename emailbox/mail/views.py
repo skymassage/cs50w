@@ -80,6 +80,7 @@ def mailbox(request, mailbox): # Display corresponding mail items when entering 
     else:
         return JsonResponse({"error": "Invalid mailbox."}, status=400) # "JsonResponse" is an HttpResponse subclass that helps to create a JSON-encoded response.
         # If you request an invalid mailbox (anything other than inbox, sent, or archive), you'll instead get back the JSON response {"error": "Invalid mailbox."}.
+        # "400 Bad Request" means the request cannot be fulfilled due to bad syntax.
 
     emails = emails.order_by("-timestamp").all() # The minus '-' inside of "-timestamp" means the descending order.
 
@@ -158,6 +159,7 @@ def compose(request): # Store email information in the database when sending ema
     # ,i.e., user and sender ((request.user)) are the same.
 
     return JsonResponse({"message": "Email sent successfully."}, status=201)
+    # "201 Created" means the request has been fulfilled, and a new resource is created .
 
 
 @csrf_exempt 
@@ -167,6 +169,7 @@ def email(request, email_id): # Get the email information based on the email ID 
         email = Email.objects.get(user=request.user, pk=email_id)
     except Email.DoesNotExist:
         return JsonResponse({"error": "Email not found."}, status=404)
+        # "404 Not Found" means the requested page could not be found but may be available again in the future
     
     if request.method == "GET": # Return email contents
         return JsonResponse(email.serialize())
@@ -195,6 +198,7 @@ def email(request, email_id): # Get the email information based on the email ID 
             email.archived = data["archived"]
         email.save()
         return HttpResponse(status=204)
+        # "204 No Content" means the request has been successfully processed, but is not returning any content
 
     else:
         return JsonResponse({"error": "GET or PUT request required."}, status=400)

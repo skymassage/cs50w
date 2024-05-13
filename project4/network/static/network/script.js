@@ -7,7 +7,7 @@
    6. The page is loaded (The "load" event is triggered) */
 
 document.addEventListener('DOMContentLoaded', function() {
-        
+    
     /* In JS, we can select all tags with the "post card" class name using ".post.card",
        where the whitespace of "post card" is replaceed by "." */
     document.querySelectorAll('.post.card').forEach(post => {
@@ -15,20 +15,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* Element also has the ".querySelector" method to select elements within itself,
            so we don't need "document.querySelector" to select the element in the whole DOM. */
-        post.querySelector('.comment_link').addEventListener('click', e => {
-            /* Note that the second argument of "addEventListener" should be a function, 
-               and this function has only one parameter which is the event.
-               If you don't want to submit the form or redirection.
-               First, prevent redirection using "preventDefault" before "load_comment".
-               Then, use another function to complete main task. 
-               So you can't pass the function to "addEventListener" to do the job and prevent redirection meanwhile. */
-            e.preventDefault();
+        post.querySelector('.comment_link').onclick = function () {
             load_comment(post, postId);
-        });
+            return false;  // Method 1: "return false" prevent submission.
+        };
 
         if (post.querySelector('.comment_submit_btn')) {
             post.querySelector('.comment_submit_btn').addEventListener('click', e => {
-                e.preventDefault();
+                /* Note that the second argument of "addEventListener" should be a function, 
+                   and this function has only one parameter which is the event.
+                   If you don't want to submit the form or redirection.
+                   First, prevent redirection using "preventDefault" before "load_comment".
+                   Then, use another function to complete main task. 
+                   So you can't pass the function to "addEventListener" to do the job and prevent redirection meanwhile. */
+                e.preventDefault(); // Method 2: "e.preventDefault()" prevents submission.
                 if (post.querySelector('.comment_field').value) { // Prevent the send the blank comment.
                     comment(post, postId);
                 }
@@ -52,44 +52,78 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 edit(post, postId);
             });
-        }
-        
-        // post.querySelector('.post-ratings-container').forEach();
-        //////////////////
-        const ratings = post.querySelectorAll(".post-rating");    
-        ratings.forEach(rating => {
-            const button = rating.querySelector(".logined.post-rating-button");
-            const count = rating.querySelector(".post-rating-count");
-    
-            button.addEventListener("click", async () => {
-                if (rating.classList.contains("post-rating-selected")) {
-                    return;
-                }
-    
-                count.textContent = Number(count.textContent) + 1;
-    
-                ratings.forEach(rating => {
-                    if (rating.classList.contains("post-rating-selected")) {
-                        const count = rating.querySelector(".post-rating-count");
-    
-                        count.textContent = Math.max(0, Number(count.textContent) - 1);
-                        rating.classList.remove("post-rating-selected");
-                    }
-                });
-    
-                rating.classList.add("post-rating-selected");
-            });
-        });
+        }   
 
+        if (document.querySelector('.userId')) {
+            var userId = document.querySelector('.userId').id.slice(7);
+            const ratings = post.querySelectorAll(".post-rating");
+            const likeRating = ratings[0]; 
+            ratings.forEach(rating => {
+                const button = rating.querySelector(".logined.post-rating-button");
+                const count = rating.querySelector(".post-rating-count");
+        
+                button.addEventListener("click", async () => {
+                    if (rating.classList.contains("post-rating-selected")) {
+                        count.textContent = Number(count.textContent) - 1;
+                        rating.classList.remove("post-rating-selected");
+
+                        const response = await fetch('/rate', {
+                            method: 'POST',
+                            headers: {
+                                "Content-type": "application/json",
+                                "X-CSRFToken": getCookie("csrftoken")
+                            },
+                            body: JSON.stringify({
+                                post_id: postId,
+                                user_id: userId,
+                                like: false,
+                                dislike: false
+                            })
+                        });
+
+                        return;
+                    }
+
+                    count.textContent = Number(count.textContent) + 1;
+                    ratings.forEach(rating => {
+                        if (rating.classList.contains("post-rating-selected")) {
+                            const count = rating.querySelector(".post-rating-count");
+        
+                            count.textContent = Math.max(0, Number(count.textContent) - 1);
+                            rating.classList.remove("post-rating-selected");
+                        }
+                    });
+                    rating.classList.add("post-rating-selected");
+
+                    const likeOrDislike = likeRating === rating ? 'like' : 'dislike';
+
+                    const response = await fetch('/rate', {
+                        method: 'POST',
+                        headers: {
+                            "Content-type": "application/json",
+                            "X-CSRFToken": getCookie("csrftoken")
+                        },
+                        body: JSON.stringify({
+                            post_id: postId,
+                            user_id: userId,
+                            like: likeOrDislike === 'like' ? true : false,
+                            dislike: likeOrDislike === 'dislike' ? true : false
+                        })
+                    });
+
+                });
+            });
+        }
 
         ////////////////////////////////////
+        
     });
 });
 
 
 function edit(post, post_id) {
     fetch('/edit', {
-        method: 'POST',
+        method: 'PUT',
         // HTTP "headers" let the client and the server pass additional information with an HTTP request or response.
         headers: {
             /* The "content-type" of "headers" tells the browser what format of data is sent, 

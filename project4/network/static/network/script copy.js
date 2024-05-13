@@ -84,22 +84,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
                 rating.classList.add("post-rating-selected");
     
-                // const likeOrDislike = likeRating === rating ? "like" : "dislike";
-                // const response = await fetch(`/rate`, {
-                //     method: 'PUT',
-                //     headers: {
-                //         "Content-type": "application/json",
-                //         "X-CSRFToken": getCookie("csrftoken")
-                //     },
-                //     body: json.stringify({
-                //         post_id: ,
-                //         like_user_id: ,
-                //         cancel_like_user_id: ,
-                //         dislike_user_id: ,
-                //         cancel_dislike_user_id:
-                //     })
-                // });
-                // const body = await response.json();
+                const likeOrDislike = likeRating === rating ? "like" : "dislike";
+                // const response = await fetch(`/posts/${postId}/${likeOrDislike}`);
+                const response = await fetch(`/rate`, {
+                    method: 'PUT',
+                    headers: {
+                        "Content-type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    body: json.stringify({
+                        post_id: 1,
+                        user_id: 2,
+                        like: false,
+                        dislike: true
+                    })
+                });
+                const body = await response.json();
             });
         });
     });
