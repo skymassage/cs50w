@@ -2,12 +2,35 @@
 
 {% block body %}
 <div class="container">
-    <!-- 用placeholder改標題 -->
-    <h2 >All Posts</h2> 
+    <h2 >{{ title }}</h2>    
+
+    {% if profile %}
+        <div class="d-flex justify-content-between">
+            <div class="text-right">
+                <div class="profile">
+                    <span class="profile-item"><strong>{{ user.post_num }}</strong> posts</span>
+                    <span class="profile-item"><strong>{{ user.follower_num }}</strong> followers</span>
+                    <span class="profile-item"><strong>{{ user.following_num }}</strong> following</span>
+                </div>
+            </div>
+    
+            {% if user != request.user %}
+                <div class="text-left">
+                    <button class="btn btn-outline-info">Follow</button>
+                    <button class="btn btn-outline-secondary">Unfollow</button>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
 
     <div class="row row-cols-1 row-cols-md-1 g-4">
-
-        {% if request.user.is_authenticated %}
+        <!-- 即使再index函數沒給user，也能使用user，且進入非自己的profile時候user會變成對方(request.user仍是自己) -->
+        <!-- 登出時，request.user與user會變成Amonymoususer -->
+        <h1>{{ user }}</h1>
+        <h1>{{ request.user }}</h1>
+        <!--  -->
+        {% if request.user.is_authenticated and user == request.user %}
             <div class="col mb-4"><div class="card">
                 <div class="card-header"><h5>New Post</h5></div>
                 <div class="card-body">
@@ -124,15 +147,18 @@
     <!-- Accessible Rich Internet Applications (ARIA) is a set of roles and attributes that define ways to make web content 
          and web applications (especially those developed with JavaScript) more accessible to people with disabilities.
          ARIA does not change anything about the functionality or behavior of an element. -->
-    <nav aria-label="Page navigation">  <!-- aria: https://reurl.cc/2YEk8X -->
+    <nav aria-label="Page navigation"> <!-- aria: https://reurl.cc/2YEk8X -->
         <ul class="pagination justify-content-center">
             
             {% if not posts_per_page.has_previous %}
                 <li class="page-item disabled">
-                    <a class="page-link" href="" tabindex="-1" aria-disabled="true">Previous</a>    <!-- tabindex: https://reurl.cc/mM0jZA -->
+                    <a class="page-link" href="" tabindex="-1" aria-disabled="true">Previous</a> <!-- tabindex: https://reurl.cc/mM0jZA -->
                 </li>
             {% else %}
                 <li class="page-item">
+                    <!-- "href" could be an absolute URL (like href="http://www.example.com/default.htm"),
+                         or a relative URL pointing to a file within a web site (like here). 
+                         "?page={{ posts_per_page.previous_page_number }}" will direct to "<current_URL>?page=<page_num>"). -->
                     <a class="page-link" href="?page={{ posts_per_page.previous_page_number }}">Previous</a>
                 </li>
             {% endif %}

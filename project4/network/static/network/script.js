@@ -118,6 +118,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ////////////////////////////////////
         
     });
+
+    // document.querySelectorAll('.page-link').forEach(page_link => {
+    //     page_link.onclick = () => {
+    //         history.replaceState({}, null, location.pathname);
+    //     };
+    // });
+    history.replaceState({}, null, location.pathname);
 });
 
 

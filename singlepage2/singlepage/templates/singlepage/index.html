@@ -44,7 +44,7 @@
                            3. What should be displayed in the URL. Here is something like section followed by the section number, 
                               for example /section1 or /section2 or /section3, 
                               and those will appear in the URL bar when I click on a different page.  */
-                        history.pushState({sect: section}, "", `section${section}`); // Add the current state to the history.
+                        history.pushState({sect: section}, '', `section${section}`); // Add the current state to the history.
                         showSection(section);
                     };
                 });

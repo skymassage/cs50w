@@ -28,6 +28,8 @@ from .forms import PostForm
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 
+NUM = 10
+
 
 def login_view(request):
     if request.method == "POST":
@@ -176,31 +178,41 @@ def index(request):
         page_number = request.GET.get("page")
 
     all_post = Post.objects.all().order_by("-timestamp")
-    post_paginator = Paginator(all_post, 10)                # Show 10 posts per page.
-    post_objs = post_paginator.get_page(page_number)
+    post_paginator = Paginator(all_post, NUM)                # Show 10 posts per page.
+    post_page = post_paginator.get_page(page_number)
 
     # "<QuerySet>.none()" creates a queryset (an instance of EmptyQuerySet) 
     # that never returns any objects and no query will be executed when accessing the results. 
-    comment_objs = Comment.objects.none()
-    for post in post_objs:
+    comment_page = Comment.objects.none()
+    for post in post_page:
         # Use '&' to take the intersection: <QuerySet1> & <QuerySet2>
         # Use '|' to take the union: <QuerySet1>| <QuerySet2>
         # User ".distinct()" to eliminate duplicate rows: (<QuerySet1> | <QuerySet2>).distinct()
-        comment_objs |= Comment.objects.filter(post=post)
+        comment_page |= Comment.objects.filter(post=post)
 
     return render(request, "network/index.html", {
-        "posts_per_page": post_objs,
-        "comments": comment_objs,
-        "form": PostForm()
+        "title": "All Posts",
+        "posts_per_page": post_page,
+        "form": PostForm(),
+        "user": User.objects.get(username=request.user.username)
     })
 
 
 def profile(request, username):
+    if request.GET.get("page") is None:
+        page_number = int(1)
+    else:
+        page_number = request.GET.get("page")
+
     user = User.objects.get(username=username)
-    posts = Post.objects.filter(poster=user).order_by("-timestamp")
-    comments = [post.post_comments for post in posts]
-    return render(request, "network/profile.html", {
+    profile_posts = Post.objects.filter(poster=user).order_by("-timestamp")
+    post_paginator = Paginator(profile_posts, NUM)
+    post_page = post_paginator.get_page(page_number)
+
+    return render(request, "network/index.html", {
+        "title": "My Profile" if user == request.user else f"{user.username}'s Profile",
+        "profile": True,
         "user": user,
-        "posts": posts,
-        "comments": comments,
+        "posts_per_page": post_page,
+        "form": PostForm()
     })
