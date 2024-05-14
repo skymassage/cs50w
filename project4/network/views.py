@@ -28,7 +28,7 @@ from .forms import PostForm
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 
-NUM = 10
+NUM = 10 # How many posts per page.
 
 
 def login_view(request):
@@ -47,11 +47,9 @@ def login_view(request):
     else:
         return render(request, "network/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
@@ -103,32 +101,31 @@ def edit(request):
     if request.method == "PUT":
         data = json.loads(request.body)
         new_content = data.get("content", "")
-        post = Post.objects.get(pk=data["post_id"])
+        post = Post.objects.get(pk=int(data["post_id"]))
         post.content = new_content
         post.save()
         
         return JsonResponse({"content": new_content})
 
-    return JsonResponse({"error": "PUT request required."}, status=404) 
+    return JsonResponse({"Error": "PUT request required."}, status=404) 
 
 
 @login_required
 def comment(request):
     if request.method == "POST":
         data = json.loads(request.body)
-
         comment_content = data.get("comment_content", "")
-        post = Post.objects.get(pk=data["post_id"])        
+        post = Post.objects.get(pk=int(data["post_id"]))
         comment = Comment(author=request.user, post=post, message=comment_content)
         comment.save()
         
-        return JsonResponse({"Sucess": "Comment has been saved."}, status=201) 
+        return JsonResponse({"Success": "Comment has been saved."}, status=201) 
 
     return JsonResponse({"Error": "POST request required."}, status=404) 
 
 
 def show_comment(request, post_id):
-    comments = Comment.objects.filter(post=Post.objects.get(pk=post_id)).order_by("-timestamp")
+    comments = Comment.objects.filter(post=Post.objects.get(pk=int(post_id))).order_by("-timestamp")
     return JsonResponse([comment.serialize() for comment in comments], safe=False) 
 
 
@@ -136,24 +133,15 @@ def show_comment(request, post_id):
 def rate(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        post, user = Post.objects.get(pk=data["post_id"]), User.objects.get(pk=data["user_id"])
+        post, user = Post.objects.get(pk=int(data["post_id"])), User.objects.get(pk=int(data["user_id"]))
         post.likes.add(user) if data["like"] else post.likes.remove(user)
         post.dislikes.add(user) if data["dislike"] else post.dislikes.remove(user)
         post.save()
 
-        return JsonResponse({"Sucess": "Rates has been saved."}, status=204) 
+        return JsonResponse({"Success": "Rates has been saved."}, status=204) 
 
-    return JsonResponse({"error": "POST request required."}, status=404)
+    return JsonResponse({"Error": "POST request required."}, status=404)
 
-def follow(request):
-    if request.method == "POST":
-
-        return JsonResponse({"Sucess": "You have followed."}, status=204) 
-
-    return JsonResponse({"error": "POST request required."}, status=404)
-
-def show_following(request):
-    return
 
 def index(request):
     # Paginator(object_list, per_page): Under the hood, all methods of pagination use the Paginator class.
@@ -181,20 +169,10 @@ def index(request):
     post_paginator = Paginator(all_post, NUM)                # Show 10 posts per page.
     post_page = post_paginator.get_page(page_number)
 
-    # "<QuerySet>.none()" creates a queryset (an instance of EmptyQuerySet) 
-    # that never returns any objects and no query will be executed when accessing the results. 
-    comment_page = Comment.objects.none()
-    for post in post_page:
-        # Use '&' to take the intersection: <QuerySet1> & <QuerySet2>
-        # Use '|' to take the union: <QuerySet1>| <QuerySet2>
-        # User ".distinct()" to eliminate duplicate rows: (<QuerySet1> | <QuerySet2>).distinct()
-        comment_page |= Comment.objects.filter(post=post)
-
     return render(request, "network/index.html", {
         "title": "All Posts",
         "posts_per_page": post_page,
         "form": PostForm(),
-        "user": User.objects.get(username=request.user.username)
     })
 
 
@@ -216,3 +194,45 @@ def profile(request, username):
         "posts_per_page": post_page,
         "form": PostForm()
     })
+
+
+def show_following(request):
+    if request.GET.get("page") is None:
+        page_number = int(1)
+    else:
+        page_number = request.GET.get("page")
+    
+    # "<QuerySet>.none()" creates a queryset (an instance of EmptyQuerySet) 
+    # that never returns any objects and no query will be executed when accessing the results. 
+    following_posts = Post.objects.none()
+    for following_user in request.user.following.all():
+        # Use '&' to take the intersection: <QuerySet1> & <QuerySet2>
+        # Use '|' to take the union: <QuerySet1>| <QuerySet2>
+        # User ".distinct()" to eliminate duplicate rows: (<QuerySet1> | <QuerySet2>).distinct()
+        following_posts |= Post.objects.filter(poster=following_user)
+    following_posts = following_posts.order_by("-timestamp")
+    
+    post_paginator = Paginator(following_posts, NUM)
+    post_page = post_paginator.get_page(page_number)
+
+    return render(request, "network/index.html", {
+        "title": "My Following Posts",
+        "posts_per_page": post_page,
+        "following": True
+    })
+
+
+@login_required
+def follow(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        following_user = User.objects.get(pk=int(data["user_id"]))
+        if following_user!= request.user:
+            request.user.following.add(following_user) if data["if_follow"] else request.user.following.remove(following_user)
+            request.user.save()
+            return JsonResponse({"Success": "You have followed or unfollowed."}, status=204) 
+            # Note that "204 No Content" doesn't return any content, so don't use ".json()" for its response in JS.
+        
+        return JsonResponse({"Error": "You couldn't follow or unfollow yourself."}, status=404)
+
+    return JsonResponse({"Error": "POST request required."}, status=404)

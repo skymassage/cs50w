@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }   
 
+        // Note that the element with the "userId" class is in the layout.html.
         if (document.querySelector('.userId')) {
             var userId = document.querySelector('.userId').id.slice(7);
             const ratings = post.querySelectorAll(".post-rating");
@@ -110,22 +111,57 @@ document.addEventListener('DOMContentLoaded', function() {
                             dislike: likeOrDislike === 'dislike' ? true : false
                         })
                     });
-
                 });
             });
-        }
-
-        ////////////////////////////////////
-        
+        }        
     });
 
-    // document.querySelectorAll('.page-link').forEach(page_link => {
-    //     page_link.onclick = () => {
-    //         history.replaceState({}, null, location.pathname);
-    //     };
-    // });
+    /*  */
     history.replaceState({}, null, location.pathname);
+
+    if (document.querySelector('#follow_btn')) {
+        // Use '>' to specify the child element.
+        // follower_num = document.querySelector('#follower_num > strong').innerText;
+        let follower_ele = document.querySelector('#follower_num > strong');
+        document.querySelector('#follow_btn > button').onclick = function () {
+            follow(this.value, true);
+            document.querySelector('#follow_btn').style.display = 'none';
+            document.querySelector('#following_btn').style.display = 'inline-block';
+            document.querySelector('#unfollow_btn').style.display = 'inline-block';
+            follower_ele.innerText = Number(follower_ele.innerText) + 1;
+            return false;
+        };
+    }
+    if (document.querySelector('#unfollow_btn')) {
+        let follower_ele = document.querySelector('#follower_num > strong');
+        document.querySelector('#unfollow_btn > button').onclick = function () {
+            follow(this.value, false);
+            document.querySelector('#follow_btn').style.display = 'inline-block';
+            document.querySelector('#following_btn').style.display = 'none';
+            document.querySelector('#unfollow_btn').style.display = 'none';
+            follower_ele.innerText = Number(follower_ele.innerText) - 1;
+            return false;
+        };
+    }
 });
+
+function follow(user_id, if_follow) {
+    fetch('/follow', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+            if_follow: if_follow
+        })
+    });
+    /* Note that here it will be an error if using "response.json()".
+       Because the status code of the JSON object returned by the backend is "204 No Content",
+       this means that the request has been successfully processed, but is not returning any content.
+       Therefore no response object is returned, and "".json()" cannot be used. */
+}
 
 
 function edit(post, post_id) {
@@ -137,8 +173,8 @@ function edit(post, post_id) {
                and the browser handles different types of data in different ways. 
                JSON format is often used for front-end and back-end data interaction because it is readable, 
                concise and convenient. So set "content-type" to "application/json". */ 
-            "Content-type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken")
+            'Content-type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
         },
         body: JSON.stringify({
             post_id: post_id,
@@ -158,8 +194,8 @@ function comment(post, post_id) {
     fetch('/comment', {
         method: 'POST',
         headers: {
-            "Content-type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken")
+            'Content-type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
         },
         body: JSON.stringify({
             post_id: post_id,

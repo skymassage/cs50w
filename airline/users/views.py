@@ -8,7 +8,7 @@ def index(request):
     # Django uses sessions and middleware to hook the authentication system into "request" objects.
     # These provide a "request.user" attribute and a "request.auser" async method on very request 
     # which represents the current user. If the current user has not logged in, 
-    # this attribute will be set to an instance of AnonymousUser, otherwise it will be an instance of User.
+    # this attribute will be set to an instance of AnonymousUser class, otherwise it will be an instance of User class.
     # You can tell them apart with ".is_authenticated".
 
     # ".is_authenticated" doesn't check if a user is logged in.
@@ -34,7 +34,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password) # Check if username and password are correct, returning User object if so
         # User objects are the core of the authentication system. They typically represent the people interacting with 
         # your site and are used to enable things like restricting access, registering user profiles, 
-        # associating content with creators etc. Only one class of users exists in Django’s authentication framework, 
+        # associating content with creators etc. Only one class of users exists in Django's authentication framework, 
         # i.e., 'superusers' or admin 'staff' users are just User objects with special attributes set, 
         # not different classes of User objects. The primary attributes of the default user are: username, password, email, first_name, last_name
         

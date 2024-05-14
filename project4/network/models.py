@@ -3,8 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    following = models.ManyToManyField("self", blank=True)
-    followers = models.ManyToManyField("self", blank=True)
+    following = models.ManyToManyField("User", blank=True, related_name="followers")
 
     def following_num(self):
         # For the "ManyToManyField" field in the model, 

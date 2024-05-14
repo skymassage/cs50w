@@ -11,7 +11,9 @@
    用戶有多少個follower與follow多少人
    對以登入的用戶，此頁面還應顯示follow或unfollow按鈕讓用戶切換是否追蹤其他用戶的貼文(自己不可follow自己)
 
-
+4. Following -> watchilist
+   導覽列的Following將用戶帶到一個頁面，顯示用戶所追蹤其他人的所有貼文(只有登入的用戶可用)
+   此頁面像All Posts頁面一樣，包含有限的貼文集
 
 5. Pagination
    在任何顯示貼文的頁面上，每個頁面上只能顯示 10 個貼文。
@@ -37,11 +39,6 @@
 
 ----------------------------------------------------------------------------------------
 
-4. Following -> watchilist
-   導覽列的Following將用戶帶到一個頁面，顯示用戶所追蹤其他人的所有貼文(只有登入的用戶可用)
-   此頁面像All Posts頁面一樣，包含有限的貼文集
-
-
 
 In the DOM, everything is a node. A node can be an element, attribute, text, comment, document, or any other type of DOM object. Nodes are organized in a tree-like structure, with the document node at the top and all other nodes branching off from it. Nodes have properties and methods that allow you to manipulate them and their child nodes. For example, you can use the appendChild() method to add a child node to an existing node.
 Elements are a specific type of node that represents an HTML element. Elements have all the properties and methods of a node, but they also have additional properties and methods that are specific to elements. For example, elements have a tagName property that specifies the name of the element, such as "div" or "span". 
@@ -63,3 +60,4 @@ In JS, "document.querySelector('#ex').classList" returns "['first', 'second', 't
 "Math.max()" returns the largest of the numbers given as input parameters, or "-Infinity" if there are no parameters. For example: Math.max(0, 150, 30, 20, 38); // 150
 
 For the "ManyToManyField" field in the model, use the ".all" after the field attribute to access all objects of the field.
+
