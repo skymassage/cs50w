@@ -16,6 +16,7 @@
     
             {% if user != request.user %}
                 <div class="text-left">
+                    <!-- For the "ManyToManyField" field in the model, use the ".all" in the template after the field attribute to access all objects of the field. -->
                     {% if user in request.user.following.all %}
                         <div id="following_btn" style="display: inline-block;"><button class="btn btn-outline-info active">Following</button></div>
                         <div id="unfollow_btn" style="display: inline-block;"><button value="{{ user.id }}" class="btn btn-outline-secondary">Unfollow</button></div>

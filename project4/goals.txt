@@ -37,27 +37,11 @@
    原本倒讚，按讚後，取消倒讚變成讚，數字也跟著變，反之亦然
    未登入按讚會導向login
 
-----------------------------------------------------------------------------------------
-
-
-In the DOM, everything is a node. A node can be an element, attribute, text, comment, document, or any other type of DOM object. Nodes are organized in a tree-like structure, with the document node at the top and all other nodes branching off from it. Nodes have properties and methods that allow you to manipulate them and their child nodes. For example, you can use the appendChild() method to add a child node to an existing node.
-Elements are a specific type of node that represents an HTML element. Elements have all the properties and methods of a node, but they also have additional properties and methods that are specific to elements. For example, elements have a tagName property that specifies the name of the element, such as "div" or "span". 
-The main difference between Element and Node is that Element is a specific type of Node that represents an HTML or XML element. While all Elements are Nodes, not all Nodes are Elements. Some methods and properties behave differently depending on whether they are called on an Element or a Node.
-
-"Number()" converts a value to a number. If the value cannot be converted, NaN is returned.
-
-"<element>.classList" returns a DOMTokenList (an array-like object with some properties and method) containing the classnames of <element>. 
-".add()" adds one or more tokens to the list and ".remove()" removes one or more tokens from the list.
-For example: "<div id="ex" class="first second third">" in HTML.
-In JS, "document.querySelector('#ex').classList" returns "['first', 'second', 'third']" and "document.querySelector('#ex').classList.remove('second', 'third')" leads to "<div id="ex" class="first">" in HTML.
-
-"<node_1>.contains(<node_2>)" returns true if <node_2> is a descendant of a <node_1>.
-
-".innerHTML" returns the text content of the element, including all spacing and inner HTML tags.
-".innerText" just returns the text content of the element and all its children, without CSS hidden text spacing and tags, except <script> and <style> elements.
-".textContent" returns the text content of the element and all descendaces, with spacing and CSS hidden text, but without tags.
-
-"Math.max()" returns the largest of the numbers given as input parameters, or "-Infinity" if there are no parameters. For example: Math.max(0, 150, 30, 20, 38); // 150
-
-For the "ManyToManyField" field in the model, use the ".all" after the field attribute to access all objects of the field.
-
+Timestamp
+New Post:
+All Posts:
+Profile Page:
+Following:
+Pagination:
+Edit Post:
+Like and Unlike
