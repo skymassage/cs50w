@@ -14,7 +14,7 @@
                 </div>
             </div>
     
-            {% if user != request.user %}
+            {% if request.user.is_authenticated and user != request.user %}
                 <div class="text-left">
                     <!-- For the "ManyToManyField" field in the model, use the ".all" in the template after the field attribute to access all objects of the field. -->
                     {% if user in request.user.following.all %}
