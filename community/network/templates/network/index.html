@@ -1,0 +1,197 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <h2 >{{ title }}</h2>    
+
+    {% if profile %}
+        <div class="d-flex justify-content-between">
+            <div class="text-right">
+                <div class="profile">
+                    <span class="profile-item"><strong>{{ user.post_num }}</strong> posts</span>
+                    <span id="follower_num" class="profile-item"><strong>{{ user.follower_num }}</strong> followers</span>
+                    <span id="following_num" class="profile-item"><strong>{{ user.following_num }}</strong> following</span>
+                </div>
+            </div>
+    
+            {% if request.user.is_authenticated and user != request.user %}
+                <div class="text-left">
+                    <!-- For the "ManyToManyField" field in the model, use the ".all" in the template after the field attribute to access all objects of the field. -->
+                    {% if user in request.user.following.all %}
+                        <div id="following_btn" style="display: inline-block;"><button class="btn btn-outline-info active">Following</button></div>
+                        <div id="unfollow_btn" style="display: inline-block;"><button value="{{ user.id }}" class="btn btn-outline-secondary">Unfollow</button></div>
+                        <div id="follow_btn" style="display: none;"><button value="{{ user.id }}" class="btn btn-outline-info">Follow</button></div>
+                    {% else %}
+                        <div id="following_btn" style="display: none;"><button class="btn btn-outline-info active">Following</button></div>
+                        <div id="unfollow_btn" style="display: none;"><button value="{{ user.id }}" class="btn btn-outline-secondary">Unfollow</button></div>
+                        <div id="follow_btn" style="display: inline-block;"><button value="{{ user.id }}" class="btn btn-outline-info">Follow</button></div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+
+    <div class="row row-cols-1 row-cols-md-1 g-4">
+        <!-- If we don't specify "user" in veiws.py, "user" is the same as "request.user" in the template.
+             We don't specify "user" in the "index" function, but in the "profile" function.
+             So "user == request.user" when calling "index", and "user" is the user of their profile page when calling "profile". -->
+        {% if request.user.is_authenticated and user == request.user and following is true %}
+            <div class="col mb-4"><div class="card">
+                <div class="card-header"><h5>New Post</h5></div>
+                <div class="card-body">
+                    <form action="{% url 'post' %}" method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">{{ field }}</div>
+                        {% endfor %}
+                        <div class="text-right"><button type="submit" class="btn btn-primary">Post</button></div>
+                    </form>
+                </div>
+            </div></div>
+        {% endif %}
+
+        {% for post in posts_per_page %}
+            <div class="col mb-4"><div id="postId_{{ post.id }}" class="post card"> <!-- The "id" attribute must not contain whitespaces. -->
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="text-start"><a href="{% url 'profile' username=post.poster.username %}"><h5>{{ post.poster }}</h5></a></div>
+                        <div class="text-end">{{ post.timestamp }}</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="content" style="display: block;">
+                        <p class="content_text card-text">{{ post.content }}</p>
+                        <hr/>
+                        <div class="d-flex justify-content-between">
+                            <div class="text-left">
+
+                                    <div class="post-ratings-container">
+                                        {% if request.user in post.likes.all %}
+                                            <div class="post-rating post-rating-selected">
+                                        {% else %}
+                                            <div class="post-rating">
+                                        {% endif %}
+                                            {% if request.user.is_authenticated %}
+                                                <span class="logined post-rating-button material-icons">thumb_up</span> <!-- "thumb_up" causes the icon to show a thumbs up. -->
+                                            {% else %}
+                                                <a href="{% url 'login' %}"><span class="unlogined post-rating-button material-icons">thumb_up</span></a>
+                                            {% endif %}
+                                            <span class="post-rating-count">{{ post.like_num }}</span>
+                                        </div>
+                                        {% if request.user in post.dislikes.all %}
+                                            <div class="post-rating post-rating-selected">
+                                        {% else %}
+                                            <div class="post-rating">
+                                        {% endif %}
+                                            {% if request.user.is_authenticated %}
+                                                <span class="logined post-rating-button material-icons">thumb_down</span> <!-- "thumb_down" causes the icon to show a thumbs down. -->
+                                            {% else %}
+                                                <a href="{% url 'login' %}"><span class="unlogined post-rating-button material-icons">thumb_down</span></a>
+                                            {% endif %}
+                                            <span class="post-rating-count">{{ post.dislike_num }}</span>
+                                        </div>
+                                    </div>
+                                
+                                <br/>
+                                <a class="comment_link" href="">Comment</a>
+                            </div>
+                            {% if post.poster == request.user %}
+                                <div class="text-right">
+                                    <button class="edit_btn btn btn-sm btn-outline-primary">Edit</button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if post.poster == request.user %}
+                        <div class="edit" style="display: none;">
+                            <h6>Edit your post</h6>
+
+                            <form>
+                                <div class="form-group">
+                                    <textarea class="edit_field form-control" rows="5" placeholder="Your post">{{ post.content }}</textarea>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="text-left">
+                                        <a class="comment_link" href="">Comment</a>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="cancel_edit_btn btn btn-sm btn-outline-danger">Cancel</button>
+                                        <button class="submit_edit_btn btn btn-sm btn-outline-primary" type="submit">Edit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                <div class="comment card-footer" style="display: none;">
+                    {% if request.user.is_authenticated %}
+                        <div style="margin-top: 0.5em; margin-bottom: 1em;">
+                            <form>
+                                <input class="comment_field form-control" style="margin-bottom: 1em;" type="text" placeholder="Leave your comment">
+                                <div class="text-right">
+                                    <button class="comment_submit_btn btn btn-outline-info btn-sm" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="comment_content"></div>
+                </div>
+
+            </div></div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="pagings">
+    <!-- Accessible Rich Internet Applications (ARIA) is a set of roles and attributes that define ways to make web content 
+         and web applications (especially those developed with JavaScript) more accessible to people with disabilities.
+         ARIA does not change anything about the functionality or behavior of an element. -->
+    <nav aria-label="Page navigation"> <!-- aria: https://reurl.cc/2YEk8X -->
+        <ul class="pagination justify-content-center">
+            
+            {% if not posts_per_page.has_previous %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="" tabindex="-1" aria-disabled="true">Previous</a> <!-- tabindex: https://reurl.cc/mM0jZA -->
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <!-- "href" could be an absolute URL (like href="http://www.example.com/default.htm"),
+                         or a relative URL pointing to a file within a web site (like here). 
+                         "?page={{ posts_per_page.previous_page_number }}" will direct to "<current_URL>?page=<page_num>"). -->
+                    <a class="page-link" href="?page={{ posts_per_page.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for page_index in posts_per_page.paginator.page_range %}
+                {% if page_index == posts_per_page.number %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="?page={{ page_index }}">{{ page_index }}<span class="sr-only">(current)</span></a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_index }}">{{ page_index }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if not posts_per_page.has_next %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="" tabindex="-1" aria-disabled="true">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts_per_page.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}
