@@ -20,7 +20,7 @@ WORKDIR /usr/src/app
 RUN pip install -r requirements.txt
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 
-# FROM <image_name>:<tag>: Construct our image based on the <image_name>:<tag Image.
+# FROM <image_name>:<tag>: Construct our image based on the <image_name>:<tag Image>.
 #                          We don't want to create a Docker image from setting up the environment, so most of the time, 
 #                          we will directly find the Image that has already set up the environment from DockerHub as a base to create our own Image.
 #                          "From" first searches for the matching image from the local Docker image,
