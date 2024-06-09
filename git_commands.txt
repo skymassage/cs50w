@@ -1,0 +1,49 @@
+Git allows you to work more easily with other developers, so you want to know who worked on a file and how to contact them,
+and you need to tell Git your name and email. The following two commands is to set or change the username and email,
+so the new name and email you set will be visible in any future commits you push to GitHub from the command line:
+git config --global user.name "<your_name>"
+git config --global user.email "<your_email>"
+The "--global" flag means to set your Git username and email for every repository on your computer.
+If you want to set them a single repository, you can leave out "--global"
+
+git config --list: See see all the setting that are associated with your particular Git installation:
+                   You can also type "git config <key>" to view the current value <key> of a setting
+
+git clone <repository_url>: Download the repository to your computer.
+                            If you didn't create a README.md, it is normal to get the warning:
+                            "You appear to have cloned into an empty repository". And there’s no need to worry about it.
+
+git add <file or directory>: Let Git know that it should be keeping track of the file you've made.
+git add .: Track all files within this directory.
+git commit -m "message": After making some changes to a file, we can "commit" those changes,
+                         taking a snapshot of the current state of our code.
+                         To do this, run this command, where "message" describes the changes you just made
+git commit -am "some message": If you've only changed existing files and not created new ones,
+                               instead of using "git add ..." and then "git commit ...", we can condense this into this command.
+
+git push: Publish the local commits you've made to Github, and the changes will be reflected on the GitHub repository page.
+
+git pull: The remote repository on GitHub will be more up to date than the local version,
+          so this command pull any remote changes to your repository.
+
+git status: See how our code compares to the code on the remote repository.
+
+git init:
+
+git log: Show a list of all the commits made to a repository.
+         If your local repository lags behind the GitHub, use "git pull" and then "git log" to the latest commits.
+
+git reset --hard <commit>: Revert your code to exactly how it was after the specified commit. To specify <commit>,
+                           use the commit hash associated with a commit which can be found using git log as shown above.
+git reset --hard origin/main: Revert your code to the version currently stored online on Github,
+                              "origin/mian" is the version of my repository that's currently on GitHub,
+                              where the "main" branch is your default branch, which is generally going to contain the up-to-date, stable version of your code.
+
+git branch: See which branch you're currently working on, which will have an asterisk to the left of its name.
+            The branch you are currently looking at is determined by the HEAD.
+            By default, the HEAD is pointed at the main branch, but we can check out other branches as well.
+
+git checkout -b <new_branch_name>: Make a new branch and switch to it
+git checkout <branch_name>: Switch to the branch which have existed.
+
+git merge <other_branch_name>: Merge the other branck into the current version of this branch
