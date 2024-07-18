@@ -1,4 +1,3 @@
-
 # In live applications with real users though, SQLite is almost never used, as it is not as easily scaled as other systems. 
 # Oftentimes, you want your database hosted elsewhere on some separate server to be able to handle its incoming requests and connections. 
 # We can simply add another Docker container, and run them together using a feature called Docker Compose. 

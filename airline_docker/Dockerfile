@@ -17,8 +17,13 @@
 FROM python:3
 COPY .  /usr/src/app
 WORKDIR /usr/src/app
+# We can also set the current working directory before copying the files to the container.
+# The following is the same as abve:
+# WORKDIR /usr/src/app
+# COPY . .
 RUN pip install -r requirements.txt
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+
 
 # FROM <image_name>:<tag>: Construct our image based on the <image_name>:<tag Image>.
 #                          We don't want to create a Docker image from setting up the environment, so most of the time, 
@@ -26,8 +31,8 @@ CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 #                          "From" first searches for the matching image from the local Docker image,
 #                          and if it cannot find it, it will download it from DockerHub.
 #                          Here we use "Python:3" as the base Image to build our own Image.
-# COPY <directory_1> <directory_2>: Copy everything from the <directory_1> directory 
-#                                   and store it n the new container's <directory_2> directory.
+# COPY <directory_1> <directory_2>: Copy everything (except Dockerfile) from the directory <directory_1>
+#                                   and store it n the new container's directory <directory_2>.
 # WORKDIR <directory>: WORKDIR means to change the working directory to <directory>. (A bit like the "cd" command on the terminal)
 #                      So this sets up where we will run commands within the container. 
 #                      Here we would like to set our working directory equal to that same app directory, 
@@ -42,3 +47,7 @@ CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 #                                              Here, when the container starts, the "python3 manage.py runserver" shell script will be executed first.
 #                                              Beside, we just specify on what address and what port we would like it to run. 
 #                                              And we run it on port 8000, for example. But we could choose another port that we would like to run instead.
+
+# RUN will be executed when the image is created.
+# And CMD won't be executed when the image is created, but the container is started based on the image.
+# CMD should be always the last instruction line in the Dockerfile.
