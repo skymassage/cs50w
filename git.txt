@@ -1,0 +1,61 @@
+Set the global configuration (for all repositories):
+    git config --global user.name "<user _name>"
+    git config --global user.email "<user _email>"
+
+Create an empty Git repository or reinitialize an existing one:
+    git init
+
+Set the local configuration (for the current repository):
+    git config user.name "<user _name>"
+    git config user.email "<user _email>"
+
+Show the configuration and their scope:
+    git config -l --show-scope
+
+Show the directory of the .gitconfig file with their scope:
+    git config -l --show-origin --show-scope
+
+Print the global and local configurations in the configuration files:
+    cat ~/.gitconfig
+    cat .git/config
+
+Set the default branch name to "master" and the next new repository will use the default branch name "master" (the current default branch name is still "main"):
+    git config --global init.defaultBranch master
+
+git cat-file <option> <object>: Output the contents or other properties such as size, type or delta information of one or more objects.
+    <object>: The name of the object is expressed by the SHA-1 expressions and all objects are stored under the .git directory, like this:
+              .git/objects/3b/18e512dba79e4c8300dd08aeb37f8e728b8dad
+              .git/objects/92/b8b694ffb1675e5975148e1121810081dbdffe
+              Note that the name of the object includes its parent folder's name,i.e.,
+              the names of the object are "3b18e512dba79e4c8300dd08aeb37f8e728b8dad" and "92b8b694ffb1675e5975148e1121810081dbdffe"
+              whcih include their parent folders' names "3b" and "92".
+              Besides, we don't need to give the full expression, we can just give their names like "3b18" and "92b8" and Git can recognize them.
+    -t: Instead of the content, show the object type identified by <object>.
+    -p: Print the contents of <object> based on its type.
+
+git-status: Show the working tree status
+
+git ls-files -s: Show the staged contents' mode bits, object name and stage number about files in the index and the working tree
+
+git add <pathspec>: Add file contents to the index (staging area),
+                    and the index is a staging area where you can gather changes you intend to include in your next commit. 
+                    <pathspec> is used in the git command to limit the scope of operations to some subset of the tree or working tree.
+
+git commit -m <message>: Record changes to the repository and use <message> as the commit message.
+                         If multiple -m options are given, their values are concatenated as separate paragraphs.
+
+git rm --cached <pathspec>: Unstages and removes <pathspec> only from the index, but doesn't remove it from the working directory                            
+
+git restore <pathspec>: Restore <pathspec> that is in the working directory and hasn't yet been staged to its most recent commit status.
+git restore --staged <pathspec>: Removes <pathspec> that has been staged from the index, but doesn't restore <pathspec> in the working directory. 
+git restore --staged --worktree <pathspec>: Removes <pathspec> that has been staged from the index, and restore <pathspec> in the working directory. 
+
+git log: Show commit logs
+git log --oneline: Display commit information in a concise one-line format.
+git log -n <number>: Display the last <number> commits.
+git log --oneline -n <number>
+git log --after='<date>': Show commits after a specific date (inclusive), where the <date> format is like 2024-01-02.
+git log --before='<date>': Show commits after a specific date (exclusive).
+git log --stat: Displays summary statistics, including number of files and lines modified etc.
+
+git shortlog: Summarize git log output.
