@@ -9,11 +9,15 @@ Set the local configuration (for the current repository):
     git config user.name "<user _name>"
     git config user.email "<user _email>"
 
-Show the configuration and their scope:
+Show all configuration (local and global) and their scope:
     git config -l --show-scope
 
-Show the directory of the .gitconfig file with their scope:
+Show all configuration (local and global), their directories and their scope:
     git config -l --show-origin --show-scope
+
+Show the global or local configuration and its directory:
+    git config --global -l --show-origin
+    git config --local -l --show-origin
 
 Print the global and local configurations in the configuration files:
     cat ~/.gitconfig
@@ -30,12 +34,13 @@ git cat-file <option> <object>: Output the contents or other properties such as 
               the names of the object are "3b18e512dba79e4c8300dd08aeb37f8e728b8dad" and "92b8b694ffb1675e5975148e1121810081dbdffe"
               whcih include their parent folders' names "3b" and "92".
               Besides, we don't need to give the full expression, we can just give their names like "3b18" and "92b8" and Git can recognize them.
-    -t: Instead of the content, show the object type identified by <object>.
+    -t: Show the object type.
+    -s: Show the object size.
     -p: Print the contents of <object> based on its type.
 
-git-status: Show the working tree status
-
 git ls-files -s: Show the staged contents' mode bits, object name and stage number about files in the index and the working tree
+
+git-status: Show the working tree status, where the work tree means a tree structure that contains the .git folder, including all sub directories and files.
 
 git add <pathspec>: Add file contents to the index (staging area),
                     and the index is a staging area where you can gather changes you intend to include in your next commit. 
@@ -44,13 +49,16 @@ git add <pathspec>: Add file contents to the index (staging area),
 git commit -m <message>: Record changes to the repository and use <message> as the commit message.
                          If multiple -m options are given, their values are concatenated as separate paragraphs.
 
-git rm --cached <pathspec>: Unstages and removes <pathspec> only from the index, but doesn't remove it from the working directory                            
+git rm <pathspec>: Remove files from the working tree and from the index.
+git rm --cached <pathspec>: Removes <pathspec> only from the index, but doesn't remove it from the working tree.                          
 
-git restore <pathspec>: Restore <pathspec> that is in the working directory and hasn't yet been staged to its most recent commit status.
-git restore --staged <pathspec>: Removes <pathspec> that has been staged from the index, but doesn't restore <pathspec> in the working directory. 
-git restore --staged --worktree <pathspec>: Removes <pathspec> that has been staged from the index, and restore <pathspec> in the working directory. 
+git restore <pathspec>: Restore <pathspec> that is in the working tree and hasn't yet been staged to its most recent staged status.
+git restore --staged <pathspec>: Removes <pathspec> that has been staged from the index, but doesn't restore <pathspec> in the working tree. 
+git restore --staged --worktree <pathspec>: Removes <pathspec> that has been staged from the index, and restore <pathspec> in the working tree. 
 
-git log: Show commit logs
+git log: Show the commit logs of the current HEAD and of its ancestry.
+         That is, it prints the commit HEAD points to, then its parent, its parent, and so on.
+         It traverses back through the repo's ancestry, by recursively looking up each commit's parent.
 git log --oneline: Display commit information in a concise one-line format.
 git log -n <number>: Display the last <number> commits.
 git log --oneline -n <number>
@@ -58,4 +66,63 @@ git log --after='<date>': Show commits after a specific date (inclusive), where 
 git log --before='<date>': Show commits after a specific date (exclusive).
 git log --stat: Displays summary statistics, including number of files and lines modified etc.
 
+git reflog: Reference logs, or "reflogs", record when the tips of branches and other references were updated in the local repository.
+            It doesn't traverse HEAD's ancestry at all. The reflog is an ordered list of the commits that HEAD has pointed to:
+            it's undo history for your repo. The reflog isn't part of the repo itself (it's stored separately to the commits themselves) 
+            and isn't included in pushes, fetches or clones; it's purely local.
+
 git shortlog: Summarize git log output.
+
+git branch: List and branches we have.
+git branch <branch_name>: Create a branch with branch_name, if there already have branch with the name you want to create, it will return error.
+git branch –d <branch_name>: Delete the branch that must have been fully merged in its upstream branch.
+                             The objects (blob, commits, trees) from this branch still exist and won't be deleted.
+                             It only deletes .git/refs/<branch> and .git/logs/refs/heads/<branch>.
+git branch –D <branch_name>: Delete branch even if it isn't merged, but can't delete current active branch or branch not existing.
+git branch –m <old_name> <new_name>: Rename branch with new name.
+
+git checkout <branch_name>: Change the current active branch to <branch_name> and the head points to the latest commit on this branch.
+git checkout <commit>: Change the current head pointing to <commit> on the current branch, this head become the detached head.
+git checkout <pathspec>: Same as "git restore <pathspec>".
+git checkout –b <branch_name>: Checkout a branch, will create that branch if it doesn't exsit.
+
+git diff: Show changes between the current working tree and the index (staging area).
+git diff --cached: Show changes between the current repository and the index.
+
+git merge <branch>: Incorporate changes from <branch> into the current branch.
+                    If the merge conflict happens, we need to fix the files having conflict merge,
+                    and then use "git add" and "git commit" to create a new commit to merge two branches.
+                    Note that this time the commit already has the message "Merge branch '<branch>'",
+                    and you don't need to add "-m <message>" unless you want to add the extra information.
+
+
+git rebase <branch>: Git takes the commits from <branch> (e.g. feature, bugfix) and applies them on top of the current base branch
+                     (e.g., main or master) as if they were made in sequence, creating a linear history.
+                     Unlike "git merge <branch>", which combines the history of <branch> and the current branch.
+                     If multiple people develop together, this command will modify the commit history, which can easily cause trouble to others, so we usually don't use this command.
+
+git reset <pathspec>: Reset current HEAD to the specified state.
+
+origin: The default alias on the system for a remote repository.
+    origin/<branch>: The local copy of the remote branch.
+    origin <branch>: The remote branch in the remote repository.
+
+git remote add origin <repository_URL>: Add the remote repository to the local repository. 
+                                        It links your local repository to the remote repository,
+                                        allowing you to push and pull changes between them using the name "origin" as a reference to the remote.
+                                        You can use "cat .git/config" to view the remote configuration added to the local repository.
+
+git push origin <branch>: Push the local <branch> to the remote <branch>, where the local and remote branches are also named <branch>.
+                          If the remote <branch> doesn't exist, it would be created.
+git push -u origin <branch>: Push the current branch to the remote (origin) branch and set the upstream tracking branch to <branch>.
+                         -u: "-u" means "upstream" that refers to the remote branch that your local branch is tracking,
+                             and it sets the remote <branch> as the upstream for the current local branch.
+
+
+git clone <repository_URL> <path>: Clone a repository into a new directory.
+                               <path> is the name of a new directory to clone into,
+                               and it can be ignored so that the repository will be cloned to the current path.
+
+git remote -v
+
+                    
