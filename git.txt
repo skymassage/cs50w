@@ -80,6 +80,7 @@ git branch –d <branch_name>: Delete the branch that must have been fully merge
                              It only deletes .git/refs/<branch> and .git/logs/refs/heads/<branch>.
 git branch –D <branch_name>: Delete branch even if it isn't merged, but can't delete current active branch or branch not existing.
 git branch –m <old_name> <new_name>: Rename branch with new name.
+git branch –a: List both remote-tracking branches and local branches. 
 
 git checkout <branch_name>: Change the current active branch to <branch_name> and the head points to the latest commit on this branch.
 git checkout <commit>: Change the current head pointing to <commit> on the current branch, this head become the detached head.
@@ -103,26 +104,28 @@ git rebase <branch>: Git takes the commits from <branch> (e.g. feature, bugfix) 
 
 git reset <pathspec>: Reset current HEAD to the specified state.
 
-origin: The default alias on the system for a remote repository.
+origin: The default remote name on the system for a remote repository.
     origin/<branch>: The local copy of the remote branch.
     origin <branch>: The remote branch in the remote repository.
 
-git remote add origin <repository_URL>: Add the remote repository to the local repository. 
-                                        It links your local repository to the remote repository,
-                                        allowing you to push and pull changes between them using the name "origin" as a reference to the remote.
-                                        You can use "cat .git/config" to view the remote configuration added to the local repository.
+git remote add <remote_name> <repository_URL>: Set the remote name of the remote repository in the local system,  
+                                               so we can use "git push", "git pull", ...etc to operate between local and remote repositories
+                                               Usually we set the default remote name "origin" to <remote_name>.
+                                               You can use "cat .git/config" to view the remote configuration added to the local repository.
 
-git push origin <branch>: Push the local <branch> to the remote <branch>, where the local and remote branches are also named <branch>.
-                          If the remote <branch> doesn't exist, it would be created.
-git push -u origin <branch>: Push the current branch to the remote (origin) branch and set the upstream tracking branch to <branch>.
-                         -u: "-u" means "upstream" that refers to the remote branch that your local branch is tracking,
-                             and it sets the remote <branch> as the upstream for the current local branch.
+git remote remove <remote_name>: Remove the current remote name.
+
+git push <remote_name> <branch>: Push the local <branch> to the remote <branch>, where the local and remote branches are also named <branch>.
+                                 If the remote <branch> doesn't exist, it would be created.
+git push -u <remote_name> <branch>: Push the current branch to the remote (origin) branch and set the upstream tracking branch to <branch>.
+                                -u: "-u" means "upstream" that refers to the remote branch that your local branch is tracking,
+                                    and it sets the remote <branch> as the upstream for the current local branch.
 
 
 git clone <repository_URL> <path>: Clone a repository into a new directory.
                                <path> is the name of a new directory to clone into,
                                and it can be ignored so that the repository will be cloned to the current path.
 
-git remote -v
+git remote -v: Displays the URL Git uses to read and write the remote name.
 
-                    
+
