@@ -10,10 +10,14 @@ Set the local configuration (for the current repository):
     git config user.email "<user _email>"
 
 Show all configuration (local and global) and their scope:
-    git config -l --show-scope
+    git config --global -l
 
 Show all configuration (local and global), their directories and their scope:
     git config -l --show-origin --show-scope
+
+Show the global or local configuration:
+    git config --global -l
+    git config --local -l
 
 Show the global or local configuration and its directory:
     git config --global -l --show-origin
@@ -40,14 +44,16 @@ git cat-file <option> <object>: Output the contents or other properties such as 
 
 git ls-files -s: Show the staged contents' mode bits, object name and stage number about files in the index and the working tree
 
-git-status: Show the working tree status, where the work tree means a tree structure that contains the .git folder, including all sub directories and files.
+git status: Show the working tree status, where the work tree means a tree structure that contains the .git folder, including all sub directories and files.
 
 git add <pathspec>: Add file contents to the index (staging area),
                     and the index is a staging area where you can gather changes you intend to include in your next commit. 
-                    <pathspec> is used in the git command to limit the scope of operations to some subset of the tree or working tree.
+                    <pathspec> is used in the git command to limit the scope of operations to some subset of the tree or working tree,
+                    such as commits, ORIGINAL_HEAD, etc. in ".git/".
 
 git commit -m <message>: Record changes to the repository and use <message> as the commit message.
                          If multiple -m options are given, their values are concatenated as separate paragraphs.
+git commit -a: Automatically stages (adds to the commit) all tracked files that have been modified or deleted, and then commits
 
 git rm <pathspec>: Remove files from the working tree and from the index.
 git rm --cached <pathspec>: Removes <pathspec> only from the index, but doesn't remove it from the working tree.                          
@@ -81,8 +87,10 @@ git branch –d <branch_name>: Delete the branch that must have been fully merge
 git branch –D <branch_name>: Delete branch even if it isn't merged, but can't delete current active branch or branch not existing.
 git branch –m <old_name> <new_name>: Rename branch with new name.
 git branch –a: List both remote-tracking branches and local branches. 
+git branch -r: List (delete if used with -d) the remote-tracking branches.
 
 git checkout <branch_name>: Change the current active branch to <branch_name> and the head points to the latest commit on this branch.
+                            If the branch doesn't exist locally but exists remotely, it will be pulled from the remote repository.
 git checkout <commit>: Change the current head pointing to <commit> on the current branch, this head become the detached head.
 git checkout <pathspec>: Same as "git restore <pathspec>".
 git checkout –b <branch_name>: Checkout a branch, will create that branch if it doesn't exsit.
@@ -92,7 +100,7 @@ git diff --cached: Show changes between the current repository and the index.
 
 git merge <branch>: Incorporate changes from <branch> into the current branch.
                     If the merge conflict happens, we need to fix the files having conflict merge,
-                    and then use "git add" and "git commit" to create a new commit to merge two branches.
+                    and then use "git add <pathspec>" and "git commit" to create a new commit to merge two branches.
                     Note that this time the commit already has the message "Merge branch '<branch>'",
                     and you don't need to add "-m <message>" unless you want to add the extra information.
 
@@ -102,11 +110,16 @@ git rebase <branch>: Git takes the commits from <branch> (e.g. feature, bugfix) 
                      Unlike "git merge <branch>", which combines the history of <branch> and the current branch.
                      If multiple people develop together, this command will modify the commit history, which can easily cause trouble to others, so we usually don't use this command.
 
-git reset <pathspec>: Reset current HEAD to the specified state.
-
 origin: The default remote name on the system for a remote repository.
     origin/<branch>: The local copy of the remote branch.
     origin <branch>: The remote branch in the remote repository.
+
+git remote: Show all remote names.
+git remote -v: Displays the URL Git uses to read and write the remote name.
+
+git remote show <remote_name>: The detailed information about a specific remote repository, including its branches,
+                               the tracking branches, and any configured fetch/push settings.
+                               It's useful for checking the status and configuration of your remotes.
 
 git remote add <remote_name> <repository_URL>: Set the remote name of the remote repository in the local system,  
                                                so we can use "git push", "git pull", ...etc to operate between local and remote repositories
@@ -115,17 +128,85 @@ git remote add <remote_name> <repository_URL>: Set the remote name of the remote
 
 git remote remove <remote_name>: Remove the current remote name.
 
-git push <remote_name> <branch>: Push the local <branch> to the remote <branch>, where the local and remote branches are also named <branch>.
-                                 If the remote <branch> doesn't exist, it would be created.
+git push <remote_name> <branch>: 1. Push the local <branch> to the remote <branch>, where the local and remote branches are also named <branch>.
+                                    If the remote <branch> doesn't exist, it would be created.
+                                 2. When <remote_name> and <branch> isn't specified, "branch.<branch_name>.remote" configuration 
+                                    ("git config -l") for the current branch will be referenced to determine where to push. 
+                                    And if the configuration is missing, it defaults to "origin".
+                                 3. Note that the push will be rejected if the local branch falls behind the remote one.
 git push -u <remote_name> <branch>: Push the current branch to the remote (origin) branch and set the upstream tracking branch to <branch>.
                                 -u: "-u" means "upstream" that refers to the remote branch that your local branch is tracking,
                                     and it sets the remote <branch> as the upstream for the current local branch.
-
 
 git clone <repository_URL> <path>: Clone a repository into a new directory.
                                <path> is the name of a new directory to clone into,
                                and it can be ignored so that the repository will be cloned to the current path.
 
-git remote -v: Displays the URL Git uses to read and write the remote name.
+git remote prune <remote_name>: Clean up references (in ".git/refs/remotes) to remote branches that have been deleted from the remote repository.
+                                It removes stale tracking branches that no longer exist on the remote but are still present locally.
+                                This helps keep the local repository in sync with the remote by removing unnecessary references.
 
+git gc: Cleanup unnecessary files and optimize the local repository, such as compressing file revisions (to reduce disk space and increase performance),
+        removing unreachable objects which may have been created from prior invocations of git add, or stale working trees.
 
+git branch -vv: Show a list of all local branches with detailed information. Each item displays:
+                1. the branch name, and its latest commit hash and message
+                2. the tracking information showing which remote branch (if any) the local branch is tracking,
+                   and whether it is ahead or behind that remote branch.
+                This command is useful for quickly seeing the status of your branches relative to their remote counterparts.
+
+git fetch [repository]: 1. Download updates (like new commits, branches, or tags) from a remote repository 
+                           to your local repository without merging them into your current branch.
+                           It lets you see what others have been working on without altering your local work.
+                           The logs of the local repository don't change, and we can't see "<remote_name>/<bahch>"
+                           and "<remote_name> <bahch>" in the "git log" because they are ahead of the local HEAD.
+                        2. [repository] can be <remote_name>, <remote_name>/<branch> or URL.
+                           When no [repository] is specified, by default <remote_name> is "origin" and <branch> is the current branch.
+                        3. Execute this commant on the current branch,
+                           and the first line of ".git/FETCH_HEAD" will be this branch's remote one and its latest commit.
+                           After "git merge", the previous commit will be stored in ".git/ORIGIN_HEAD",
+                           so we can use "git reset --hard ORIGIN_HEAD" to rollback the previous commit before "git fetch".
+                        4. If we delete the branch of the remote repository and then use this command,
+                           this branch in the local repository will be stale (using"git remote show <remote_name>"),but isn't deleted.
+                           We can delete this branch locally by adding "--prune" to this command
+                           or using "git remote prune <remote_name> <branch>" after this command.
+               --prune: If we delete the branch of the remote repository,
+                        we should add "--prune" to delete the branch in the local repository.
+                    -v: Show the detailed information during the fetch process.
+git merge <remote_name>/<branch>: Merge the local branch with the remote for update, if the remote branch is ahead of the loacl one.
+
+git pull [repository]: 1. Fetch from and incorporate changes from a remote repository into the current branch (i.e. git pull = git fetch + git merge).
+                          Because it execute "git fetch" first, the first line of ".git/FETCH_HEAD" will be this branch's remote one and its latest commit 
+                          Then merge the current branch with its branch's remote one(i.e. the first line of ".git/FETCH_HEAD").
+                          Before merge, Git sends the POST message (git-upload-pack) to the remote,
+                          and compares with the local branch to decide where should be updated.
+                          If the merge confilct will happen, add "--no-rebase" to this command to avoid errors.
+                          Then fix the conflict, and finally use "git add <pathspec>" and "git commit"
+                          (or "git commit -a" to skip "git add <pathspec>") for commit.
+                       2. When no [repository] is specified,
+                          the default of [repository] for "<remote_name>/<branch>" is "branch.<branch_name>.remote"
+                          and "branch.<branch_name>.merge" in "git config -l", where <branch> is the current branch.
+                       3. If the current branch is behind the remote,
+                          then by default it will fast-forward the current branch to match the remote. 
+                          And if the current branch and the remote have diverged,
+                          specify "--no-rebase" to reconcile the divergent branches.
+                       4. If you are not sure that merge will conflict, first use "git fetch <remote_name>/<branch>",
+                          then use "git diff <remote_name>/<branch>" to check the differences, and then use "git merge <remote_name>/<branch>".
+                          If you are sure there will be no conflicts (that is, fast-forward, 3-way merge),
+                          use git pull, which is faster.
+                   -v: Show the detailed information during the pull process.
+          --no-rebase: Eensure that when pulling changes from a remote repository,
+                       Git will use a merge to integrate the updates instead of rebasing thelocal commits on top of the incoming commits.
+                       In short, it avoids rebasing and merges the changes directly.
+
+git reset <pathspec>: Reset current HEAD to the specified state. <pathspec> can be commits, ORIGIN_HEAD etc.
+                      It can move the current branch to a different commitand optionally modify the index (staging area)
+                      and working directory depending on the options used (--soft, --mixed, or --hard).
+              --soft: Move the HEAD to a specified commit without altering the working directory or the index.
+                      It effectively undoes commits, but leaves the files in the index as they were.
+                      This allows you to recommit changes if needed.
+              --hard: Reset the working directory and the index to the specified commit, discarding all changes.
+                      This means any uncommitted changes in tracked files will be lost. Use it with caution as it cannot be undone easily.
+             --mixed: This is the default action. Reset the index but not the working tree 
+                      (i.e., the changed files are preserved but not marked for commit or not added to the index)
+                      and report what has not been updated.
