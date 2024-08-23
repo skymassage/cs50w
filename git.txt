@@ -1,13 +1,17 @@
-Set the global configuration (for all repositories):
+Set the global username and its email for all repositories:
     git config --global user.name "<user _name>"
     git config --global user.email "<user _email>"
 
 Create an empty Git repository or reinitialize an existing one:
     git init
 
-Set the local configuration (for the current repository):
+Set the local username and its email (the current local repository uses them first):
     git config user.name "<user _name>"
     git config user.email "<user _email>"
+
+Print the global and local configurations in the configuration files:
+    cat ~/.gitconfig
+    cat .git/config
 
 Show all configuration (local and global) and their scope:
     git config --global -l
@@ -22,10 +26,6 @@ Show the global or local configuration:
 Show the global or local configuration and its directory:
     git config --global -l --show-origin
     git config --local -l --show-origin
-
-Print the global and local configurations in the configuration files:
-    cat ~/.gitconfig
-    cat .git/config
 
 Set the default branch name to "master" and the next new repository will use the default branch name "master" (the current default branch name is still "main"):
     git config --global init.defaultBranch master
@@ -86,8 +86,10 @@ git branch –d <branch_name>: Delete the branch that must have been fully merge
                              It only deletes .git/refs/<branch> and .git/logs/refs/heads/<branch>.
 git branch –D <branch_name>: Delete branch even if it isn't merged, but can't delete current active branch or branch not existing.
 git branch –m <old_name> <new_name>: Rename branch with new name.
-git branch –a: List both remote-tracking branches and local branches. 
-git branch -r: List (delete if used with -d) the remote-tracking branches.
+git branch –a: List all branches both local and remote.
+git branch -r: List the remote branches.
+git branch -vv: List all local branches tracking information. 
+                This command is useful for quickly seeing the status of your branches relative to their remote counterparts.
 
 git checkout <branch_name>: Change the current active branch to <branch_name> and the head points to the latest commit on this branch.
                             If the branch doesn't exist locally but exists remotely, it will be pulled from the remote repository.
@@ -157,16 +159,7 @@ git remote prune <remote_name>: Clean up references (in ".git/refs/remotes) to r
                                 It removes stale tracking branches that no longer exist on the remote but are still present locally.
                                 This helps keep the local repository in sync with the remote by removing unnecessary references.
 
-git gc: Cleanup unnecessary files and optimize the local repository, such as compressing file revisions (to reduce disk space and increase performance),
-        removing unreachable objects which may have been created from prior invocations of git add, or stale working trees.
-
-git branch -vv: Show a list of all local branches with detailed information. Each item displays:
-                1. the branch name, and its latest commit hash and message
-                2. the tracking information showing which remote branch (if any) the local branch is tracking,
-                   and whether it is ahead or behind that remote branch.
-                This command is useful for quickly seeing the status of your branches relative to their remote counterparts.
-
-git fetch [repository]: 1. Download updates (like new commits, branches, or tags) from a remote repository 
+git fetch [repository]: 1. download objects and refs from remote repository from a remote repository 
                            to your local repository without merging them into your current branch.
                            It lets you see what others have been working on without altering your local work.
                            The logs of the local repository don't change, and we can't see "<remote_name>/<bahch>"
@@ -182,11 +175,11 @@ git fetch [repository]: 1. Download updates (like new commits, branches, or tags
                            We can delete this branch locally by adding "--prune" to this command
                            or using "git remote prune <remote_name> <branch>" after this command.
                --prune: If we delete the branch of the remote repository,
-                        we should add "--prune" to delete the branch in the local repository.
+                        this option can remove any remote-tracking references that no longer exist on the remote when getching.
                     -v: Show the detailed information during the fetch process.
 git merge <remote_name>/<branch>: Merge the local branch with the remote for update, if the remote branch is ahead of the loacl one.
 
-git pull [repository]: 1. Fetch from and incorporate changes from a remote repository into the current branch (i.e. git pull = git fetch + git merge).
+git pull [repository]: 1. Fetch from and merge the remote branch into the current one (i.e. git pull = git fetch + git merge).
                           Because it execute "git fetch" first, the first line of ".git/FETCH_HEAD" will be this branch's remote one and its latest commit 
                           Then merge the current branch with its branch's remote one(i.e. the first line of ".git/FETCH_HEAD").
                           Before merge, Git sends the POST message (git-upload-pack) to the remote,
@@ -221,3 +214,12 @@ git reset <pathspec>: Reset current HEAD to the specified state. <pathspec> can 
              --mixed: This is the default action. Reset the index but not the working tree 
                       (i.e., the changed files are preserved but not marked for commit or not added to the index)
                       and report what has not been updated.
+
+git show-ref: List the latest commits for all local and remote branches and which commit HEAD is pointing to.
+              We can know which branches are currently in the same commit
+              (use "git fetch" to ensure the loacl and remote branches are in sync).
+              Add <branch> to see the latest commits for the specific local and remote <branch>.
+
+git gc: Cleanup unnecessary files and optimize the local repository, such as compressing file revisions (to reduce disk space and increase performance),
+        removing unreachable objects which may have been created from prior invocations of git add, or stale working trees.
+
