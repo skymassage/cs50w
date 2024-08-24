@@ -79,7 +79,7 @@ git reflog: Reference logs, or "reflogs", record when the tips of branches and o
 
 git shortlog: Summarize git log output.
 
-git branch: List and branches we have.
+git branch: List local branches we have.
 git branch <branch_name>: Create a branch with branch_name, if there already have branch with the name you want to create, it will return error.
 git branch –d <branch_name>: Delete the branch that must have been fully merged in its upstream branch.
                              The objects (blob, commits, trees) from this branch still exist and won't be deleted.
@@ -90,6 +90,8 @@ git branch –a: List all branches both local and remote.
 git branch -r: List the remote branches.
 git branch -vv: List all local branches tracking information. 
                 This command is useful for quickly seeing the status of your branches relative to their remote counterparts.
+git branch --merged <branch>: List the local branches that have been merged into <branch>
+                              (including branches merged by the parent branch of <branch> before creating <branch>).
 
 git checkout <branch_name>: Change the current active branch to <branch_name> and the head points to the latest commit on this branch.
                             If the branch doesn't exist locally but exists remotely, it will be pulled from the remote repository.
@@ -155,9 +157,11 @@ git clone <repository_URL> <path>: Clone a repository into a new directory.
                                <path> is the name of a new directory to clone into,
                                and it can be ignored so that the repository will be cloned to the current path.
 
-git remote prune <remote_name>: Clean up references (in ".git/refs/remotes) to remote branches that have been deleted from the remote repository.
-                                It removes stale tracking branches that no longer exist on the remote but are still present locally.
+git remote prune <remote_name>: Clean up references (in ".git/refs/remotes") to remote branches that have been deleted from the remote repository.
+                                (i.e. remove stale tracking branches in ".git/refs/remotes" that no longer exist on the remote but are still present locally,
+                                we can check the stale branches disappeared from "git branch -r").
                                 This helps keep the local repository in sync with the remote by removing unnecessary references.
+                                Note that this doesn't remove the stale branched locally.
 
 git fetch [repository]: 1. download objects and refs from remote repository from a remote repository 
                            to your local repository without merging them into your current branch.
@@ -223,3 +227,37 @@ git show-ref: List the latest commits for all local and remote branches and whic
 git gc: Cleanup unnecessary files and optimize the local repository, such as compressing file revisions (to reduce disk space and increase performance),
         removing unreachable objects which may have been created from prior invocations of git add, or stale working trees.
 
+----------------------------------------------------------------------------------------------------------------
+Delete the local branch that has been merged into "master":
+    git branch --merged master | grep -v "master" | xargs git branch -d
+"git branch --merged master" lists branches that have been merged into "master".
+'grep -v "master"' excludes the "master" branch.
+"xargs git branch -d" deletes the branches excluding "master".
+
+Delete the local branch that has been merged into "master", 
+and delete the branches in ".git/refs/remotes" whcih has been removed in the remote repository:
+    git branch --merged master | grep -v "master" | xargs git branch -d && git remote prune origin
+"git remote prune origin" deletes the branches in ".git/refs/remotes" which has been removed in the remote repository
+(we can check whether the branches are deleted using "git branch -r").
+
+Delete the remote branches that has been merged into master (it will delete the branched in the repository and be careful to use it):
+    git branch --remote  --merged master | grep -v "master" | sed 's/origin\///' | xargs git push origin -d 
+"sed 's/origin\///'" gives the remaining remote branches which have "/origin" substring.
+"xargs git push origin -d" deletes these remote branches in the remote repository.
+
+----------------------------------------------------------------------------------------------------------------
+We forked a repository created by other for development, but the original owner may push new commits,
+and our local repository will fall behind the original repository.
+In this case, we need to sync our local repository with the original repository.
+First, configure a remote for the original repository, where <upstream> is the remote name representing the original repository 
+(Use "git remote -v" to check if <upstream> is added to the local repository):
+    1. git remote add <upstream> https://github.com/<original_owner>/<original_repository>.git
+And sync the local master branch with the original one:
+    2. git fetch <upstream>
+    3. git merge <upstream>/master
+    (Or just use "git pull <upstream>/master")
+The local master branch and the original repository are in sync, and we finally push it to our remote repository.
+So the our local and remote repositories sync with the original repository:
+    4. git push origin master
+
+----------------------------------------------------------------------------------------------------------------
