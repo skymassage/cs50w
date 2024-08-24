@@ -132,6 +132,16 @@ git remote add <remote_name> <repository_URL>: Set the remote name of the remote
 
 git remote remove <remote_name>: Remove the current remote name.
 
+git clone <repository_URL> <path>: Clone a repository into a new directory.
+                                   <path> is the name of a new directory to clone into,
+                                   and it can be ignored so that the repository will be cloned to the current path.
+
+git remote prune <remote_name>: Clean up references (in ".git/refs/remotes") to remote branches that have been deleted from the remote repository.
+                                (i.e. remove stale tracking branches in ".git/refs/remotes" that no longer exist on the remote but are still present locally,
+                                we can check the stale branches disappeared from "git branch -r").
+                                This helps keep the local repository in sync with the remote by removing unnecessary references.
+                                Note that this doesn't remove the stale branched locally.
+
 git push <remote_name> <branch>: 1. Push the local <branch> to the remote <branch>, where the local and remote branches are also named <branch>                
                                  2. If the local branch doesn't exist in the remote repository, must use "git push -u <remote_name> <branch>"
                                     to Push the current branch to the remote branch and set the upstream tracking branch to <branch>,
@@ -150,18 +160,8 @@ git push <remote_name> <branch>: 1. Push the local <branch> to the remote <branc
                                 and it sets the remote <branch> as the upstream for the current local branch
                                 (i.e. "-u" means that the local branch tracks the remote one).
 
-push <remote_name> -d <branch>: Delete the remote branch locally.
-                                (use "git branch -vv" or "git branch -a" to check whether the remote branch is still there after deleting)
-
-git clone <repository_URL> <path>: Clone a repository into a new directory.
-                               <path> is the name of a new directory to clone into,
-                               and it can be ignored so that the repository will be cloned to the current path.
-
-git remote prune <remote_name>: Clean up references (in ".git/refs/remotes") to remote branches that have been deleted from the remote repository.
-                                (i.e. remove stale tracking branches in ".git/refs/remotes" that no longer exist on the remote but are still present locally,
-                                we can check the stale branches disappeared from "git branch -r").
-                                This helps keep the local repository in sync with the remote by removing unnecessary references.
-                                Note that this doesn't remove the stale branched locally.
+git push <remote_name> -d <branch>: Delete the remote branch locally.
+                                    (use "git branch -vv" or "git branch -a" to check whether the remote branch is still there after deleting)                                
 
 git fetch [repository]: 1. download objects and refs from remote repository from a remote repository 
                            to your local repository without merging them into your current branch.
@@ -227,7 +227,7 @@ git show-ref: List the latest commits for all local and remote branches and whic
 git gc: Cleanup unnecessary files and optimize the local repository, such as compressing file revisions (to reduce disk space and increase performance),
         removing unreachable objects which may have been created from prior invocations of git add, or stale working trees.
 
-----------------------------------------------------------------------------------------------------------------
+Clean up the remote and local branches --------------------------------------------------------------------------------------
 Delete the local branch that has been merged into "master":
     git branch --merged master | grep -v "master" | xargs git branch -d
 "git branch --merged master" lists branches that have been merged into "master".
@@ -245,7 +245,7 @@ Delete the remote branches that has been merged into master (it will delete the 
 "sed 's/origin\///'" gives the remaining remote branches which have "/origin" substring.
 "xargs git push origin -d" deletes these remote branches in the remote repository.
 
-----------------------------------------------------------------------------------------------------------------
+Sync the local master branch with the master branch of the original repository we forked -----------------------
 We forked a repository created by other for development, but the original owner may push new commits,
 and our local repository will fall behind the original repository.
 In this case, we need to sync our local repository with the original repository.
@@ -260,4 +260,28 @@ The local master branch and the original repository are in sync, and we finally 
 So the our local and remote repositories sync with the original repository:
     4. git push origin master
 
+Git SSH key-----------------------------------------------------------------------------------------------
+Generate the SSH key pairs, and we can provide a key comment (which will be appended at the end of the public key) with "-C":
+    ssh-keygen -C '<comment>'
+We will be asked to set the passphrase, we don;t have to set it (just press the "Enter" btton).
+Then specify the directory of the key pair, and we usually save it in "~/.ssh/<key_name>",
+But we must exactly specify '~' which is "/home/lin" in this Linux system,
+so the key pair is stored in "/home/lin/.ssh/<keyname>".
+
+Check the SSH key pairs (public keys have the file extenion ".pub"):
+    ls ~/.ssh
+
+It is best to set the ssh key pairs for different platforms.
+By default, "git clone" chooses the local private key named "id_rsa" for the remote repository.
+So we need to create the "config" file in "~/.ssh" so that each platforms can find their corresponding private key.
+The format to set <key_name> to GitHub in "~/.ssh/config" can be:
+    HOST github.com
+    IdentityFile /home/lin/.ssh/<key_name>
+    User <username>
+By default, SSH keys are stored in "~/.ssh", where "~" is "/home/lin" in this system.
+
+Change the connection ("git clone") between local and remote repositories from Https to SSH.
+In the ".git/config", find the remote repository we want to change the connection
+from Https:    url=https://github.com/<github_username>/<reopository>
+to SSH:        url=git@github.com:<github_username>/<reopository>.git
 ----------------------------------------------------------------------------------------------------------------
