@@ -160,8 +160,30 @@ git push <remote_name> <branch>: 1. Push the local <branch> to the remote <branc
                                 and it sets the remote <branch> as the upstream for the current local branch
                                 (i.e. "-u" means that the local branch tracks the remote one).
 
+git push -d <remote_name> <branch>:
 git push <remote_name> -d <branch>: Delete the remote branch locally.
-                                    (use "git branch -vv" or "git branch -a" to check whether the remote branch is still there after deleting)                                
+                                   (use "git branch -vv" or "git branch -a" to check whether the remote branch is still there after deleting)                                
+
+git push <remote_name> <tag_name>: Push tag to remote
+git push <remote_name> --tags: Push multiple tags simultaneously.
+
+git push -d <remote_name> <tag_name>: 
+git push <remote_name> -d <tag_name>: Delete remote tag.
+
+git tag: List all tags.
+
+git tag <tag_name>: Creates a Lightweight tag  for the latest commit on the current branch,
+                    but doesn't create a tag object.
+                    Note that lightweight tags are actually the commit object
+                    (check by "cat .git/refs/tags/<tag_name> | xargs git cat-file -p").
+git tag -a <tag_name> -m "<tag_message>": For the latest commit on the current branch,
+                                          creates annotated tag that have the message with the associated meta-data(like email, date, etc.),
+                                          and creates a tag object in ".git/objects" which contains the tag message and meta-data.
+                                          Note that annotated tags are the tag object 
+                                          (check by "cat .git/refs/tags/<tag_name> | xargs git cat-file -p").
+git tag -a <tag name> <commit_SHA1_value> -m "<tag_message>": Create a annotated tag for an older commit.
+
+git tag -d <tag_name>: Delete tag, but tag object aren't deleted.
 
 git fetch [repository]: 1. download objects and refs from remote repository from a remote repository 
                            to your local repository without merging them into your current branch.
@@ -178,6 +200,8 @@ git fetch [repository]: 1. download objects and refs from remote repository from
                            this branch in the local repository will be stale (using"git remote show <remote_name>"),but isn't deleted.
                            We can delete this branch locally by adding "--prune" to this command
                            or using "git remote prune <remote_name> <branch>" after this command.
+                        5. Sync tags from remot. However, if the tags were deleted remotely,
+                           this command wouldn't deletled the stale tags for sync, so we need to delete them manually.
                --prune: If we delete the branch of the remote repository,
                         this option can remove any remote-tracking references that no longer exist on the remote when getching.
                     -v: Show the detailed information during the fetch process.
@@ -284,4 +308,5 @@ Change the connection ("git clone") between local and remote repositories from H
 In the ".git/config", find the remote repository we want to change the connection
 from Https:    url=https://github.com/<github_username>/<reopository>
 to SSH:        url=git@github.com:<github_username>/<reopository>.git
+
 ----------------------------------------------------------------------------------------------------------------
