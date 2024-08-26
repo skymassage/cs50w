@@ -10,6 +10,8 @@ So we usually don't directly create hooks in ".git/hooks/",
 and we set up the hook configuration in a file whose directory level is the same as ".git".
 Besides, for different languages, we have different ways to realize hooks.
 
+Note that if we just want to stop using hooks, we add the ".sample" extention to the hook file or just delete them.
+
 ------------------------------------------------- Ex: Set the pre-commit hooks for python 
 
 1. We can use the python virtual environment to use hooks.
