@@ -1,0 +1,30 @@
+Hooks are written in shell script in ".git/hooks/",​
+and you can use hooks by removing the ".sample" file extension of the files in ".git/hooks".
+
+By default, "pre-commit" in ".git/hooks/" contains a hook that checks if each file has a non-ASCII file name,
+and if a file has a non-ASCII file name, the commit isn't allowed.
+We can also add other hooks before commiting in "pre-commit".
+
+".git" won't be pushed to the remote repository, so other people using our repository don't have the hooks we set.
+So we usually don't directly create hooks in ".git/hooks/".
+
+Hook for python ------------------------------------------------------------------
+
+trailing-whitespace: Trims trailing whitespace.
+
+end-of-file-fixer: Makes sure files end in a newline and only a newline.
+
+check-yaml: Attempts to load all yaml files to verify syntax.
+
+check-added-large-files: Prevent giant files from being committed.
+
+Linter is a tool that checks code for syntax errors. Linter also checks the code style, 
+such as whether the code conforms to the PEP8 (Python Enhancement Proposal 8) code style
+officially required by Python, or the style we defined.
+Most languages ​​have their own linter, and the common linters for Python are pylint, pycodestyle and flake8.
+
+Formatter is a tool that automatically fix the code style problems.
+However, formatter can't fix syntax errors, such as using unset variables, they can be detected the linter,
+but they only can be fixed manually. The common formatters for Python are autopep8 yapf Black.
+
+By using Flake8 and Black, you can ensure the good quality of your Python code.

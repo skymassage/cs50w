@@ -129,6 +129,9 @@ git remote add <remote_name> <repository_URL>: Set the remote name of the remote
                                                so we can use "git push", "git pull", ...etc to operate between local and remote repositories
                                                Usually we set the default remote name "origin" to <remote_name>.
                                                You can use "cat .git/config" to view the remote configuration added to the local repository.
+                                               Note that if the remote repository's branch we want to push to doesn't have the upstream,
+                                               use "git push -u <remote_name> <branch>" including "-u" for push.
+                                               "git push -u <remote_name> <branch>" is usually used to push new branches that the remote doesn't have.
 
 git remote remove <remote_name>: Remove the current remote name.
 
@@ -159,6 +162,9 @@ git push <remote_name> <branch>: 1. Push the local <branch> to the remote <branc
                             -u: "-u" means "upstream" that refers to the remote branch that your local branch is tracking,
                                 and it sets the remote <branch> as the upstream for the current local branch
                                 (i.e. "-u" means that the local branch tracks the remote one).
+                                So if the remote repository's branch we want to push to doesn't have the upstream,
+                                use "git push -u <remote_name> <branch>" including "-u" for push.
+                                "git push -u <remote_name> <branch>" is usually used to push new branches that the remote doesn't have.
 
 git push -d <remote_name> <branch>:
 git push <remote_name> -d <branch>: Delete the remote branch locally.
@@ -284,7 +290,7 @@ The local master branch and the original repository are in sync, and we finally 
 So the our local and remote repositories sync with the original repository:
     4. git push origin master
 
-Git SSH key-----------------------------------------------------------------------------------------------
+Git SSH key -----------------------------------------------------------------------------------------------
 Generate the SSH key pairs, and we can provide a key comment (which will be appended at the end of the public key) with "-C":
     ssh-keygen -C '<comment>'
 We will be asked to set the passphrase, we don;t have to set it (just press the "Enter" btton).
@@ -309,4 +315,46 @@ In the ".git/config", find the remote repository we want to change the connectio
 from Https:    url=https://github.com/<github_username>/<reopository>
 to SSH:        url=git@github.com:<github_username>/<reopository>.git
 
-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+
+For different languages, we have different ways to realize hooks
+
+Exit the virtual environment:
+	deactivate
+Delete the virtual environment:
+	rm <venv_name> -rf
+------------------------------------------
+可以在.git外面創建，不然要push很久
+Build the python virtual envirment (python3 -m venv <venv_directory>)
+	python3 -m venv testvenv
+
+Enter the virtual envirment
+	source testvenv/bin/activate 
+
+進到跟.git同層級地址
+Install the packages written in "requirements.txt" which contains the "pre-commit" package
+	pip install -r requirements.txt
+
+------------------------------------------
+We can set the hook configuration in "pre-commit-config.yaml" file whose directory is at the same level as ".git", which lets pre-commit konw which hook to be executed before commiting:
+"black" and "flake8" can check the python code style.
+
+With the pre-commit package and ".pre-commit-config.yaml", we can use the following command to create a new file in ".git/hooks/pre-commit", which set up the git hook scripts annd is written in python not shell script:
+	pre-commit install
+
+For example, in "test.py" we just add a line "x = 2" to assign a variable 'x' but never used, which won't be passed by the python code style check and won't be commited
+
+We don't save the package and hook configuration in ".git", so they can be pushed to the remote repository and other people using our repository can use the hooks we set.
+
+------------------------------------------
+Execute all hooks 
+	pre-commit run --all-file
+Execute the specific hook to check
+	pre-commit run --all-file <hook>
+------------------------------------------
+Use "git commit" with "--no-verify" to ingore hooks before commiting
+	git commit -m '<message>' --no-verify
+We can't prevent others from avoiding the hooks we set.
+We need to check on the service end through CI/CD and limit other people's push, like "pull request" in GitHub or "merge request" in GitLab.
+
