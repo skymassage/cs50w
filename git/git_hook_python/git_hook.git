@@ -10,8 +10,6 @@ So we usually don't directly create hooks in ".git/hooks/",
 and we set up the hook configuration in a file whose directory level is the same as ".git".
 Besides, for different languages, we have different ways to realize hooks.
 
-Note that if we just want to stop using hooks, we add the ".sample" extention to the hook file or just delete them.
-
 ------------------------------------------------- Ex: Set the pre-commit hooks for python 
 
 1. We can use the python virtual environment to use hooks.
@@ -31,7 +29,8 @@ Note that if we just want to stop using hooks, we add the ".sample" extention to
         rm <venv_name> -rf
 
 2. Set up the hooks with the pre-commit package:
-    Install the packages written in "requirements.txt" which contains the "pre-commit" package
+    We can enter the virtual envirment,
+    and install the packages written in "requirements.txt" which contains the "pre-commit" package
         pip install -r requirements.txt
     Note that the current directory should have "requirements.txt" to be installed.
 
