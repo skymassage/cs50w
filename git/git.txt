@@ -46,8 +46,9 @@ git ls-files -s: Show the staged contents' mode bits, object name and stage numb
 
 git status: Show the working tree status, where the work tree means a tree structure that contains the .git folder, including all sub directories and files.
 
-git add <pathspec>: Add file contents to the index (staging area),
-                    and the index is a staging area where you can gather changes you intend to include in your next commit. 
+git add <pathspec>: Add files to the index (staging area), and Git compresses the content of file and saves it as a blob object.
+                    Blob objects represent files stored in the repository, and are named using the SHA1 function along with the file's header and content.
+                    The index is a staging area where you can gather changes you intend to include in your next commit. 
                     <pathspec> is used in the git command to limit the scope of operations to some subset of the tree or working tree,
                     such as commits, ORIGINAL_HEAD, etc. in ".git/".
 
@@ -59,7 +60,8 @@ git rm <pathspec>: Remove files from the working tree and from the index.
 git rm --cached <pathspec>: Removes <pathspec> only from the index, but doesn't remove it from the working tree.                          
 
 git restore <pathspec>: Restore <pathspec> that is in the working tree and hasn't yet been staged to its most recent staged status.
-git restore --staged <pathspec>: Removes <pathspec> that has been staged from the index, but doesn't restore <pathspec> in the working tree. 
+git restore --staged <pathspec>: Removes <pathspec> that has been staged from the index,
+                                 but doesn't restore <pathspec> in the working tree (commits created via "git add" wno't be deleted).
 git restore --staged --worktree <pathspec>: Removes <pathspec> that has been staged from the index, and restore <pathspec> in the working tree. 
 
 git log: Show the commit logs of the current HEAD and of its ancestry.
@@ -82,7 +84,7 @@ git shortlog: Summarize git log output.
 git branch: List local branches we have.
 git branch <branch_name>: Create a branch with branch_name, if there already have branch with the name you want to create, it will return error.
 git branch –d <branch_name>: Delete the branch that must have been fully merged in its upstream branch.
-                             The objects (blob, commits, trees) from this branch still exist and won't be deleted.
+                             The objects (blob, commit, tree, tag) from this branch still exist and won't be deleted.
                              It only deletes .git/refs/<branch> and .git/logs/refs/heads/<branch>.
 git branch –D <branch_name>: Delete branch even if it isn't merged, but can't delete current active branch or branch not existing.
 git branch –m <old_name> <new_name>: Rename branch with new name.
@@ -254,9 +256,6 @@ git show-ref: List the latest commits for all local and remote branches and whic
               (use "git fetch" to ensure the loacl and remote branches are in sync).
               Add <branch> to see the latest commits for the specific local and remote <branch>.
 
-git gc: Cleanup unnecessary files and optimize the local repository, such as compressing file revisions (to reduce disk space and increase performance),
-        removing unreachable objects which may have been created from prior invocations of git add, or stale working trees.
-
 Clean up the remote and local branches --------------------------------------------------------------------------------------
 Delete the local branch that has been merged into "master":
     git branch --merged master | grep -v "master" | xargs git branch -d
@@ -293,7 +292,7 @@ So the our local and remote repositories sync with the original repository:
 Git SSH key -----------------------------------------------------------------------------------------------
 Generate the SSH key pairs, and we can provide a key comment (which will be appended at the end of the public key) with "-C":
     ssh-keygen -C '<comment>'
-We will be asked to set the passphrase, we don;t have to set it (just press the "Enter" btton).
+We will be asked to set <key_name> and passphrase, we don't have to set it (just press the "Enter" btton).
 Then specify the directory of the key pair, and we usually save it in "~/.ssh/<key_name>",
 But we must exactly specify '~' which is "/home/lin" in this Linux system,
 so the key pair is stored in "/home/lin/.ssh/<keyname>".
@@ -316,5 +315,29 @@ from Https:    url=https://github.com/<github_username>/<reopository>
 to SSH:        url=git@github.com:<github_username>/<reopository>.git
 
 -----------------------------------------------------------------------------------------------
+The initial format in which Git saves objects on disk is called a loose (one object per file) object format.
+In order to save space and be more efficient, Git packs up several loose objects into a single binary file called a packfile,
+with an index file. Git does this if we have too many loose objects around, if we run "git gc",or if we push to a remote server. 
+When Git packs objects, it looks for files that are named and sized similarly,
+and stores just the deltas (offsets) from one version of the file to the next. 
+The packfile is a single file containing the contents of all the objects that were removed from your filesystem.
+The index is a file that contains deltas into that packfile so you can quickly seek to a specific object.
+Note that even two packfiles contain the same objects, their names may be different.
 
+git gc: Cleanup unnecessary files and optimize the local repository, such as compressing file revisions,
+        removing unreachable objects which may have been created from prior invocations of git add, or stale working trees.
+
+git verify-pack -v .git/objects/pack/pack-<sha1_number>.idx: Read given .idx file for packed Git archive created 
+                                                             and verify the .idx file and the corresponding pack file.
+                                                             "-v" shows the list of objects contained in the pack
+                                                             and a histogram of delta chain length after verifying the pack,
+                                                             to see what was packed up.
+
+git unpack-objects < <parent_path>/pack-<sha1_number>.pack: Unpack objects from a packfile to expand the objects contained within
+                                                            and write them into the repository in loose format.
+                                                            The packfile to be unpacked can't exist in ".git/objects/pack",
+                                                            otherwise nothing will be unpacked.
+                                                            So we should move this packfile to other path first 
+                                                            using "mv .git/objects/pack/pack-<sha1_number>.pack <parent_path>/pack-<sha1_number>.pack",
+                                                            and specify its new path to "git unpack-objects <".
 

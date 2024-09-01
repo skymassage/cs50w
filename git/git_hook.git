@@ -1,0 +1,82 @@
+Hooks are written in shell script in ".git/hooks/",​
+and you can use hooks by removing the ".sample" file extension of the files in ".git/hooks".
+
+By default, the pre-commit file in ".git/hooks/" contains a hook that checks if each file has a non-ASCII file name,
+and if a file has a non-ASCII file name, the commit isn't allowed.
+We can also add other hooks before commiting in the pre-commit file.
+
+".git" won't be pushed to the remote repository, so other people using our repository don't have the hooks we set.
+So we usually don't directly create hooks in ".git/hooks/",
+and we set up the hook configuration in a file whose directory level is the same as ".git".
+Besides, for different languages, we have different ways to realize hooks.
+
+------------------------------------------------- Ex: Set the pre-commit hooks for python 
+
+1. We can use the python virtual environment to use hooks.
+    Build the python virtual envirment:
+        python3 -m venv <venv_name>
+    This command will create the folder named <venv_name> in the current directory.
+    We can execut it in the directory level outside of ".git"
+    otherwise we will take some time to push <venv_name> containing many files.
+
+    Enter the virtual envirment:
+        source <venv_name>/bin/activate 
+
+    Exit the virtual environment:
+        deactivate
+
+    Delete the virtual environment:
+        rm <venv_name> -rf
+
+2. Set up the hooks with the pre-commit package (reference: https://pre-commit.com/):
+    We can enter the virtual envirment,
+    and install the packages written in "requirements.txt" which contains the "pre-commit" package
+        pip install -r requirements.txt
+    Note that the current directory should have "requirements.txt" to be installed.
+
+    With the pre-commit package, we can set up the git hook scripts:
+        pre-commit install
+    This command will create a file in ".git/hooks/pre-commit",
+    which contains the git hook scripts and is written in python not shell script.
+
+    We can set the hook configuration in "pre-commit-config.yaml" file whose directory is the same level as ".git",
+    which lets pre-commit konw which hook to be executed before commiting.
+    And the following part shows some hooks for the pre-commit package.
+    Execute all hooks 
+        pre-commit run --all-file
+    Or execute the individual hook to check
+        pre-commit run <hook>
+    <hook> is the hook set up in "pre-commit-config.yaml"
+
+    For test, in "test.py" we just add a line "x = 2" to assign a variable 'x' but never used,
+    which won't be passed by the python code style check and won't be commited.
+
+    We can use "git commit" with "--no-verify" to ingore hooks before committing
+        git commit -m '<message>' --no-verify
+    So we can't prevent others from avoiding the hooks we set,
+    and we need to check on the service end through CI/CD and limit other people's push,
+    like "pull request" in GitHub or "merge request" in GitLab.
+
+Therefore, we don't save the package and hook configuration in ".git",
+so they can be pushed to the remote repository and other people using our repository can use the hooks we set.
+
+----------------------------------- Pre-commit hooks for python (use them in ".pre-commit-config.yaml") 
+
+trailing-whitespace: Trims trailing whitespace.
+
+end-of-file-fixer: Makes sure files end in a newline and only a newline.
+
+check-yaml: Attempts to load all yaml files to verify syntax.
+
+check-added-large-files: Prevent giant files from being committed.
+
+Linter is a tool that checks code for syntax errors. Linter also checks the code style, 
+such as whether the code conforms to the PEP8 (Python Enhancement Proposal 8) code style
+officially required by Python, or the style we defined.
+Most languages ​​have their own linter, and the common linters for Python are pylint, pycodestyle and flake8.
+
+Formatter is a tool that automatically fix the code style problems.
+However, formatter can't fix syntax errors, such as using unset variables, they can be detected the linter,
+but they only can be fixed manually. The common formatters for Python are autopep8 yapf Black.
+
+By using Flake8 and Black, you can ensure the good quality of your Python code.
