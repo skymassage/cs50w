@@ -42,7 +42,11 @@ git cat-file <option> <object>: Output the contents or other properties such as 
     -s: Show the object size.
     -p: Print the contents of <object> based on its type.
 
-git ls-files -s: Show the staged contents' mode bits, object name and stage number about files in the index and the working tree
+git ls-files -s: Show the staged contents' mode bits, object name and stage number about files in the index and the working tree.
+
+git init <directory>: Create an empty Git repository or reinitialize an existing one in <directory>. 
+                      We don't have to create <directory> before executing this command.
+                      By default, <directory> is the current directory.
 
 git status: Show the working tree status, where the work tree means a tree structure that contains the .git folder, including all sub directories and files.
 
@@ -67,19 +71,29 @@ git restore --staged --worktree <pathspec>: Removes <pathspec> that has been sta
 git log: Show the commit logs of the current HEAD and of its ancestry.
          That is, it prints the commit HEAD points to, then its parent, its parent, and so on.
          It traverses back through the repo's ancestry, by recursively looking up each commit's parent.
-git log --oneline: Display commit information in a concise one-line format.
+         Note that press 'q' to exit "git log".
 git log -n <number>: Display the last <number> commits.
-git log --oneline -n <number>
+git log --oneline: Display commit information in a concise one-line format.
+                   It can be combined with other options, such as "git log --oneline -n <number>".
 git log --after='<date>': Show commits after a specific date (inclusive), where the <date> format is like 2024-01-02.
 git log --before='<date>': Show commits after a specific date (exclusive).
 git log --stat: Displays summary statistics, including number of files and lines modified etc.
+git log --graph: Draw a text-based graphical representation of the commit history on the left hand side of the output.
+git log --author=<author_name>: Show commits in which the author entry matches <author_name>. 
+git log --grep=<string>: Show commits with a commit message containing <string>.
+git log --merges: Show merge commits.
+
 
 git reflog: Reference logs, or "reflogs", record when the tips of branches and other references were updated in the local repository.
             It doesn't traverse HEAD's ancestry at all. The reflog is an ordered list of the commits that HEAD has pointed to:
             it's undo history for your repo. The reflog isn't part of the repo itself (it's stored separately to the commits themselves) 
             and isn't included in pushes, fetches or clones; it's purely local.
 
-git shortlog: Summarize git log output.
+git shortlog: Summarizes "git log" output in a format suitable for inclusion in release announcements. Each commit will be grouped by author and title.
+          -n: Show output according to the number of commits per author (in descending order) instead of author alphabetic order.
+          -s: Show the number of commits for each author and their name (sort alphabetically by author name).
+       -s -n: Show the number of commits for each author and their name (sort by number of commits in descending order).
+          -e: Show the email address of each author (sort alphabetically by author name).
 
 git branch: List local branches we have.
 git branch <branch_name>: Create a branch with branch_name, if there already have branch with the name you want to create, it will return error.
@@ -140,6 +154,9 @@ git remote remove <remote_name>: Remove the current remote name.
 git clone <repository_URL> <path>: Clone a repository into a new directory.
                                    <path> is the name of a new directory to clone into,
                                    and it can be ignored so that the repository will be cloned to the current path.
+git clone <repository_URL> <path> --depth=1: Create a shallow clone with a history truncated to the latest commits,
+                                             so "git log" only shows the latest commit.
+                                             It's useful to clone a huge repository.
 
 git remote prune <remote_name>: Clean up references (in ".git/refs/remotes") to remote branches that have been deleted from the remote repository.
                                 (i.e. remove stale tracking branches in ".git/refs/remotes" that no longer exist on the remote but are still present locally,
@@ -172,26 +189,25 @@ git push -d <remote_name> <branch>:
 git push <remote_name> -d <branch>: Delete the remote branch locally.
                                    (use "git branch -vv" or "git branch -a" to check whether the remote branch is still there after deleting)                                
 
-git push <remote_name> <tag_name>: Push tag to remote
+git push <remote_name> <tag>: Push tag to remote
 git push <remote_name> --tags: Push multiple tags simultaneously.
 
-git push -d <remote_name> <tag_name>: 
-git push <remote_name> -d <tag_name>: Delete remote tag.
+git push -d <remote_name> <tag>: 
+git push <remote_name> -d <tag>: Delete remote tag.
 
 git tag: List all tags.
 
-git tag <tag_name>: Creates a Lightweight tag  for the latest commit on the current branch,
+git tag <tag>: Creates a Lightweight tag  for the latest commit on the current branch,
                     but doesn't create a tag object.
                     Note that lightweight tags are actually the commit object
-                    (check by "cat .git/refs/tags/<tag_name> | xargs git cat-file -p").
-git tag -a <tag_name> -m "<tag_message>": For the latest commit on the current branch,
-                                          creates annotated tag that have the message with the associated meta-data(like email, date, etc.),
-                                          and creates a tag object in ".git/objects" which contains the tag message and meta-data.
-                                          Note that annotated tags are the tag object 
-                                          (check by "cat .git/refs/tags/<tag_name> | xargs git cat-file -p").
+                    (check by "cat .git/refs/tags/<tag> | xargs git cat-file -p").
+git tag -a <tag> -m "<tag_message>": For the latest commit on the current branch,
+                                     creates annotated tag that have the message with the associated meta-data(like email, date, etc.),
+                                     and creates a tag object in ".git/objects" which contains the tag message and meta-data.
+                                     Note that annotated tags are the tag object (check by "cat .git/refs/tags/<tag> | xargs git cat-file -p").
 git tag -a <tag name> <commit_SHA1_value> -m "<tag_message>": Create a annotated tag for an older commit.
 
-git tag -d <tag_name>: Delete tag, but tag object aren't deleted.
+git tag -d <tag>: Delete tag, but tag object aren't deleted.
 
 git fetch [repository]: 1. download objects and refs from remote repository from a remote repository 
                            to your local repository without merging them into your current branch.
@@ -314,7 +330,7 @@ In the ".git/config", find the remote repository we want to change the connectio
 from Https:    url=https://github.com/<github_username>/<reopository>
 to SSH:        url=git@github.com:<github_username>/<reopository>.git
 
------------------------------------------------------------------------------------------------
+Git pack-----------------------------------------------------------------------------------------------
 The initial format in which Git saves objects on disk is called a loose (one object per file) object format.
 In order to save space and be more efficient, Git packs up several loose objects into a single binary file called a packfile,
 with an index file. Git does this if we have too many loose objects around, if we run "git gc",or if we push to a remote server. 
@@ -355,3 +371,20 @@ The following command can remove unused objects from a git repository:
     git -c gc.reflogExpire=0 -c gc.reflogExpireUnreachable=0 -c gc.rerereresolved=0 -c gc.rerereunresolved=0 -c gc.pruneExpire=now gc "$@"
 This will remove all unreferenced things, so be careful to use it.
 
+Clone the specific tag of the repository -------------------------------------------------------------------------------------------
+1. Initialize the repository:
+        git init
+
+2. Add the URL of the remote repository you want to colne:
+        git remote add <URL>
+
+3a. Fetech the specific tag of the repository, which includes all history before this tag:
+        git fetch [repository] [tag]
+
+3b. Fetech the specific tag of the repository, which only includes the latest commit:
+        git -c protocol.version=2 fetch [repository] [tag] --depth=1
+    But the master branch is still empty, we need to change the branch:
+        git checkout FETCH_HEAD
+    Now we are in the branch whose name is the latest commit hash number.
+
+`
