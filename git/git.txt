@@ -341,3 +341,17 @@ git unpack-objects < <parent_path>/pack-<sha1_number>.pack: Unpack objects from 
                                                             using "mv .git/objects/pack/pack-<sha1_number>.pack <parent_path>/pack-<sha1_number>.pack",
                                                             and specify its new path to "git unpack-objects <".
 
+git prune: Prune all unreachable objects from the object database.
+       -n: Do not remove anything; just report what it would remove.
+
+git fsck: Check the connectivity and validity of objects in the git repository.
+          Users can confirm the integrity of the files in their repository and identify any corrupted objects.
+          It will also inform the user if there are any dangling objects in the repository.
+          These objects may be taking up unnecessary space in the repository and can be removed by running "git gc".
+
+If we have huge objects and we don't need them, but we can't remove them,
+for example: Objects related to deleted branch can't be removed.
+The following command can remove unused objects from a git repository:
+    git -c gc.reflogExpire=0 -c gc.reflogExpireUnreachable=0 -c gc.rerereresolved=0 -c gc.rerereunresolved=0 -c gc.pruneExpire=now gc "$@"
+This will remove all unreferenced things, so be careful to use it.
+
