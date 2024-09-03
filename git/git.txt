@@ -59,6 +59,8 @@ git add <pathspec>: Add files to the index (staging area), and Git compresses th
 git commit -m <message>: Record changes to the repository and use <message> as the commit message.
                          If multiple -m options are given, their values are concatenated as separate paragraphs.
 git commit -a: Automatically stages (adds to the commit) all tracked files that have been modified or deleted, and then commits
+git commit --amend --no-edit: Amend the latest commit of the current branch without changing its message.
+                              Note that we still need to use "git add" before this command.
 
 git rm <pathspec>: Remove files from the working tree and from the index.
 git rm --cached <pathspec>: Removes <pathspec> only from the index, but doesn't remove it from the working tree.                          
@@ -387,4 +389,54 @@ Clone the specific tag of the repository ---------------------------------------
         git checkout FETCH_HEAD
     Now we are in the branch whose name is the latest commit hash number.
 
-`
+Switch user automatically -------------------------------------------------------------------------------------------
+When working on a private or company project, you need to switch users,
+otherwise personal or company information will be leaked.
+
+1. Create new git configuration file in "~/.<new_gitconfig>/"
+   containing new user data whose format is similar to "~/.gitconfig":
+        [user]
+            name = <new_username>
+            email = <new_email>
+    "~/.<new_gitconfig>" is the new git configuration file containg new user data (the same path as ".gitconfig").
+
+2. Open "~/.gifconfig" to insert the following part to let Git know where the new git configuration file is
+   so Git can automatically use this file to apply the new user in the directory we want:
+        [includeif "gitdir:<directory_using_new_gitconfig>"]
+            path = ~/.<new_gitconfig>/
+   <directory_using_new_gitconfig> is the directory where we want to use the new user for the repositories there.
+   And set the path of the new git configuration file to "~/.<new_gitconfig>/".
+   
+We can go to <directory_using_new_gitconfig> to create a new repository and commit,
+so we can check the new repository there if it uses new user.
+Or go to <directory_using_new_gitconfig> and use the following command to check if the new user is used there:
+        git config user.name
+        git config user.email
+
+Alias -------------------------------------------------------------------------------------------
+We can set aliases to shorten commands.
+
+Method 1:
+    Linux alias:
+        alias <command_alias>="<git_command>"
+    For example, show all git configuration (local and global), their directories and their scope:
+        alias gitconfig="git config -l --show-origin --show-scope"
+    So we just excute the alias of that command:
+        gitconfig
+
+Method 2:
+    Git alias:
+        git config --global alias.<command_alias> "<git_command_wiout_git>"
+    Note that <git_command_wiout_git> don't need the "git" part in itself.
+    So we just excute the alias of that command:
+        git <command_alias>
+    And we can go to "~/.gitconfig" to view the aliases we set.
+
+We can also use "shell scripts" to set alias in "~/.gitconfig", which can combine several commands into one.
+For example:
+    cp = !sh -c 'git add . && git commit --amend --no-edit && git push origin $(git rev-parse --abbrev-ref HEAD) --force' -
+"$(git rev-parse --abbrev-ref HEAD)" means the current branch.
+It combine three commands: "git add .", "git commit --amend --no-edit", "git push origin --force".
+
+-------------------------------------------------------------------------------------------
+
