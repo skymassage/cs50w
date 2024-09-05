@@ -58,9 +58,22 @@ git add <pathspec>: Add files to the index (staging area), and Git compresses th
 
 git commit -m <message>: Record changes to the repository and use <message> as the commit message.
                          If multiple -m options are given, their values are concatenated as separate paragraphs.
-git commit -a: Automatically stages (adds to the commit) all tracked files that have been modified or deleted, and then commits
-git commit --amend --no-edit: Amend the latest commit of the current branch without changing its message.
-                              Note that we still need to use "git add" before this command.
+git commit -a: Automatically stages (adds to the commit) all tracked files that have been modified or deleted, and then commits.
+
+git commit --amend: Enter the another terminal to amend the message of the latest commit of the current branch.
+                    If use "git add" before this command, the new changes will be added to the latest commit.
+                    This command changes the commit locally so it's different with the remote one,
+                    and we have to forcibly push the amended commit to the repository using "git push <remote_name> <branch> --force".
+                    Note that if our branch has been forked by other team members, changing commits will disturb them.
+git commit --amend --no-edit: Only change the latest commit (if there are new changes and use "git add" in advance),
+                              but the commit message (not enter another terminal).
+git commit --amend -m "<message>": Same as "git commit --amend", but instead of entering another terminal,
+                                   directly modify the message by replacing <message>.
+git commit --amend --reset-author: In addition to being the same as "git commit --amend", 
+                                   it also modifies the author information.
+                                   However, we have to revise the user information in "~/.gitconfig",
+                                   so this command will change the author information.
+git commit --amend --reset-author --no-edit: Same as "git commit --amend --reset-author", but instead of entering another terminal.
 
 git rm <pathspec>: Remove files from the working tree and from the index.
 git rm --cached <pathspec>: Removes <pathspec> only from the index, but doesn't remove it from the working tree.                          
@@ -258,8 +271,13 @@ git pull [repository]: 1. Fetch from and merge the remote branch into the curren
                        In short, it avoids rebasing and merges the changes directly.
 
 git reset <pathspec>: Reset current HEAD to the specified state. <pathspec> can be commits, ORIGIN_HEAD etc.
-                      It can move the current branch to a different commitand optionally modify the index (staging area)
+                      It can move the current branch to a different commit and optionally modify the index (staging area)
                       and working directory depending on the options used (--soft, --mixed, or --hard).
+                      The history log will be changed, so the commits have changed locally
+                      and are different from the commit on the remote repository, 
+                      we have to push the local commits forcibly using "git push <remote_name> <branch> --force".
+                      Note that if our branch has been forked by other team members, changing commits will disturb them,
+                      similar to "git commit --amend".
               --soft: Move the HEAD to a specified commit without altering the working directory or the index.
                       It effectively undoes commits, but leaves the files in the index as they were.
                       This allows you to recommit changes if needed.
@@ -268,6 +286,9 @@ git reset <pathspec>: Reset current HEAD to the specified state. <pathspec> can 
              --mixed: This is the default action. Reset the index but not the working tree 
                       (i.e., the changed files are preserved but not marked for commit or not added to the index)
                       and report what has not been updated.
+                      However, we can use "git checkout <file>" to roll back <file> that hasn't been added to the index
+                      to the status before that commit. So we don't have to use "--hard" to roll back all files changed in that commit, 
+                      and only roll back the specific file changed in that commit.
 
 git show-ref: List the latest commits for all local and remote branches and which commit HEAD is pointing to.
               We can know which branches are currently in the same commit
@@ -438,5 +459,57 @@ For example:
 "$(git rev-parse --abbrev-ref HEAD)" means the current branch.
 It combine three commands: "git add .", "git commit --amend --no-edit", "git push origin --force".
 
--------------------------------------------------------------------------------------------
+.gitignore -------------------------------------------------------------------------------------------
+Create a ".gitignore" file in the repository to ignore the files we don't want to add to the repository.
+Add the file names we want to ignore to ".gitignore".
+If we want to ignore the specific type of files, we can add the item like "*.<file_extension>".
 
+If add the files to the index and then add them to .gitignore, the added file are still in the index.
+
+Go to "https://github.com/github/gitignore" to find the .gitignore files for different languages,
+so we can ignore non-code files produced by the language we use in the repository.
+
+If we want to ignore files locally, we can open ".git/info/exclude" and add the files we want to ignore to it.
+Because ".git" won't be pushed, so other people won't ignore the files we want to ignore locally.
+
+Git stash -------------------------------------------------------------------------------------------
+If we have uncommitted changes on branch_1 and switch to  b`ranch_2, 
+these uncommitted changes are also brought from branch_1 to branch_2 
+(i.e. the status of branch_2 will be affected even we don't work on it).
+We can commit on branch_1 so its changes won't be brought to branch_2, 
+but it's not a good practice because it causes unnecessary commits.
+
+"git stash" temporarily stashes (or shelves) changes you've made to the working tree so you can work on something else,
+and then come back and re-apply them later on.
+Stashing is handy if you need to quickly switch context and work on something else,
+but you're mid-way through a code change and aren't quite ready to commit.
+
+git stash push: It's the same as "git stash". Take the uncommitted changes (both staged and unstaged),
+                saves them away for later use, and they can be reverted from the working tree.
+                But it won't stash new files that haven't been staged yet.
+                The uncommitted changes will be removed temporarily (i.e. the branch status will be roll back to the lates commit's status).
+                Note that the stashed changes are local, if the changes are import, it's better to commit and push them.
+            -u: Untracked files (like new files that haven't been staged yet) are also stashed.
+            -a: All ignored and untracked files are also stashed.
+  -m <message>: Annotate stash with a description. The default message is the message of the latest commit.
+
+git stash list: Show stash entries.
+
+git stash show <stash>: Display a summary of file changes for <stash>.
+                        It won't show the entry includes untracked or ignored files, so have to use "-u" or "-a" to display them.
+                        <stash> is "stash@{<number>}". When no <stash> is given, the latest stash stash@{0} is assumed.
+                    -u: Include the stash entry of the untracked files (like new files that haven't been staged yet).
+                    -a: Include the stash entry of ignored and untracked files.
+
+git stash pop <stash>: Remove <stash> from the stash list, and re-apply its changes to the working tree and index
+                       (i.e. the uncommitted changes that have been temporarily removed because of "git stash" will be restored).                       
+                       The default of <stash> is "stash@{0}".
+
+git stash apply <stash>: Re-apply its changes to the working tree and index, but not remove <stash>.
+                         The default of <stash> is "stash@{0}".
+
+git stash clear <stash>: Remove <stash>, but not re-apply its changes to the working tree and index. 
+                         The default of <stash> is "stash@{0}".
+
+git stash drop: Remove all stashes, but not re-apply their changes to the working tree and index.
+-------------------------------------------------------------------------------------------
