@@ -1,9 +1,24 @@
 Git worktree -------------------------------------------------------------------------------------------
+"git worktree" allows us to have multiple working trees attached to the same repository, creating different directories per tree,
+enabling you to have multiple branches checked out simultaneously without having to switch back and forth.
 
-git worktree add <path> <branch>:
-Through "cd <path>" to switch to another branch not "git checkout <branch>"
+Worktrees are automatically configured by Git when we add them. Each worktree has its own ".git" file
+with a link back to the repository, ensuring that all worktrees stay in sync with the repository's state.
 
-git worktree list: Show all worktrees
-First item in the worktree list the current branch in the current repository path
+git worktree add <directory_for_worktree> <branch>: Add a new worktree for <branch> in <path>, 
+                                                    so have to use "cd <path>" instead of "git checkout <branch>" to swith branche.
+                                                    In <path>, there is the ".git" file containg
+                                                    "gitdir: <main_worktree_path>/.git/worktree/<directory_for_worktree>"
+                                                    which links back to the main worktree or repository.
+git worktree add -b <branch> <directory_for_worktree>: Create a new branch on a new worktree.
 
-git worktree remove:
+git worktree list: List all worktrees
+
+git worktree move <original_directory> <new_directory>: Move the worktree's directory.
+
+git worktree remove <directory_for_worktree>: Remove a worktree. The main worktree can't be removed.
+
+git worktree prune: Prune worktrees (Removes references to worktrees that are no longer valid).
+
+
+
