@@ -5,20 +5,32 @@ enabling you to have multiple branches checked out simultaneously without having
 Worktrees are automatically configured by Git when we add them. Each worktree has its own ".git" file
 with a link back to the repository, ensuring that all worktrees stay in sync with the repository's state.
 
+"git worktree" can quickly switch between branches for testing or comparison without stashing or committing work in progress,
+and isolate work on a new feature while keeping the main branch clean and deployable.
+Besides, using "git stash" to temporarily stash changes,
+then switch branches and switch back and apply the stash can be cumbersome and disrupt the workflow.
+
 git worktree add <directory_for_worktree> <branch>: Add a new worktree for <branch> in <path>, 
-                                                    so have to use "cd <path>" instead of "git checkout <branch>" to swith branche.
+                                                    and have to use "cd <path>" instead of "git checkout <branch>" to swith branche.
+                                                    So switching to the new worktree won't bring the current branch status (changes)
+                                                    to that branch on the new worktree, and on;y keep the current changes on the current branch.
                                                     In <path>, there is the ".git" file containg
                                                     "gitdir: <main_worktree_path>/.git/worktree/<directory_for_worktree>"
-                                                    which links back to the main worktree or repository.
+                                                    which links back to the main worktree (repository).
 git worktree add -b <branch> <directory_for_worktree>: Create a new branch on a new worktree.
 
 git worktree list: List all worktrees
 
 git worktree move <original_directory> <new_directory>: Move the worktree's directory.
 
-git worktree remove <directory_for_worktree>: Remove a worktree. The main worktree can't be removed.
+git worktree remove <directory_for_worktree>: Remove a worktree and the main worktree can't be removed,
+                                              but the main worktree won't be removed.
+                                              This command will fail if the working tree has modified or uncommitted untracked files,
+                                              but it can be removed with "-f".
+                                          -f: Force removal of a worktree which can't be removed.
 
-git worktree prune: Prune worktrees (Removes references to worktrees that are no longer valid).
-
-
-
+git worktree prune: Prune worktree information in ".git/worktrees"
+                    (remove references to worktrees that are no longer valid).
+                    For example, if delete a worktree directory but don't execute "git worktree remove",
+                    git won't recognize that it has been deleted.
+                    At this point, use "git worktree prune" to update the project's woktree configuration.

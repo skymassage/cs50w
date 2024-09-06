@@ -28,13 +28,16 @@ git stash show <stash>: Display a summary of file changes for <stash>.
                     -a: Include the stash entry of ignored and untracked files.
 
 git stash pop <stash>: Remove <stash> from the stash list, and re-apply its changes to the working tree and index
-                       (i.e. the uncommitted changes that have been temporarily removed because of "git stash" will be restored).                       
+                       (i.e. the uncommitted changes that have been temporarily removed because of "git stash" will be restored).
+                       This command may fail with conflicts; in this case, it isn't removed from the stash list,
+                       and we need to resolve the conflicts using "git stash drop" manually afterwards
                        The default of <stash> is "stash@{0}".
 
 git stash apply <stash>: Re-apply its changes to the working tree and index, but not remove <stash>.
                          The default of <stash> is "stash@{0}".
 
-git stash clear <stash>: Remove <stash>, but not re-apply its changes to the working tree and index. 
-                         The default of <stash> is "stash@{0}".
-
-git stash drop: Remove all stashes, but not re-apply their changes to the working tree and index.
+git stash drop <stash>: Remove <stash>, but not re-apply its changes to the working tree and index.
+                        The default of <stash> is "stash@{0}".
+                        
+git stash clear: Remove all stashes, but not re-apply their changes to the working tree and index.
+                         

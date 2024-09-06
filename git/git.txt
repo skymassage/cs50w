@@ -53,6 +53,8 @@ git status: Show the working tree status, where the work tree means a tree struc
 git add <pathspec>: Add files to the index (staging area), and Git compresses the content of file and saves it as a blob object.
                     Blob objects represent files stored in the repository, and are named using the SHA1 function along with the file's header and content.
                     The index is a staging area where you can gather changes you intend to include in your next commit. 
+                    Note that new created files are never staged (added to the index) are untracked files,
+                    and the files that have been staged before but then changed (like modify, delete) are not staged files.
                     <pathspec> is used in the git command to limit the scope of operations to some subset of the tree or working tree,
                     such as commits, ORIGINAL_HEAD, etc. in ".git/".
 
@@ -79,7 +81,7 @@ git rm <pathspec>: Remove files from the working tree and from the index.
 git rm --cached <pathspec>: Removes <pathspec> only from the index, but doesn't remove it from the working tree.                          
 
 git restore <pathspec>: Restore <pathspec> that is in the working tree and hasn't yet been staged to its most recent staged status.
-git restore --staged <pathspec>: Removes <pathspec> that has been staged from the index,
+git restore --staged <pathspec>: Removes <pathspec> that has been staged from the index (not including untracked files),
                                  but doesn't restore <pathspec> in the working tree (commits created via "git add" wno't be deleted).
 git restore --staged --worktree <pathspec>: Removes <pathspec> that has been staged from the index, and restore <pathspec> in the working tree. 
 
