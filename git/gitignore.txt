@@ -1,0 +1,12 @@
+.gitignore -------------------------------------------------------------------------------------------
+Create a ".gitignore" file in the repository to ignore the files we don't want to add to the repository.
+Add the file names we want to ignore to ".gitignore".
+If we want to ignore the specific type of files, we can add the item like "*.<file_extension>".
+
+If add the files to the index and then add them to .gitignore, the added file are still in the index.
+
+Go to "https://github.com/github/gitignore" to find the .gitignore files for different languages,
+so we can ignore non-code files produced by the language we use in the repository.
+
+If we want to ignore files locally, we can open ".git/info/exclude" and add the files we want to ignore to it.
+Because ".git" won't be pushed, so other people won't ignore the files we want to ignore locally.

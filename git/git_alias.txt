@@ -1,0 +1,24 @@
+Alias -------------------------------------------------------------------------------------------
+We can set aliases to shorten commands.
+
+Method 1:
+    Linux alias:
+        alias <command_alias>="<git_command>"
+    For example, show all git configuration (local and global), their directories and their scope:
+        alias gitconfig="git config -l --show-origin --show-scope"
+    So we just excute the alias of that command:
+        gitconfig
+
+Method 2:
+    Git alias:
+        git config --global alias.<command_alias> "<git_command_wiout_git>"
+    Note that <git_command_wiout_git> don't need the "git" part in itself.
+    So we just excute the alias of that command:
+        git <command_alias>
+    And we can go to "~/.gitconfig" to view the aliases we set.
+
+We can also use "shell scripts" to set alias in "~/.gitconfig", which can combine several commands into one.
+For example:
+    cp = !sh -c 'git add . && git commit --amend --no-edit && git push origin $(git rev-parse --abbrev-ref HEAD) --force' -
+"$(git rev-parse --abbrev-ref HEAD)" means the current branch.
+It combine three commands: "git add .", "git commit --amend --no-edit", "git push origin --force".

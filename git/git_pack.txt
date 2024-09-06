@@ -1,0 +1,40 @@
+Git pack-----------------------------------------------------------------------------------------------
+The initial format in which Git saves objects on disk is called a loose (one object per file) object format.
+In order to save space and be more efficient, Git packs up several loose objects into a single binary file called a packfile,
+with an index file. Git does this if we have too many loose objects around, if we run "git gc",or if we push to a remote server. 
+When Git packs objects, it looks for files that are named and sized similarly,
+and stores just the deltas (offsets) from one version of the file to the next. 
+The packfile is a single file containing the contents of all the objects that were removed from your filesystem.
+The index is a file that contains deltas into that packfile so you can quickly seek to a specific object.
+Note that even two packfiles contain the same objects, their names may be different.
+
+git gc: Cleanup unnecessary files and optimize the local repository, such as compressing file revisions,
+        removing unreachable objects which may have been created from prior invocations of git add, or stale working trees.
+
+git verify-pack -v .git/objects/pack/pack-<sha1_number>.idx: Read given .idx file for packed Git archive created 
+                                                             and verify the .idx file and the corresponding pack file.
+                                                             "-v" shows the list of objects contained in the pack
+                                                             and a histogram of delta chain length after verifying the pack,
+                                                             to see what was packed up.
+
+git unpack-objects < <parent_path>/pack-<sha1_number>.pack: Unpack objects from a packfile to expand the objects contained within
+                                                            and write them into the repository in loose format.
+                                                            The packfile to be unpacked can't exist in ".git/objects/pack",
+                                                            otherwise nothing will be unpacked.
+                                                            So we should move this packfile to other path first 
+                                                            using "mv .git/objects/pack/pack-<sha1_number>.pack <parent_path>/pack-<sha1_number>.pack",
+                                                            and specify its new path to "git unpack-objects <".
+
+git prune: Prune all unreachable objects from the object database.
+       -n: Do not remove anything; just report what it would remove.
+
+git fsck: Check the connectivity and validity of objects in the git repository.
+          Users can confirm the integrity of the files in their repository and identify any corrupted objects.
+          It will also inform the user if there are any dangling objects in the repository.
+          These objects may be taking up unnecessary space in the repository and can be removed by running "git gc".
+
+If we have huge objects and we don't need them, but we can't remove them,
+for example: Objects related to deleted branch can't be removed.
+The following command can remove unused objects from a git repository:
+    git -c gc.reflogExpire=0 -c gc.reflogExpireUnreachable=0 -c gc.rerereresolved=0 -c gc.rerereunresolved=0 -c gc.pruneExpire=now gc "$@"
+This will remove all unreferenced things, so be careful to use it.

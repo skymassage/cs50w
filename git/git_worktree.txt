@@ -1,0 +1,9 @@
+Git worktree -------------------------------------------------------------------------------------------
+
+git worktree add <path> <branch>:
+Through "cd <path>" to switch to another branch not "git checkout <branch>"
+
+git worktree list: Show all worktrees
+First item in the worktree list the current branch in the current repository path
+
+git worktree remove:

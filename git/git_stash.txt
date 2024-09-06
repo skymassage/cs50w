@@ -1,0 +1,40 @@
+Git stash -------------------------------------------------------------------------------------------
+If we have uncommitted changes on branch_1 and switch to  b`ranch_2, 
+these uncommitted changes are also brought from branch_1 to branch_2 
+(i.e. the status of branch_2 will be affected even we don't work on it).
+We can commit on branch_1 so its changes won't be brought to branch_2, 
+but it's not a good practice because it causes unnecessary commits.
+
+"git stash" temporarily stashes (or shelves) changes you've made to the working tree so you can work on something else,
+and then come back and re-apply them later on.
+Stashing is handy if you need to quickly switch context and work on something else,
+but you're mid-way through a code change and aren't quite ready to commit.
+
+git stash push: It's the same as "git stash". Take the uncommitted changes (both staged and unstaged),
+                saves them away for later use, and they can be reverted from the working tree.
+                But it won't stash new files that haven't been staged yet.
+                The uncommitted changes will be removed temporarily (i.e. the branch status will be roll back to the lates commit's status).
+                Note that the stashed changes are local, if the changes are import, it's better to commit and push them.
+            -u: Untracked files (like new files that haven't been staged yet) are also stashed.
+            -a: All ignored and untracked files are also stashed.
+  -m <message>: Annotate stash with a description. The default message is the message of the latest commit.
+
+git stash list: Show stash entries.
+
+git stash show <stash>: Display a summary of file changes for <stash>.
+                        It won't show the entry includes untracked or ignored files, so have to use "-u" or "-a" to display them.
+                        <stash> is "stash@{<number>}". When no <stash> is given, the latest stash stash@{0} is assumed.
+                    -u: Include the stash entry of the untracked files (like new files that haven't been staged yet).
+                    -a: Include the stash entry of ignored and untracked files.
+
+git stash pop <stash>: Remove <stash> from the stash list, and re-apply its changes to the working tree and index
+                       (i.e. the uncommitted changes that have been temporarily removed because of "git stash" will be restored).                       
+                       The default of <stash> is "stash@{0}".
+
+git stash apply <stash>: Re-apply its changes to the working tree and index, but not remove <stash>.
+                         The default of <stash> is "stash@{0}".
+
+git stash clear <stash>: Remove <stash>, but not re-apply its changes to the working tree and index. 
+                         The default of <stash> is "stash@{0}".
+
+git stash drop: Remove all stashes, but not re-apply their changes to the working tree and index.

@@ -1,0 +1,24 @@
+Git SSH key -----------------------------------------------------------------------------------------------
+Generate the SSH key pairs, and we can provide a key comment (which will be appended at the end of the public key) with "-C":
+    ssh-keygen -C '<comment>'
+We will be asked to set <key_name> and passphrase, we don't have to set it (just press the "Enter" btton).
+Then specify the directory of the key pair, and we usually save it in "~/.ssh/<key_name>",
+But we must exactly specify '~' which is "/home/lin" in this Linux system,
+so the key pair is stored in "/home/lin/.ssh/<keyname>".
+
+Check the SSH key pairs (public keys have the file extenion ".pub"):
+    ls ~/.ssh
+
+It is best to set the ssh key pairs for different platforms.
+By default, "git clone" chooses the local private key named "id_rsa" for the remote repository.
+So we need to create the "config" file in "~/.ssh" so that each platforms can find their corresponding private key.
+The format to set <key_name> to GitHub in "~/.ssh/config" can be:
+    HOST github.com
+    IdentityFile /home/lin/.ssh/<key_name>
+    User <username>
+By default, SSH keys are stored in "~/.ssh", where "~" is "/home/lin" in this system.
+
+Change the connection ("git clone") between local and remote repositories from Https to SSH.
+In the ".git/config", find the remote repository we want to change the connection
+from Https:    url=https://github.com/<github_username>/<reopository>
+to SSH:        url=git@github.com:<github_username>/<reopository>.git
