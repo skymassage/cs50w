@@ -128,7 +128,7 @@ git branch --merged <branch>: List the local branches that have been merged into
 
 git checkout <branch_name>: Change the current active branch to <branch_name> and the head points to the latest commit on this branch.
                             If the branch doesn't exist locally but exists remotely, it will be pulled from the remote repository.
-git checkout <commit>: Change the current head pointing to <commit> on the current branch, this head become the detached head.
+git checkout <commit_SHA1_value>: Change the current head pointing to <commit_SHA1_value> on the current branch, this head become the detached head.
 git checkout <pathspec>: Same as "git restore <pathspec>".
 git checkout –b <branch_name>: Checkout a branch, will create that branch if it doesn't exsit.
 

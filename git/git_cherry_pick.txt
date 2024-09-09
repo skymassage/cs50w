@@ -1,0 +1,3 @@
+Switch to the branch we want to apply changes
+	git cherry-pick <commit_SHA1_value>
+The changes are the same but the SHA1 value of the commit

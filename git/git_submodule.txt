@@ -1,0 +1,24 @@
+It often happens that while working on one project, you need to use another project from within it.
+Perhaps it’s a library that a third party developed or that you’re developing separately and using in multiple parent projects.
+A common issue arises in these scenarios:
+you want to be able to treat the two projects as separate yet still be able to use one from within the other.
+Submodules allow you to keep a Git repository as a subdirectory of another Git repository.
+This lets you clone another repository into your project and keep your commits separate.
+
+Add a new submodule (subrepository) using "git submodule add" with <repository_URL> which we would like to start tracking:
+    git submodule add <repository_URL>
+It add the ".gitmodules" file which contains submodules' path and URL.
+
+Show the status of the submodules:
+	git submodule status
+
+When we clone the repository containing other submodules, it only have the submodule folders but nn content with them,
+so we need to run the following command to repopulate submodule contents:
+	git submodule update --init --recursive
+"--recursive" recurses into the registered submodules, and update any nested submodules within,
+and "--init" initializes the submodules for the first fetching submodule contents.
+
+If we already have the submodule and it lag behind its reomte one, just locally update it with:
+	git submodule update --remote
+There is no corresponding update to the submodules of the remote main repository,
+so use "git add", "git commit", and "git push" to update submodules inside of the remote main repository.
