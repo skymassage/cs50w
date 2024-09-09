@@ -1,3 +1,11 @@
-Switch to the branch we want to apply changes
+When a bug is discovered it is important to deliver a fix to end users as quickly as possible.
+For an example, the developers are working on a new feature branch.
+During that new feature development they identify a pre-existing bug on previous stable version (another branch).
+The developers fix the bug on the feature branch and commit it, and they want to apply the bugfix to the previous version,
+They can use "git cherry-pick" to apply this same commit to the previous version to fix the bug.
+"git cherry-pick" is used to take the change introduced in a commit and try to re-introduce it as a new commit on the working HEAD.
+
+Switch to the branch we want to apply the commit to:
 	git cherry-pick <commit_SHA1_value>
-The changes are the same but the SHA1 value of the commit
+<commit_SHA1_value> does the same changes,
+but the SHA1 value of the commit this command creates is different from <commit_SHA1_value>.
