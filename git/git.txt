@@ -42,6 +42,8 @@ git cat-file <option> <object>: Output the contents or other properties such as 
     -s: Show the object size.
     -p: Print the contents of <object> based on its type.
 
+git version: Show the Git version.
+
 git ls-files -s: Show the staged contents' mode bits, object name and stage number about files in the index and the working tree.
 
 git init <directory>: Create an empty Git repository or reinitialize an existing one in <directory>. 

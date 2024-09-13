@@ -1,0 +1,33 @@
+In the early stages of Git, developers shared their code by creating Git patches and sending them to their colleagues via email.
+At that time, Git pull requests didn't exist like they do today, and Git patches were the best available option for sharing code.
+While it's certainly more common now for developers to use pull requests to share code,
+there are still a few well-known projects that use Git patches.
+The Linux Kernel, Drupal, and Git projects frequently utilize Git patches.
+Projects that use Git patches today generally do so give project maintainers the ability to extensively review the changes
+in each Git patch before applying the patch, which adds another layer of security.
+
+A patch in Git is a textual representation of the changes in a commit,
+formatted in a way that Git can reconstruct the commit and apply it on a branch in another repository.
+Creating a Git patch is, in essence, copying and packaging up our work to send to someone else,
+and applying a Git patch involves taking someone's work and adding it to our local Git repository. 
+To create a Git patch, we can run a variation of the "git format-patch" command depending on 
+if we're creating a patch for a commit or from a Git branch.
+Once the Git patch has been created, you can send it, usually via email, to our team members for them to apply to their codebase.
+
+Take all commits that haven't yet been pushed yet to generate patches:
+	git format-patch <remote_name>
+Each patch can only have a single commit, and use the commit message as the patch name.
+
+Take the commits between commit_1 and commit_2 to gnerate patches:
+	git format-patch <commit_1_SHA1_value>..<commit_2_SHA1_value>
+
+Take the last <n> commits to generate patches:
+	git format-patch -<n>
+
+Take the last <n> commits of this commit and include itselt to generate patches:
+	git format-patch <commit_SHA1_value> -<n>
+
+Apply a Git patch to the commit or branch where we want the changes applied:
+    git apply "<patch_directory>"
+The repository will change but the cahnges aren't staged and committed.
+It lets us just add someone else's work to our repository rather than having to write the code ourself.
