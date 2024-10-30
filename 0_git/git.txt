@@ -240,7 +240,7 @@ git fetch [repository]: 1. download objects and refs from remote repository from
                            After "git merge", the previous commit will be stored in ".git/ORIGIN_HEAD",
                            so we can use "git reset --hard ORIGIN_HEAD" to rollback the previous commit before "git fetch".
                         4. If we delete the branch of the remote repository and then use this command,
-                           this branch in the local repository will be stale (using"git remote show <remote_name>"),but isn't deleted.
+                           this branch in the local repository will be stale (using"git remote show <remote_name>"), but isn't deleted.
                            We can delete this branch locally by adding "--prune" to this command
                            or using "git remote prune <remote_name> <branch>" after this command.
                         5. Sync tags from remot. However, if the tags were deleted remotely,
