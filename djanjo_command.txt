@@ -13,7 +13,7 @@ python3 manage.py runserver: Open a development server, which you can access by 
 
 python3 manage.py makemigrations: Create some Python files that will create or edit our database to be able to store what we have in our models.
 python3 manage.py makemigrations <APP_Name>: By default, migrations are global. If you want to migrations for the specific app, add the app name to the end.
-python3 manage.py makemigrations <APP_Name> <File_Name>: If you want to migrations for a certain file exactly.
+python3 manage.py makemigrations <APP_Name> <File_Name>: If you want to migrations for a certain file exactly like .db file.
 
 python3 manage.py migrate: Create all of the default tables inside of Django's database.
 

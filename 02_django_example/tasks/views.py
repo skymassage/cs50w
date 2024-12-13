@@ -24,7 +24,7 @@ class NewTaskForm(forms.Form):
 
 def index(request):
     # We don't want to create the list "tasks" as a global variable and store the submitted data in it, 
-    # so that all of the users who visit the page see the exact same list.
+    # so that all of the users who visit the page can see the exact same list.
     # We can employ a tool known as sessions to solve this problem 
     if "tasks" not in request.session:  # Check if there already exists a "tasks" key in our session, oththerwise create one.
         request.session["tasks"] = []
@@ -46,7 +46,7 @@ def add(request):
         # Check if form data is valid (server-side). That is, are they providing all the necessary data in the right format.
         if form.is_valid():  
             
-            # We can use ".cleaned_data["key_name"]" to access the submitted data whose key is called "task".
+            # We can use ".cleaned_data["<key_name>"]" to access the submitted data whose key is called "task".
             # If the key doesn't exist, it will return KeyError.
             task = form.cleaned_data["task"] # Note that here we use square brackets "[]".
             # Also, we can use "cleaned_data.get("key_name")" to access the submitted data.

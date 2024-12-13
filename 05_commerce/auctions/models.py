@@ -7,15 +7,14 @@ from django.db.models import Max
 # The User class inherits from "AbstractUser", so it will already have fields for a username, email, password, and you can add new fields to the User class.
 # The "User" class here conflicts with the "User" class that comes with Django.
 # And we must add the line "AUTH_USER_MODEL = '<App_Name>.<lass_Name>'" to the setting.py file to tell Django we use the customized model class.
-# So add this line "AUTH_USER_MODEL = 'auctions.User'" to our setting.py file.
 class User(AbstractUser):
     pass
 
 class Listing(models.Model):
-    # null: If True, Django will store an empty value as NULL in the database. A "Null" value represents the absence of data. 
+    # null: If True, Django will store an empty value as NULL in the database. A "Null" value represents the absence of data.
     #       Default is False which means the field must have a value (not include NULL) in the database
-    # blank: blank determines whether the field will be required in forms.
-    #        If True, the field can be left blank in forms. Default is False which means the field will be required
+    # blank: It determines whether the field will be required in forms. If True, the field can be left blank in forms.
+    #        Default is False which means the field will be required.
     # To summarize, null is about the database, and blank is about forms.
     
     # The exception is CharFields and TextFields, which in Django are never saved as NULL. 
@@ -24,14 +23,14 @@ class Listing(models.Model):
     # that means it has two possible values for "no data" (NULL), and the empty string (blank). In most cases, 
     # it's redundant to have two possible values for "no data"; the Django convention is to use the empty string, not NULL.
     # One exception is when a CharField has both "unique=True" and "blank=True" set. In this situation, 
-    # "null=True" is required to avoid unique constraint violations when saving multiple objects with blank values.
+    # "null=True" is required to avoid unique constraint violations when saving multiple objects with the empty string ('').
     
     # There are four cases:
     # 1) null=False, blank=False: 
     #    This is the default configuration and means that the value is required in both the database and the models.
     # 2) null=False, blank=True:
     #    This means that the form doesn't require a value but the database does.
-    #    You don't accept the value provided by the form, but you can still have to provide a value for the database in some ways.
+    #    You don't accept the value provided by the form, but you can still have to provide a Null value for the database.
     #    a. The most common use is for optional string-based fields. 
     #       If NULL was also allowed you would end up with two different ways to indicate a missing value. 
     #       (If the field is also unique, you'll have to use null=True to prevent multiple empty strings from failing the uniqueness check.)
@@ -51,12 +50,16 @@ class Listing(models.Model):
     img = models.CharField(max_length=1000)      
     starting_price = models.DecimalField(max_digits=6, decimal_places=2) # "decimal_places" is the number of decimal places to store with the number.
                                                                          # "max_digits" is the maximum number of digits allowed in the number. 
-                                                                         # Note that this number must be greater than or equal to "decimal_places".
-    category = models.ForeignKey("Category", on_delete=models.SET_DEFAULT, blank=True, null=True, default="", related_name="category_listings")
+                                                                         # Note that "max_digits" must be greater than or equal to "decimal_places".
+    category = models.ForeignKey("Category", on_delete=models.SET_DEFAULT, blank=True, null=True, default="", related_name="category_listings")    
     # If you need to create a relationship on a model that has not yet been defined, 
     # you can put the class name of the model within "...", rather than the model object itself.
     # That is, we haven't created the Category class yet, so put the Category inside of "".
     # "SET_DEFAULT" means that when the ForeignKey is deleted, the object containing the ForeignKey will be set the default value.
+    # Some lists may not be categroized into the categories we already have when we are creating new listing in the form, 
+    # so we will leave this field blank. We cannot just set "blank=True", we also have to set "null=True".
+    # Otherwise we will have errors when we are leave this field blank.
+    # Because this field is not a string-based field, it must a NULL value instead of a empty string to represent the absence of field in the database.
 
     active = models.BooleanField(default=True)   
     watch_by = models.ManyToManyField(User, blank=True, related_name="watchlist") 
@@ -75,7 +78,7 @@ class Listing(models.Model):
         # and returns the results in dictionary format. "aggregate" support the statistical calculations 
         # including AVG, COUNT, MAX, MIN, SUM, etc.
         # Note that the return of "aggregate" is a dict, and the key is "amount__max" here.
-        bid_highest  = self.listing_bids.all().aggregate(Max("amount"))["amount__max"] 
+        bid_highest  = self.listing_bids.all().aggregate(Max("amount"))["amount__max"]
         if self.bidder_num() > 0 and bid_highest > self.starting_price:
             return bid_highest
         else:

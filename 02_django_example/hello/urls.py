@@ -4,8 +4,8 @@
 from django.urls import path 
 from . import views # "from ." means from the current directory.
 
- # "urlpatterns" is a list of all of the allowable URLs that can be accessed for this particular app.
-urlpatterns = [  
+ # "urlpatterns" is a list of all of the allowable URLs that can be accessed for the particular app.
+urlpatterns = [
     # The "path" function is the path converter
     # "path" gives us the ability to reroute URLs and has two or three arguments: 
     # 1. A string representing the URL path (here is the empty string which means nothing at the end of the route), 
@@ -24,7 +24,6 @@ urlpatterns = [
     # Use angle brackets "<>" to capture the values from the URL and pass them to the second arugment as the parameter to this function.
     # "str" inside of "<>" specify the type of the captured value "name".
     # If the type isn't specifed, the captured value type will be string by default. 
-    # If the captured value is to be used as other types, its type can be converted from string to that type.
     # Note that the captured value must be named as the parameter of the called function so as to pass it to that funciton in views.py.
     # So here means that we capture the value "name" from the URL and convert it to a string, then this value is passed to the "greet" function in views.py as its parameter "name"
     path("<str:name>", views.greet, name="greet"), # Add "/hello/<name>" to the url of the home page to see the result, where "<name>" you can type anything you want.

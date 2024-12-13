@@ -1,5 +1,5 @@
 # This file will contain a number of different views, and we can think of a view as one page the user might like to see. 
-# We need to tell the app when should you actually run the following functions and what URL is the user going to visit. 
+# We need to tell the app when you should actually run the following functions and what URL is the user going to visit. 
 # And this is where we begin to create some URL configuration, 
 # some sort of setting to tell Django when a particular URL is visited, then this function should be run.
 # So we need to create another "urls.py" file for this particular app.
@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 # When a page is requested, Django creates an "HttpRequest" object that contains metadata about the request. 
-# Then Django loads the appropriate view function, passing the "HttpRequest" as the first argument to the view function. 
+# Then Django loads the appropriate view function, passing the "HttpRequest" as the first argument ("request") to the view function. 
 # Each view function is responsible for returning an "HttpResponse" object
 def index(request):
     return render(request, "hello/index.html") # Use the "render" function to the template. 

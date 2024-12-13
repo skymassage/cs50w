@@ -16,7 +16,7 @@ def flight(request, flight_id):
         raise Http404("Flight not found.")
     return render(request, "flights/flight.html", {
         "flight": flight,
-        "passengers": flight.passengers.all(),  # Note that "passengers" is the "related_name" argument which be used to track the passengers who happened to be on that flight.
+        "passengers": flight.passengers.all(),  # Note that "passengers" is the "related_name" argument which be used to track the passengers who are on that flight.
         "non_passengers": Passenger.objects.exclude(flights=flight).all()   # Use "exclude()" to exclude certain objects from a query. 
                                                                             # Here is to exclude the passenger objects which have corresponded to this flight object,
                                                                             # i.e., exclude the passengers who are already on this flight.

@@ -2,8 +2,8 @@
 # Then, Django will determine the SQL syntax necessary to store information on each of our models.
 from django.db import models
 
-# Tell Django to update the database to include information about the models I just created. 
-# In Django, we refer to this process as migrations. I create a migration to say, 
+# Tell Django to update the database to include information about the models we just created. 
+# In Django, we refer to this process as migrations. We create a migration to say, 
 # here are some changes that I would like to apply to the database. 
 # Then I migrate them to tell Django to take those changes and actually apply them to the database. 
 # So it's a two-step process. First is to create the migration, which is instructions for how to actually manipulate the database.
@@ -15,9 +15,9 @@ from django.db import models
 # This file has instructions to Django for how to manipulate the database to reflect the changes I have made to the model. 
 # That is an instruction to Django to create a new model called "Flight" that has these particular fields inside of it. 
 # 2-step:
-# If we want to apply the migration to Django's database, we can run "python3 manage.py migrate" to apply these migrations. 
+# If we want to apply the migration to Django's database, we need to run "python3 manage.py migrate" to apply these migrations. 
 # We'll see that some default migrations have been applied and displayed on multiple lines in the terminal, 
-# but notice one line that "Applying flights.0001_initial" means to apply that migration and create that table that is going to represent Flight.
+# but notice one line message in the terminal that "Applying flights.0001_initial" means to apply that migration and create that table that is going to represent Flight.
 # And we'll also notice that we will create a file called "db.sqlite3" in our project's directory.
 
 '''
@@ -43,8 +43,8 @@ Out[4]: <QuerySet [<Flight: Flight object (1)>]>                           # The
 
 The above output shows "Flight object (1)" that is not very informative.
 We can fix that by defining a "__str__" function in the "Flight" class of models.py:
-def __str__(self):
-    return f"{self.id}: {self.origin} to {self.destination}"
+    def __str__(self):
+        return f"{self.id}: {self.origin} to {self.destination}"
 
 Leave Django's shell and enter shell again to run the following Python code:
 In [1]: from flights.models import Flight              # Import our flight model again
@@ -82,7 +82,7 @@ class Flight(models.Model):
     # Here means that when a certain airport (ForeignKey) is deleted, all flights associated with it should also be deleted.
     # "related name" is a way of accessing a relationship in the reverse order. For example, if we have an airport, 
     # and I want to know all of the flights that have that airport as their origin, the reasonable name for "related_name" can be "departures". 
-    # So we can access all of the departures, which gets me all of the flights that are leaving from that airport. 
+    # So we can access all of the departures, which gets us all of the flights that are leaving from that airport. 
     # Note that "on_delete" and "related_name" are required for "ForeignKey".
     origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="departures")
     destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrivals")
@@ -105,6 +105,7 @@ In [6]: cdg = Airport(code="CDG", city="Paris")
 In [7]: cdg.save()
 In [8]: nrt = Airport(code="NRT", city="Tokyo")
 In [9]: nrt.save()
+
 In [10]: f = Flight(origin=jfk, destination=lhr, duration=414)       # Add a flight and save it to the database
 In [11]: f.save()
 

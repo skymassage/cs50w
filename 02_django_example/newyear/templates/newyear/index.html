@@ -8,10 +8,11 @@
     <!-- Similarly, create a folder and name it "static" (it's necessary because of Django setting in setting.py) in this app, 
          and create the newyear (app's name) folder inside of "static", then create the CSS file there. -->
     <!-- We don't hard-code to exactly specify where the URL is, but I just use Django-specific syntax to say it is a static file 
-         that is inside of a "newyear" folder called "styles.css". And Django is going to figure out what that URL ought to be. 
+         that is inside of a "newyear" folder called "styles.css". And Django is going to figure out what that URL ought to be,
          This is better than exactly specifying where the URL is, because in larger web applications you might move your static files to a different places.
          In order to deal with that, this "static" keyword just means Django will figure out where your static files are located 
-         and will replace this command here in the curly braces and percent signs with the actual URL for this particular file. -->
+         and will replace this command here in the curly braces and percent signs with the actual URL for this particular file.
+         Because by default it was already set with "STATIC_URL = 'static/'" in "<project_name>/setting.py" and will go to "<appp_name>/static" to find the CSS file. -->
     <title>Is it New Year's?</title>
 </head>
 <body>

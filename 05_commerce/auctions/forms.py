@@ -1,4 +1,4 @@
-# If you're building a database-driven app, chances are you'll have forms that map closely to Django models. 
+# If you're building a database-driven app, chances are you will have forms that map closely to Django models. 
 # In this case, it would be redundant to define the field types in your form, because you've already defined the fields in your model.
 # For this reason, Django provides a nested class that lets you create a Form class from a Django model.
 from django import forms
@@ -14,7 +14,7 @@ class ListingForm(forms.ModelForm):
         model = Listing
 
         # Use "fields" to specify which fields in the model should be displayed in the template.
-        # If we want all fields in the model should be used in the template, We can set: fields = "__all__".
+        # If we want all fields in the model should be used in the template, We can directly set: fields = "__all__".
         fields = ["name", "description", "img", "starting_price", "category"]
 
         # Use "labels" to change the titles of the fields like in Django Forms.
@@ -59,4 +59,3 @@ class CommentForm(forms.ModelForm):
         widgets = {
             "message": forms.Textarea(attrs={"maxlength":1000, "rows":4, "placeholder":"Leave a comment on the listing", "class": "form-control"})
         }
-        

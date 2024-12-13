@@ -3,6 +3,17 @@ Note that when you create or change the models, you need to run two command: "py
 After changeing models or admin settings, you should close the web by "Ctrl + C" in the terminal and run "python3 manage.py runserver" again so that it won't get an error.
 
 =========================================================================================================================
+Superuser: super
+Email address: super@example.com
+Password: hellosuper
+
+The testing accounts:
+Username    Password       Email
+alice       helloalice     alice@example.com
+bob         hellobob       bob@example.com
+colt        hellocolt      colt@example.com
+
+=========================================================================================================================
 
 In this project, our own "User" class in /auctions/models.py we created conflicts with the "User" class that comes with Django.
 We must add the line "AUTH_USER_MODEL = '<Your_App_Name>.<Your_Class_Name>'" to the setting.py file to tell Django we use the customized model class.
@@ -38,15 +49,4 @@ To use the Humanize filters, you should do the following first:
         'django.contrib.humanize',
     ]
 
-2. In the template where you want to use the humanization filter, load the template tags: {% load humanize %}
-
-=========================================================================================================================
-Superuser: super
-Email address: super@example.com
-Password: hellosuper
-
-The testing accounts:
-Username    Password       Email
-alice       helloalice     alice@example.com
-bob         hellobob       bob@example.com
-colt        hellocolt      colt@example.com
+2. In the template where you want to use the humanization filter, load this template tags: {% load humanize %}
