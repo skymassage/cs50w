@@ -32,6 +32,44 @@ QuerySet is used to perform database query operations and return a collection of
 while instance is used to operate on a single database record. 
 Depending on the requirements, one or a combination of both can be used.
 '''
+
+'''Method: .filer, .get, .save and .update
+1. Return value
+.get: An instance of a model class, called "instance" (also an object).
+.filter: A collection object called "QuerySet". It can be used for iteration, but it's not a list.
+         In the html template, we cannot use the QuerySet returned to obtain its attributes, 
+         otherwise we will get None. We should use a for loop to obtain its attributes.
+
+2. Error
+.get: Only return a single search result (instance), so an error will occur if multiple results are found.
+.filter: Return more than one search result (QuerySet), it returns None if not found (no results).
+
+3. Make changes to tables with .save and .update 
+.save: It can only be used with .get, .filter doesn't has the .save method.
+       For example:
+          user = User.objects.get(pk=user_id)
+          user.username, user.email = "David", "david@example.com"
+          user.save()
+        
+       .save can not only update existing records in the table, but also insert new records.
+       For example:
+           user = User(username="David", email="david@example.com")
+           user.save()
+           # Also, you can use ".create" to insert a new record as below:
+           User.objects.create(username="David", email="david@example.com")
+
+.update: It can only be used with .filter, errors will occur if used with .get.
+         .update can only be used to update existing object and can update multiple records at the same time.
+
+         Note that it will be errors if use .update like this: 
+            user = User.objects.filter(pk=user_id)
+            user.update(username="David", email="david@example.com")
+         You should use .update like this :                                 
+            User.objects.filter(pk=id).update(username="David", email="david@example.com")
+
+.update is suitable for updating the existing records, and .save is suitable for inserting new records.
+'''
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -105,13 +143,13 @@ def category(request):
     # If the key doesn't exist, request.GET["key_name"] will return KeyError and request.GET.get("key_name") will return None.
     # Therefore, if you are not certain if the key exists, you can use request.GET.get("key_name").
     # Here it is better to use request.GET.get("key_name"), because we will receive no value when submitting the placeholder "Select Category".
-    # You still can use request.POST["key_name"], but you should use "try" and "except" statement to avoid the error.    
+    # You still can use request.POST["key_name"], but you have to use "try" and "except" statement to avoid the error.    
     category_name = request.GET.get("category_name")  
     if category_name == "others":
         return render(request, "auctions/index.html", {
             "title": "Category: Others",
             "category_name": "Others",
-            "listings": Listing.objects.filter(category=None).filter(active=True),
+            "listings": Listing.objects.filter(category=None).filter(active=True), # Note that Python doesn't have the NULL value, it uses None.
             "categories": Category.objects.all().order_by("name")
         })
 
@@ -127,7 +165,9 @@ def category(request):
     })
 
 
-# "login_required(login_url=<URL_Name>): If the user isn't logged in, redirect to the URL with the <URL_Name> name. If the user is logged in, execute the view normally.
+# "login_required(login_url=<URL_Name>): If the user isn't logged in, 
+#                                        redirect to the URL with the <URL_Name> name. 
+#                                        If the user is logged in, execute the view normally.
 @login_required(login_url="login") # Add the "@login_required" decorator over the view function to ensure that only logged-in users can access the view.
 def watchlist(request):
     user = request.user
@@ -135,7 +175,7 @@ def watchlist(request):
         # We are not sure which one of request.POST["watch_id"] and request.POST["remove_id"] can receive the value,
         # so it is better to use request.POST.get("key_name") here.
         if request.POST.get("watch_id"):
-            watched_listing = Listing.objects.get(pk=request.POST["watch_id"]).watch_by.add(user)
+            Listing.objects.get(pk=request.POST["watch_id"]).watch_by.add(user)
 
         if request.POST.get("remove_id"):
             Listing.objects.get(pk=request.POST["remove_id"]).watch_by.remove(user)
@@ -148,17 +188,17 @@ def watchlist(request):
 @login_required(login_url="login") 
 def create(request):
     if request.method == "POST":
-        form = ListingForm(request.POST)
+        form = ListingForm(request.POST) # Create a form instance from POST data ("request.POST").
         if form.is_valid():
-            form.instance.seller = request.user  # Use "instance" to set the "seller" field value.
-            new_listing = form.save()            # Save a new created object from form and assign it to a variable.
+            form.instance.seller = request.user  # Use ".instance" to set the "seller" field value.
+            new_listing = form.save()            # Save a new Listing object from the form's data and assign it to a variable.
             return redirect("listing", listing_id=new_listing.pk)
         else:
-            return render(request, "auctions/creat.html", {
+            return render(request, "auctions/create.html", {
                 "form": form
             })
 
-    return render(request, "auctions/creat.html", {
+    return render(request, "auctions/create.html", {
         "form": ListingForm(),
     })
 
@@ -229,42 +269,3 @@ def close(request):
         Listing.objects.filter(pk=listing_id).update(active=False) 
         listing = Listing.objects.get(pk=listing_id)    
         return redirect("listing", listing_id=listing.id)
-
-'''Method: .filer, .get, .save and .update
-1. Return value
-.get: An instance of a model class, called "instance" (also an object).
-.filter: A collection object called "QuerySet". It can be used for iteration, but it's not a list.
-         In the html template, we cannot use the QuerySet returned to obtain its attributes, 
-         otherwise we will get None. We should use a for loop to obtain its attributes.
-
-
-2. Error
-.get: Only return a single search result (instance), so an error will occur if multiple results are found.
-.filter: Return more than one search result (QuerySet), it returns None if not found (no results).
-
-
-3. Make changes to tables with .save and .update 
-.save: It can only be used with .get, .filter doesn't has the .save method.
-       For example:
-          user = User.objects.get(pk=user_id)
-          user.username, user.email = "David", "david@example.com"
-          user.save()
-        
-       .save can not only update existing records in the table, but also insert new records.
-       For example:
-           user = User(username="David", email="david@example.com")
-           user.save()
-           # Also, you can use ".creata" to insert a new record as below:
-           User.objects.create(username="David", email="david@example.com")
-
-.update: It can only be used with .filter, errors will occur if used with .get.
-        .update can only be used to update existing object and can update multiple records at the same time.
-
-         Note that it will be errors if use .update like this: 
-            user = User.objects.filter(pk=user_id)
-            user.update(username="David", email="david@example.com")
-         You use .update like this :                                 
-            User.objects.filter(pk=id).update(username="David", email="david@example.com")
-
-.update is suitable for updating the existing records, and .save is suitable for inserting new records.
-'''

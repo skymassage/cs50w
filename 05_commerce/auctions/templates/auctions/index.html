@@ -28,7 +28,8 @@
                         <div class="card-body">
                             <h5 class="card-title text-truncate">{{ listing.name }}</h5>
                             <p class="card-text text-truncate">{{ listing.description }}</p>
-                            <p class="card-text"><strong>$ {{ listing.current_price }}</strong></p> <!-- Note that the template cannot parse the parenthesis "()", so we use ".current_price" instead of ".current_price()" -->
+                            <!-- Note that the template cannot parse the parenthesis "()", so we use ".current_price" instead of ".current_price()" -->
+                            <p class="card-text"><strong>$ {{ listing.current_price }}</strong></p> 
                             {% if not listing.seller == request.user %}
                                 <form action="{% url 'watchlist' %}" method="post">
                                     {% csrf_token %}

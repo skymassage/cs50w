@@ -31,7 +31,8 @@
     <br/>
 
     {% if not listing.seller == request.user %}
-        {% if request.user in listing.watch_by.all %} <!-- Note that the template cannot parse the parenthesis "()", so we use ".all" instead of ".all()" -->
+        <!-- Note that the parenthesis "()" of methods in templates cannot be parsed, so use ".all" instead of ".all()" -->
+        {% if request.user in listing.watch_by.all %} 
             <div class="text-right">
                 <form action="{% url 'watchlist' %}" method="post">
                     {% csrf_token %}
@@ -54,8 +55,9 @@
 
     <div class="flex-header" style="display: flex;">
         {% if not listing.active %}
-            {% if not listing.winner %}  <!-- Listing closed but no bidder wins the listing. -->
-                <h4>Cuurent Price: $ {{ listing.current_price }}</h4> <!-- Note that the method in templates don't use parenthesis. -->
+            <!-- Listing closed but no bidder wins the listing. -->
+            {% if not listing.winner %} 
+                <h4>Cuurent Price: $ {{ listing.current_price }}</h4> 
             {% elif listing.winner == request.user and request.user.is_authenticated %}
                 <h4>You won the listing for ${{ listing.current_price }}</h4>
             {% elif listing.seller == request.user and request.user.is_authenticated %}
@@ -118,7 +120,7 @@
             </div>
             <div class="col-6 text-right text-muted">
                 <small><em>{{ comment.time | naturaltime }}</em></small>
-                <!-- The "naturaltime" filter can return a string indicating how long ago or how long after.
+                <!-- The "naturaltime" filter returns a string indicating how long ago or how long after.
 　　　　　　　　　　　 For example (now is 17 Feb 2007 16:30:00): 17 Feb 2007 16:30:00 -> now.
                                                                 17 Feb 2007 16:25:35 -> 4 minutes ago.
                                                                 18 Feb 2007 16:31:29 -> 1 day from now. -->

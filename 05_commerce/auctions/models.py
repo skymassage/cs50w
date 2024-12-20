@@ -16,6 +16,7 @@ class Listing(models.Model):
     # blank: It determines whether the field will be required in forms. If True, the field can be left blank in forms.
     #        Default is False which means the field will be required.
     # To summarize, null is about the database, and blank is about forms.
+    # Note that Python doesn't have the NULL value, it uses None.
     
     # The exception is CharFields and TextFields, which in Django are never saved as NULL. 
     # Blank values in CharFields and TextFields are stored in the database as an empty string ('').
@@ -56,8 +57,8 @@ class Listing(models.Model):
     # you can put the class name of the model within "...", rather than the model object itself.
     # That is, we haven't created the Category class yet, so put the Category inside of "".
     # "SET_DEFAULT" means that when the ForeignKey is deleted, the object containing the ForeignKey will be set the default value.
-    # Some lists may not be categroized into the categories we already have when we are creating new listing in the form, 
-    # so we will leave this field blank. We cannot just set "blank=True", we also have to set "null=True".
+    # Some lists may not have their own categories to be categroized when we are creating new listing in the form, 
+    # so it will leave the fields blank. We cannot just set "blank=True", we also have to set "null=True".
     # Otherwise we will have errors when we are leave this field blank.
     # Because this field is not a string-based field, it must a NULL value instead of a empty string to represent the absence of field in the database.
 
