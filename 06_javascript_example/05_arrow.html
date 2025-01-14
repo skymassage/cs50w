@@ -5,7 +5,7 @@
         <script>
             /* In addition to the traditional function notation we've seen already, 
                JS also gives us the ability to use Arrow Functions where we have an input 
-               (or parentheses when there's no input) followed by "=>" followed by some code to be run. */
+               (or only parentheses when there's no input) followed by "=>" followed by some code to be run. */
 
             // Regular function
             var callSomeone = function(someone) {
@@ -28,9 +28,7 @@
             // var callSomeone = () => 'Hi, ' + 'David';  
             
             document.addEventListener('DOMContentLoaded', () => {
-                document.querySelector('form').onsubmit = () => {
-                    alert(callSomeone(document.querySelector('#name').value));
-                };
+                document.querySelector('form').onsubmit = () => alert(callSomeone(document.querySelector('#name').value));
             });
 
 
@@ -59,8 +57,10 @@
                 document.querySelector('#btn_2').addEventListener('click', hello_2);  // Click the button to execute "hello_2", and you will see that "this" still represents the window object.
             });
 
-            /* The result will show that the first example returns two different objects (window and button), 
-               and the second example returns the window object twice, because the window object is the "owner" of the function. */
+            /* The result will show that the first example returns different objects (window and button), 
+               and the second example returns only window object, because the window object is the "owner" of the function. */
+            /* So when we want to refer to the object that is executing the current piece of code, not the object initially defined,
+               we cannot use the arrow functions with "this". */
 
         </script>
     </head>

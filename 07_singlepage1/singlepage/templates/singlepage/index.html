@@ -20,7 +20,7 @@
 
             document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('button').forEach(button => {
-                    button.onclick = function() { // Note that we cannot use the arrow functon here because of "this".
+                    button.onclick = function() { // Note that we cannot use the arrow function here because of "this".
                         showSection(this.dataset.section);
                     };
                 });

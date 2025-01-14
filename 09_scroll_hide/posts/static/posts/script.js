@@ -18,7 +18,8 @@ function load() { // Load next set of posts.
     fetch(`/posts?start=${start}&end=${end}`)
     .then(response => response.json())
     .then(data => {
-        data.posts.forEach(add_post);
+        // The element of "data.posts" will be input as the argument to the "add_post" function.
+        data.posts.forEach(add_post); 
     })
 };
 
@@ -39,9 +40,9 @@ document.addEventListener('click', event => {
     const element = event.target; // Find what was clicked on. The ".target" property returns the element where the event occured, and it is read-only.
 
     if (element.className === 'hide') {     // Check if the user clicked on a hide button.
-        element.parentElement.style.animationPlayState = 'running'; // The ".parentElement" property returns the parent element of the specified element.
+        element.parentElement.style.animationPlayState = 'running'; // ".parentElement" returns the parent element of the specified element.
         element.parentElement.addEventListener('animationend', () => {  // The "animationend" event occurs when a CSS animation has completed.
-            element.parentElement.remove();     // The "".remove()"" method removes an element (or node) from the document.
+            element.parentElement.remove();     // ".remove()" removes an element (or node) from the document.
         });
     }    
 });

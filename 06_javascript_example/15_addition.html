@@ -44,7 +44,6 @@
                 function updateResponse(event) {
                     /* We need to use "setState" to change the state so as to set a new value for "response". */
                     setState({
-                        /*  */
                         /* "..." is the spread operator that allows us to quickly copy all or part of an existing array 
                            or object into another array or object. For example:
                                const numbersOne = [1, 2, 3], numbersTwo = [4, 5, 6];
@@ -73,11 +72,9 @@
                                 /* "Math.ceil()" always rounds up and returns the smallest integer greater than or equal to a given number.
                                    "Math.floor()" always rounds down and returns the largest integer less than or equal to a given number. */
                                 /* "Math.random()" returns a floating-point, pseudo-random number that's greater than or equal to 0 and less than 1, 
-                                    with approximately uniform distribution over that range. You can then scale to your desired range as the following:
-                                        Math.floor(Math.random() * 10);       // Returns a random integer from 0 to 9.
-                                        Math.floor(Math.random() * 100) + 1;  // Returns a random integer from 1 to 100.
+                                    with approximately uniform distribution over that range. You can then scale to your desired range as the following:                                        
                                         Math.ceil(Math.random() * 10);        // Returns a random integer from 1 to 10.
-                                        Math.ceil(Math.random() * 100) + 1;   // Returns a random integer from 2 to 101. */
+                                        Math.floor(Math.random() * 10);       // Returns a random integer from 0 to 9. */
                                 num1: Math.ceil(Math.random() * 10),
                                 num2: Math.ceil(Math.random() * 10),
                                 incorrect: false
@@ -101,7 +98,7 @@
                 
                 return (
                     // Use "className" in React instead of "class" because "class" is a keyword in JS.
-                    /* The conditional (ternary) operator is the only JavaScript operator that takes three operands: 
+                    /* The conditional (ternary) operator is the only JS operator that takes three operands: 
                         a condition followed by a question mark (?), then an expression to execute if the condition is truthy followed by a colon (:),
                         and finally the expression to execute if the condition is falsy.  */
                     // Note that in React we use "onKeyPress" and "onChange" instead of "onkeypress" and "onchange".
@@ -112,6 +109,8 @@
                             {state.num1} + {state.num2}
                         </div>
                         <input onKeyPress={inputKeyPress} onChange={updateResponse} autoFocus="true" value={state.response} />
+                        {/* "value={state.response}" is to clear the input value after pressing the enter key. */}
+                        {/* This is the format for commenting in React. */}
                         <div>Score: {state.score}</div>
                     </div>
                 );

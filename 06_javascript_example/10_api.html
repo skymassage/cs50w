@@ -17,8 +17,8 @@
                which return the results representing success and failure respectively. 
                Only one of these "resolve" and "reject" can be returned, and then it means that this Promise event has ended. 
                "resolve" and "reject" are pre-defined by the JavaScript engine, so we don't need to create them. 
-               The names of "resolve" and "reject" can be customized, but most developers are accustomed to maintaining this name. 
-               So the first argument "resolve) of the executor function is necessary and means success, 
+               The names of "resolve" and "reject" can be customized, but most developers are accustomed to maintaining these names.
+               So the first argument "resolve" of the executor function is necessary and means success, 
                the second one "reject" is optional and means failure.
                The "new" operator lets developers create an instance of a user-defined object type 
                or of one of the built-in object types that has a constructor function.
@@ -55,12 +55,12 @@
                        that will come through at some point, but not necessarily right away. We deal with promises 
                        by giving them the ".then()" method describing what should be done when we get a fulfilled response,
                        and the ".catch()" method describing what should be done when we get a rejected response,.
-                       Note that the argument of ".then()" and ".catch()" is always a function. */
+                       Note that the argument inside of ".then()" and ".catch()" is always a function. */
 
                     /* Notice this URL containing "apikey=<...>" which means you need the API key <...>.
                        You can find many exchage rate APIs online, but generally you must register their websites to get the API keys.
-                       And follow the different sites's URL formats and fill in the corrsponding api keys to use their exchage rate APIs.
-                       Here is another URL I found online and we can test this api by visiting this URL.
+                       And follow the different sites's URL formats and fill in the corrsponding api keys to use APIs.
+                       Here is another URL we found online and we can test this api by visiting this URL.
                        When you visit this page, you'll see the current exchange rate between the U.S. Dollar and many other currencies,
                        written in JSON format which looks like the content of the "currency.json" file in this folder.
                        If someday the following URL doesn't work, you can change it to 'currency.json' 

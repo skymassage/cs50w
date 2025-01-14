@@ -55,12 +55,11 @@
 
     <div class="flex-header" style="display: flex;">
         {% if not listing.active %}
-            <!-- Listing closed but no bidder wins the listing. -->
-            {% if not listing.winner %} 
+            {% if not listing.winner %}
                 <h4>Cuurent Price: $ {{ listing.current_price }}</h4> 
-            {% elif listing.winner == request.user and request.user.is_authenticated %}
+            {% elif listing.winner == request.user %}
                 <h4>You won the listing for ${{ listing.current_price }}</h4>
-            {% elif listing.seller == request.user and request.user.is_authenticated %}
+            {% elif listing.seller == request.user %}
                 <h4>{{ listing.winner }} has been won for $ {{ listing.current_price }}</h4>
             {% else %}
                 <h4>The listing has been won for $ {{ listing.current_price }}</h4>
@@ -71,7 +70,7 @@
                 <h6>Number of Bidders: {{ listing.bidder_num }}</h6>
             </div>   
             <hr/>
-            {% if request.user.is_authenticated and request.user == listing.seller %}
+            {% if request.user == listing.seller %}
                 <form action="{% url 'close' %}" method="post">
                     {% csrf_token %}
                     <button name="close_listing_id" value="{{ listing.id }}" type="submit" class="btn btn-danger">Close Listing</button>
