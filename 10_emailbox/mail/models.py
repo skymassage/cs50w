@@ -1,10 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 class User(AbstractUser):
     pass
-
 
 class Email(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="emails") # 
@@ -19,12 +17,19 @@ class Email(models.Model):
     def serialize(self):
         return {
             "id": self.id,
+            # Here we don't set a username for the user (instead we set a email as the username),
+            # we use email to represent the user. 
+            # Because "self.sender" are the built-in User class objects,
+            # we can access the ".email" attrubute (which aren't defined here) of the User class objects.  
             "sender": self.sender.email,
-            "recipients": [recipient.email for recipient in self.recipients.all()], # Note that one mail can be sent to multiple people.
-            # Here we don't set a username for the user (instead we set a email as the username), so use email to represent the user. That's why "user.email" is used.
-            # Note that each element in "self.recipients.all()" is a User class object.
+            
+            # Note that one mail can be sent to multiple people.
+            "recipients": [recipient.email for recipient in self.recipients.all()], 
+            # "self.recipients.all()" are also the User class objects.
+            
             "subject": self.subject,
             "body": self.body,
+            
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             # ".strftime(<format>)" converts date and time objects to their string representation, 
             # where <format> consists of various format codes that define specific parts of the date and time.
@@ -38,6 +43,7 @@ class Email(models.Model):
             # For example:
             #   datetime.now()                                      # 2024-04-16 16:46:34.444601  
             #   datetime.now().strftime("%b %d %Y, %I:%M %p")       # Apr 16 2024, 04:46 PM
+            
             "read": self.read,
             "archived": self.archived
         }

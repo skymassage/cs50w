@@ -9,44 +9,52 @@
    Construct an HTTP request, for example:
 	   const req = new Request(<URL>, {method: <...> , headers: <...>, body: <...>, ...});
    The following is the options inside of the second argument in "Request":
-   method：Specify the HTTP request method, such as GET, POST, PUT, etc. and default is GET.
+   method：Specify the HTTP request method, such as GET, POST, PUT, etc. and the default is GET.
    headers：Any Headers objects you want to add to the request and default is "{}" empty. (You can go to cs50/wk9_flask/11_birthdays/app.py to view about request headers)
    body: The information you want to send to the server. Note that GET or HEAD method requests cannot contain body information.
    Other options: mode, credentials, cache, redirect, integrity. */
 
 
 /* "JSON.stringify" is a common use of JSON is to exchange data to/from a web server.
-   When sending data to a web server, the data has to be a string. It can convert a JS object and arrays into a string.
+   When sending data to a web server, the data has to be a string. 
+   It can convert a JS object and arrays into a string.
 
    In JSON, date objects are not allowed, but "JSON.stringify" will convert any dates into strings:
 	   const obj = {name: "John", today: new Date(), city : "New York"};
 	   const myJSON = JSON.stringify(obj);
 
-   In JSON, functions are not allowed as object values. "JSON.stringify" will remove any functions from a JS object, both the key and the value. So you must convert the functions into strings before running "JSON.stringify": 
+   In JSON, functions are not allowed as object values. 
+   "JSON.stringify" will remove any functions from a JS object, both the key and the value.
+   So you must convert the functions into strings before running "JSON.stringify": 
 	   const obj = {name: "John", age: function () {return 30;}, city: "New York"};
 	   obj.age = obj.age.toString();   // convert to string
 	   const myJSON = JSON.stringify(obj);
 
-   When storing data, the data has to be a certain format, and regardless of where you choose to store it, text is always one of the legal formats. JSON makes it possible to store JS objects as text:
-	   // Storing data:
+   When storing data, the data has to be a certain format,
+   and regardless of where you choose to store it, text is always one of the legal formats.
+   JSON makes it possible to store JS objects as text:
+	   // Store data in the string format:
 	   const myObj = {name: "John", age: 31, city: "New York"};
 	   const myJSON = JSON.stringify(myObj);
 	   localStorage.setItem("testJSON", myJSON);
 
-	   // Retrieving data:
+	   // Retrieve data and convert it into the JS object:
 	   let text = localStorage.getItem("testJSON");
-	   let obj = JSON.parse(text);  // "JSON.parse" converts text into a JS object.
-	   document.getElementById("demo").innerHTML = obj.name; */
+	   let obj = JSON.parse(text);  // When receiving data from a web server, the data is always a string.
+                                    // Use "JSON.parse", and the data becomes a JS object.
+*/
 
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
     // document.querySelector('#inbox').addEventListener('click', load_mailbox('inbox'));   // Same as the last line
+    
     document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
     document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
 
 
     document.querySelector('#compose').addEventListener('click', compose_email);
     // document.querySelector('#compose').addEventListener('click', () => compose_email);   // Same as the last line
+    
     document.querySelector('#compose-form').addEventListener('submit', send_email);
 
     load_mailbox('inbox'); // By default, load the inbox
@@ -110,7 +118,6 @@ function load_mailbox(mailbox) {
     fetch(`/emails/${mailbox}`)
     .then(response => response.json())
     .then(emails => {
-        console.log(emails);
         emails.forEach(email => {
             /* Instead of creating a <div>, we create an <a> so that when the mouse is hovering over <a>, 
                the mouse cursor will turn into a hand shape. */
@@ -145,10 +152,7 @@ function load_email(email_id) {
     fetch(`/emails/${email_id}`)
     .then(response => response.json())
     .then(email => {
-        console.log(email);
-
         content = document.querySelector('#emails-view');
-
         email.body = email.body.replaceAll('\n', '<br/>');
         content.innerHTML = `
             <p><strong>From: </strong>${email.sender}</p>
@@ -200,9 +204,12 @@ function reply_email(email_id) {
     .then(response => response.json())
     .then(email => {
         document.querySelector('#compose-recipients').value = email.sender;
+        
+        // We need to remove "Re: " in the subject when replying the email again.
         // ".substr(i, len)" extracts a substring of length len from the i-th position of the string.
         document.querySelector('#compose-subject').value = (email.subject.substr(0, 4) === 'Re: ') ? email.subject : 'Re: ' + email.subject;
+        
         document.querySelector('#compose-body').value = '\r\n\r\n------------------------------------------------------------------------------------------\r\n' 
-        + `On ${email.timestamp} ${email.sender} wrote: `+ '\r\n' + email.body;
+        + `On ${email.timestamp} ${email.sender} wrote: \r\n` + email.body;
     });
 }

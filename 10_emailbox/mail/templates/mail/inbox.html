@@ -15,7 +15,9 @@
 
     <div id="compose-view">
         <h3>New Email</h3>
-        <form id="compose-form"> <!-- Here we don't need to add method="POST" because we send the POST request from "fetch" in JS. -->
+        
+        <!-- Here we don't need to add method="POST" because we will send the POST request from "fetch" in JS. -->
+        <form id="compose-form"> 
             <div class="form-group">
                 From: <input disabled class="form-control" value="{{ request.user.email }}">
             </div>

@@ -12,8 +12,9 @@ DATABASES = {
 '''
 =========================================================================================================================
 
-Set the login route if the page requires login so that we just set "@login_required" instead of "@login_required(login_url=<Login_URL>)" in views.py.
-So we need to set "LOGIN_URL = '/login'" in setting.py.
+Set the login route if the page requires login so that we just need to set "@login_required",
+instead of "@login_required(login_url=<Login_URL>)", in views.py. 
+Thus we have to set "LOGIN_URL = '/login'" in setting.py.
 
 =========================================================================================================================
 

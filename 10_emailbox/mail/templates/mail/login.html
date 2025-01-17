@@ -11,6 +11,7 @@
     <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
+            <!-- type="email" defines a field for an e-mail address (validates automatically when submitted). -->
             <input autofocus class="form-control" type="email" name="email" placeholder="Email">
         </div>
         <div class="form-group">

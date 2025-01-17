@@ -125,7 +125,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Set the login route if the page requires login so that we just set "@login_required" instead of "@login_required(login_url=<Login_URL>)" in views.py.
+# Set the login route if the page requires login so that we just set "@login_required",
+# instead of "@login_required(login_url=<Login_URL>)", in views.py.
 LOGIN_URL = '/login'  # The default is '/accounts/login/'.
 # If the user want to go to the <URL> required login, they will be redirected to "<LOGIN_URL>?next=/<URL>". 
 # Example for this project and LOGIN_URL = '/login': If we go to the "emails" route without login, we will be redirected to "login?next=/emails".

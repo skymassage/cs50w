@@ -84,9 +84,9 @@ def mailbox(request, mailbox): # Display corresponding mail items when entering 
 
     emails = emails.order_by("-timestamp").all() # The minus '-' inside of "-timestamp" means the descending order.
 
-    # In order to serialize objects other than dict you must set "safe=False", otherwise a TypeError will be raised. 
-    # Note that an API based on dict objects is more extensible, flexible, and makes it easier to maintain forwards compatibility.
-    # Therefore, you should avoid using non-dict objects in JSON-encoded response.
+    # The "safe" parameter decides on the type of python data type (tuples, dictionaries, strings etc.) we want to pass.
+    # "safe=True", which is the default, allows only dictionaries to be returned. "safe=False" allows lists to be returned.
+    # "[email.serialize() for email in emails]" is a list, we should use "safe=False" to avoid errors.
     return JsonResponse([email.serialize() for email in emails], safe=False) 
     # For example, if you send a GET request to "/emails/inbox", you might get a JSON response like the below (representing two emails): 
     # [{"id": 100, "sender": "foo@example.com", "recipients": ["bar@example.com"], "subject": "Hello!", 
@@ -107,7 +107,7 @@ def compose(request): # Store email information in the database when sending ema
     # Access the body of the request we sent by "<request>.body" which we have written inside of "fetch()" in the JS code.
     data = json.loads(request.body) # "json.loads()" parses a valid JSON string and convert it into a Python Dictionary.
 
-    # Use ".get(<key>)" in Python to get the key value of the JSON object. If the key doesn't exist, ".get(<key>)" returns None. 
+    # Use ".get(<key>)" to get the key value of the JSON object. If the key doesn't exist, ".get(<key>)" returns None. 
     # And we can add a second argument to specify what will be returned if the key is not found. 
     # For example, ".get(<key>, "Error")" will return a string "Error" if the key was not found.
     # Or we can also use "[]" to retrieve the key value of the JSON object.
@@ -135,7 +135,7 @@ def compose(request): # Store email information in the database when sending ema
     subject = data.get("subject", "")
     body = data.get("body", "")
 
-    # Create one email for each recipient, plus sender
+    # Create one email for each recipient, plus sender (i.e. "request.user").
     users = set() # Create an empty set. 
     users.add(request.user)
     users.update(recipients) # ".update" inserts the items from the list "recipients" into the set "users".
@@ -145,18 +145,18 @@ def compose(request): # Store email information in the database when sending ema
             sender=request.user,
             subject=subject,
             body=body,
-            read=user == request.user # 
+            read=(user==request.user)
         )
         email.save()
         for recipient in recipients:
             email.recipients.add(recipient)
         email.save()
     # This means if the sender sends an email to N other recipients, 
-    # we will create N rows in the database's email model.
-    # For these rows, all fields except "user" and read"" are the same.
+    # we will create N+1 (one sender and N recipients) rows in the database's email model.
+    # For these rows, all fields except "user" and "read" are the same.
     # The "user" field contains only one value which would be the email address of sender or recipients.
     # And the "read" field would be True if the "user" field is same as the "sender" field 
-    # ,i.e., user and sender ((request.user)) are the same.
+    # ,i.e., user and sender ("request.user") are the same.
 
     return JsonResponse({"message": "Email sent successfully."}, status=201)
     # "201 Created" means the request has been fulfilled, and a new resource is created .
@@ -185,7 +185,7 @@ def email(request, email_id): # Get the email information based on the email ID 
     #   The sent book data can then be added to a database on the server. 
     #   Making multiple POST requests to this API will create multiple book entries in the database.
     #   Your book review app may also have an "/edit_book/<id>" API route that allows you to edit a book by its ID. 
-    #   API requests to this route would be suited to PUT requests that will replace the book information in the database with the data in the request payload. 
+    #   API requests to this route would be suited to the PUT requests that will replace the book information in the database with the data in the request payload.
     #   Multiple PUT requests to edit the book data will result in the same data change as one PUT request to edit the data.
     # However that these definitions are only defined by the HTTP specifications for POST and PUT.
     # In reality, it is up to software engineers to implement POST and PUT into apps as recommended by the specification, 
