@@ -5,12 +5,12 @@ Global: Set the "django.middleware.csrf.CsrfViewMiddleware" middleware in "setti
         Django performs CSRF token validation on all POST requests by default.
         If the validation fails, a 403 error will occur.
         Therefore, {% csrf_token %} needs to be added to <form>.
-        Commenting "django.middleware.csrf.CsrfViewMiddleware" can remove all CSRF token verification, 
+        Removing "django.middleware.csrf.CsrfViewMiddleware" can avoid all CSRF token verification, 
         but it will make our website completely unable to prevent CSRF attacks.
 
 Local: Set CSRF token validation by setting the "@csrf_protect" decorator for the current view function, 
        even if "django.middleware.csrf.CsrfViewMiddleware" is not set in settings.
-       Note adding {% csrf_token %} in HTML.
+       Note adding {% csrf_token %} to the HTML forms.
        Besides, "@csrf_exempt" cancels the CSRF token validation of the current view function, 
        even if "django.middleware.csrf.CsrfViewMiddleware" is set in settings.
 '''
@@ -29,7 +29,6 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 
 NUM = 10 # How many posts per page.
-
 
 def login_view(request):
     if request.method == "POST":
@@ -150,9 +149,10 @@ def index(request):
     # "<Paginator>.page_range" return a 1-based range iterator of page numbers.
     # "1-based" means 1-based numbering that is the computational idea of ​​indexing an ordered data structure by starting with 1 instead of 0.
     # "<Paginator>.get_page(<page_num>)" returns a Page object with the given 1-based index, while also handling out of range and invalid page numbers.
-    # <page_num> isn't a number, it returns the first page. And <page_num> is negative or greater than the number of pages, it returns the last page.
+    # If <page_num> isn't a number, it will return the first page.
+    # And if <page_num> is negative or greater than the number of pages, it returns the last page.
     
-    # You usually won't construct Page objects by hand - you'll get them by iterating Paginator (<Paginator>.page_range), or by using <Paginator>.get_page().
+    # You usually won't construct <Page> objects by hand - you'll get them by iterating Paginator (<Paginator>.page_range), or by using <Paginator>.get_page().
     # "<Page>.number" returns the 1-based page number for <Page> (i.e. the current page number).
     # "<Page>.has_previous()" returns True if there's a previous page.
     # "<Page>.has_next()" returns True if there's a next page.

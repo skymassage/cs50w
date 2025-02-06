@@ -25,27 +25,28 @@
    ".textContent" returns the text content of the element and all descendaces, with spacing and CSS hidden text, but without tags. */
 
 document.addEventListener('DOMContentLoaded', function() {
-    
     /* In JS, we can select all tags with the "post card" class name using ".post.card",
-       where the whitespace of "post card" is replaceed by "." */
+       where the whitespace of "post card" is replaceed by "."
+       Note that the id names cannot include whitespace like the calss names. */
     document.querySelectorAll('.post.card').forEach(post => {
         var postId = post.id.slice(7);
 
-        /* Element also has the ".querySelector" method to select elements within itself,
+        /* Element also has the ".querySelector" or "querySelectorAll" method to select elements within itself,
            so we don't need "document.querySelector" to select the element in the whole DOM. */
-        post.querySelector('.comment_link').onclick = function () {
-            load_comment(post, postId);
-            return false;  // Method 1: "return false" prevent submission.
-        };
+        /* Here we use "querySelectorAll('.comment_link')" instead of "querySelector('.comment_link')",
+           because some posts have two "<a class="comment_link" href="">Comment</a>" if the posters are "request.user".
+           If we use "querySelector('.comment_link')",
+           only the first "<a class="comment_link" href="">Comment</a>" can be triggered,
+           and the second cannot. */
+        post.querySelectorAll('.comment_link').forEach(comment_link => {
+            comment_link.addEventListener('click', e => {
+                e.preventDefault();
+                load_comment(post, postId);
+            });
+        });
         if (post.querySelector('.comment_submit_btn')) {
             post.querySelector('.comment_submit_btn').addEventListener('click', e => {
-                /* Note that the second argument of "addEventListener" should be a function, 
-                   and this function has only one parameter which is the event.
-                   If you don't want to submit the form or redirection.
-                   First, prevent redirection using "preventDefault" before "load_comment".
-                   Then, use another function to complete main task. 
-                   So you can't pass the function to "addEventListener" to do the job and prevent redirection meanwhile. */
-                e.preventDefault(); // Method 2: "e.preventDefault()" prevents submission.
+                e.preventDefault(); 
                 if (post.querySelector('.comment_field').value) { // Prevent the send the blank comment.
                     comment(post, postId);
                 }
@@ -227,7 +228,13 @@ function edit(post, post_id) {
             /* The "content-type" of "headers" tells the browser what format of data is sent, 
                and the browser handles different types of data in different ways. 
                JSON format is often used for front-end and back-end data interaction because it is readable, 
-               concise and convenient. So set "content-type" to "application/json". */ 
+               concise and convenient. So set "content-type" to "application/json". 
+               Other content-type like: 
+               text/html: HTML format
+               text/plain:plain text format
+               image/jpeg: jpg image format
+               image/png: png image format
+               application/pdf: pdf format */ 
             'Content-type': 'application/json',
             'X-CSRFToken': getCookie('csrftoken')
         },
@@ -282,8 +289,8 @@ function load_comment(post, post_id) {
                 comments.forEach(comment => {
                     /* If we declare the rendering content as a string,
                        the results displayed on the page will have many tags (i.e., many '<', '>', '/', etc),
-                       because this is a string not an HTML object.
-                       We can declare a <div> and have its "innerHTML" attribute be the rendering content. */
+                       but this is a string not an HTML object.
+                       So we need to create a <div> and have its "innerHTML" attribute be the rendering content. */
                     let each_comment = document.createElement('div');
                     each_comment.innerHTML = `
                         <div class="d-flex justify-content-between">
@@ -299,7 +306,6 @@ function load_comment(post, post_id) {
         
                     comment_content_div.append(each_comment);
                 });
-                comment_div.append(comment_content_div);
             } 
         });
     } else if (comment_div.style.display == 'block') {
