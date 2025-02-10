@@ -1,0 +1,29 @@
+In Linux, "update-alternatives" creates, removes, maintains and displays information about the symbolic links comprising the alternatives system. It is possible for several programs fulfilling the same or similar functions to be installed on a single system at the same time.
+
+Add a group of alternatives to the system:
+update-alternatives --install <link> <name> <path> <priority>
+ex: update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+
+Display all targets of the <name> group:
+update-alternatives --list <name>
+ex: update-alternatives --list python3
+
+Show alternatives for the <name> group and ask the user to select which one to use:
+update-alternatives --config <name>
+ex: update-alternatives --config python3
+
+Remove <path> from the <name> group alternative:
+update-alternatives --remove <name> <path>
+ex: update-alternatives --remove python3 /usr/bin/python3.10
+
+<link> is the symlink pointing to /etc/alternatives/<name>. (e.g. /usr/bin/python3)
+<name> is the master name for this link group. (e.g. python3)
+<path> is the location of one of the alternative target files. (e.g. /usr/bin/python3.10)
+<priority> is an integer; options with higher numbers have higher priority in automatic mode.
+
+------------------------------------
+List all versions of Python installed:
+ls -ls /usr/bin/python*
+
+Or they maybe be installed in "usr/local":
+ls -ls /usr/local/bin/python*
