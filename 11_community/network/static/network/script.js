@@ -21,8 +21,8 @@
    Some methods and properties behave differently depending on whether they are called on an Element or a Node. */
 
 /* ".innerHTML" returns the text content of the element, including all spacing and inner HTML tags.
-   ".innerText" just returns the text content of the element and all its children, without CSS hidden text spacing and tags, except <script> and <style> elements.
-   ".textContent" returns the text content of the element and all descendaces, with spacing and CSS hidden text, but without tags. */
+   ".innerText" just returns the text content of the element and all its children, without CSS hidden text spacing ("display: none") and tags, except <script> and <style> elements.
+   ".textContent" returns the text content of the element and all descendants, with spacing and CSS hidden text, but without tags. */
 
 document.addEventListener('DOMContentLoaded', function() {
     /* In JS, we can select all tags with the "post card" class name using ".post.card",
@@ -30,14 +30,14 @@ document.addEventListener('DOMContentLoaded', function() {
        Note that the id names cannot include whitespace like the calss names. */
     document.querySelectorAll('.post.card').forEach(post => {
         var postId = post.id.slice(7);
-
-        /* Element also has the ".querySelector" or "querySelectorAll" method to select elements within itself,
-           so we don't need "document.querySelector" to select the element in the whole DOM. */
         /* Here we use "querySelectorAll('.comment_link')" instead of "querySelector('.comment_link')",
-           because some posts have two "<a class="comment_link" href="">Comment</a>" if the posters are "request.user".
+           because some posts have two "<a class="comment_link" href="">Comment</a>" if the posters are "request.user" (i.e. post.poster == request.user).
            If we use "querySelector('.comment_link')",
            only the first "<a class="comment_link" href="">Comment</a>" can be triggered,
            and the second cannot. */
+        /* "querySelector" for selecting all elements with the same class names returns first element.
+           We should use "querySelectorAll" for selecting all elements with the same class names,
+           but sometimes "querySelector" also works and here we don't plan to modify them. */
         post.querySelectorAll('.comment_link').forEach(comment_link => {
             comment_link.addEventListener('click', e => {
                 e.preventDefault();
@@ -73,12 +73,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }   
 
-
         // Note that the element with the "userId" class is in the layout.html.
         if (document.querySelector('.userId')) {
             var userId = document.querySelector('.userId').id.slice(7);
             const ratings = post.querySelectorAll(".post-rating");
             const likeRating = ratings[0]; 
+            // console.log(ratings);
+            console.log(likeRating)
             ratings.forEach(rating => {
                 const button = rating.querySelector(".logined.post-rating-button");
                 const count = rating.querySelector(".post-rating-count");
@@ -112,6 +113,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
 
+                    /* When we click the thump-up and the thumb-down is already clicked,
+                       we should cancel the thumb-down and substract its number, and vice versa. */
                     count.textContent = Number(count.textContent) + 1;
                     ratings.forEach(rating => {
                         if (rating.classList.contains("post-rating-selected")) {
@@ -172,8 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-
-    /* The history object contains the URLs visited by the user (the browser's history.). 
+    /* The history object contains the URLs visited by the user (the browser's history). 
        The history object is a property of the window object, and be accessed with "window.history" or just "history".
        "history.replaceState(data, title, url)" and "history.pushState(data, title, url)" are similar but still different.
        data: Information (in ket-value format) passed to the target URL, can be empty.
@@ -189,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
     /* The location object contains information about the current URL.
        The location object is a property of the window object, and cen be accessed with "window.location" or just "location".
        The ".pathname" property of the location object sets or returns the pathname of a URL (page). */
-       history.replaceState({}, "", location.pathname); // Prevent URL changes when using paginator.
+    history.replaceState({}, "", location.pathname); // Prevent URL changes when using paginator.
 });
 
 
@@ -203,19 +205,20 @@ document.addEventListener('DOMContentLoaded', function() {
    and obtain the "csrftoken" value in the cookie as the value of the "X-CSRFTOKEN" key. */
 /* This funcion is used to retrieve "csrftoken" from cookie which may contain many key-value pairs. */
 function getCookie(name){
-    /* ".split()" splits a string into the new array of substrings and returns this new array (doesn't change the original string).
+    /* ".split(<separator>)" takes <separator> to split a string into the new array of substrings,
+       and returns this new array (<separator> doesn't exist in the new array).
        ".pop()" removes (pops) the last element of an array (changes the original array) and returns this removed element. 
        ".shift()" removes the first elemnt of an array (changes the original array) and returns this removed element. */
     
     /* Access cookies through "document.cookie", and a cookie look likes '<key1>=<value1>; <key2>=<value2>...'.
-       Here Django autimatically create the cookie for us, which is csrftoken=<csrftoken>. */
-
-    // If document.cookie is 'csrftoken=<csrftoken>; <key1>=<value1>; <key2>=<value2>; ...'
-    const value = `; ${document.cookie}`;    // '; csrftoken=<csrftoken>; <key1>=<value1>; <key2>=<value2>; ...'
-    const parts = value.split(`; ${name}=`); // ['', '<csrftoken>; <key1>=<value1>; <key2>=<value2>; ...']    
+       Here Django automatically create the cookie for us, which is csrftoken=<csrftoken>. */
+    // "document.cookie" is "<key>=<value>; ... ; csrftoken=<csrftoken>... ; <key>=<value> ...".
+    // Add ';' the head of "<key>=<value>; ... ; csrftoken=<csrftoken>... ; <key>=<value> ..." for separating <key>=<value>.
+    const value = `; ${document.cookie}`;    // ';<key>=<value>; ... ; csrftoken=<csrftoken>... ; <key>=<value> ...'
+    const parts = value.split(`; ${name}=`); // [';<key>=<value>; ... ', '<csrftoken>... ; <key>=<value> ...'] 
     if(parts.length == 2) return parts.pop().split(';').shift();
-    /* parts.pop()                           // ''<csrftoken>; <key1>=<value1>; <key2>=<value2>; ...'
-       parts.pop().split(';')                // ['<csrftoken>', ' <key1>=<value1>', ' <key2>=<value2>', ...]
+    /* parts.pop()                           // '<csrftoken>... ; <key>=<value> ...'
+       parts.pop().split(';')                // ['<csrftoken>', ' <key>=<value>', ...]
        parts.pop().split(';').shift()        // '<csrftoken>'                                                   */
 }
 
@@ -302,7 +305,7 @@ function load_comment(post, post_id) {
                         <p>${comment.message}</p>
                     `;
                     /* In JS, don't use {% url ... %} like <a class="text-dark" href="{% url 'profile' username=comment.author %}">.
-                    URL paths should be hardcoded in JS like <a class="text-dark" href="/profile/${comment.author}"> above. */
+                    URL paths should be hardcoded in JS like <a class="text-dark" href="/profile/${comment.author}"> as above. */
         
                     comment_content_div.append(each_comment);
                 });
@@ -329,5 +332,5 @@ function follow(user_id, if_follow) {
     /* Note that here it will be an error if using "response.json()".
        Because the status code of the JSON object returned by the backend is "204 No Content",
        this means that the request has been successfully processed, but is not returning any content.
-       Therefore no response object is returned, and "".json()" cannot be used. */
+       Therefore no response object is returned, so "<response>.json()" cannot be used. */
 }

@@ -16,7 +16,8 @@
           
             <div>
               <ul class="navbar-nav mr-auto">
-                <!-- Don't use "user.is_authenticated" here because "user" is an User object whose ".is_authenticated" is always True.
+                <!-- Use "request.user.is_authenticated " instead of "user.is_authenticated" 
+                     because "user" is an User object whose ".is_authenticated" is always True.
                      Only when the user logs in, "request.user" is the User object and its ".is_authenticated" is True.
                      If the user logs out, "request.user" is the AnonymousUser object its ".is_authenticated" is False.  -->
                 {% if request.user.is_authenticated %}

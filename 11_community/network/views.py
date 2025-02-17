@@ -1,20 +1,3 @@
-'''
-CSRF token validation settings in Django are divided into global and local settings:
-
-Global: Set the "django.middleware.csrf.CsrfViewMiddleware" middleware in "setting.py".
-        Django performs CSRF token validation on all POST requests by default.
-        If the validation fails, a 403 error will occur.
-        Therefore, {% csrf_token %} needs to be added to <form>.
-        Removing "django.middleware.csrf.CsrfViewMiddleware" can avoid all CSRF token verification, 
-        but it will make our website completely unable to prevent CSRF attacks.
-
-Local: Set CSRF token validation by setting the "@csrf_protect" decorator for the current view function, 
-       even if "django.middleware.csrf.CsrfViewMiddleware" is not set in settings.
-       Note adding {% csrf_token %} to the HTML forms.
-       Besides, "@csrf_exempt" cancels the CSRF token validation of the current view function, 
-       even if "django.middleware.csrf.CsrfViewMiddleware" is set in settings.
-'''
-
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -207,7 +190,7 @@ def show_following(request):
         # Use '&' to take the intersection: <QuerySet1> & <QuerySet2>
         # Use '|' to take the union: <QuerySet1>| <QuerySet2>
         # User ".distinct()" to eliminate duplicate rows: (<QuerySet1> | <QuerySet2>).distinct()
-        following_posts |= Post.objects.filter(poster=following_user)
+        following_posts |= Post.objects.filter(poster=following_user) 
     following_posts = following_posts.order_by("-timestamp")
     
     post_paginator = Paginator(following_posts, NUM)
@@ -216,7 +199,7 @@ def show_following(request):
     return render(request, "network/index.html", {
         "title": "My Following Posts",
         "posts_per_page": post_page,
-        "following": True
+        "following": True  # Setting "following" to True is to prevent the post form from being displayed.
     })
 
 
@@ -224,12 +207,12 @@ def show_following(request):
 def follow(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        following_user = User.objects.get(pk=int(data["user_id"]))
-        if following_user!= request.user:
-            request.user.following.add(following_user) if data["if_follow"] else request.user.following.remove(following_user)
+        followed_user = User.objects.get(pk=int(data["user_id"]))
+        if followed_user!= request.user:
+            request.user.following.add(followed_user) if data["if_follow"] else request.user.following.remove(followed_user)
             request.user.save()
             return JsonResponse({"Success": "You have followed or unfollowed."}, status=204) 
-            # Note that "204 No Content" doesn't return any content, so don't use ".json()" for its response in JS.
+            # Note that "204 No Content" doesn't return any content, so don't use "<response>.json()" for its response in JS.
         
         return JsonResponse({"Error": "You couldn't follow or unfollow yourself."}, status=404)
 

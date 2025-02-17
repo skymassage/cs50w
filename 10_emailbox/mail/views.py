@@ -1,3 +1,20 @@
+'''
+CSRF token validation settings in Django are divided into global and local settings:
+
+Global: Set the "django.middleware.csrf.CsrfViewMiddleware" middleware in "setting.py".
+        Django performs CSRF token validation on all POST requests by default.
+        If the validation fails, a 403 error will occur.
+        Therefore, {% csrf_token %} needs to be added to <form>.
+        Removing "django.middleware.csrf.CsrfViewMiddleware" can avoid all CSRF token verification, 
+        but it will make our website completely unable to prevent CSRF attacks.
+
+Local: Set CSRF token validation by setting the "@csrf_protect" decorator for the current view function, 
+       even if "django.middleware.csrf.CsrfViewMiddleware" is not set in settings.
+       Note adding {% csrf_token %} to the HTML forms.
+       Besides, "@csrf_exempt" cancels the CSRF token validation of the current view function, 
+       even if "django.middleware.csrf.CsrfViewMiddleware" is set in settings.
+'''
+
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required

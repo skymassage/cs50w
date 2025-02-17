@@ -13,7 +13,12 @@
                     <span id="following_num" class="profile-item"><strong>{{ user.following_num }}</strong> following</span>
                 </div>
             </div>
-    
+            
+            <!-- If we don't specify "user" in veiws.py, by default "user" refers to "request.user" in the template.
+                 We don't specify "user" in the "index" function, but in the "profile" function.
+                 So "user" is "request.user" by default when we call "index",
+                 and "user" will be the user whose profile page is opened when we call "profile". -->
+            <!-- Here "user" is passed from the "profile" view function. -->
             {% if request.user.is_authenticated and user != request.user %}
                 <div class="text-left">
                     <!-- For the "ManyToManyField" field in the model, use the ".all" in the template after the field attribute to access all objects of the field. -->
@@ -33,10 +38,7 @@
 
 
     <div class="row row-cols-1 row-cols-md-1 g-4">
-        <!-- If we don't specify "user" in veiws.py, by default "user" refers to "request.user" in the template.
-             We don't specify "user" in the "index" function, but in the "profile" function.
-             So "user" is "request.user" by default when we call "index",
-             and "user" will be the user whose profile page is opened when we call "profile". -->
+        <!-- "following is true" is to prevent the post form from being displayed. -->
         {% if request.user.is_authenticated and user == request.user and following is true %}
             <div class="col mb-4"><div class="card">
                 <div class="card-header">
@@ -76,7 +78,7 @@
                         <hr/>
                         <div class="d-flex justify-content-between">
                             <div class="text-left">
-
+                    
                                     <div class="post-ratings-container">
                                         {% if request.user in post.likes.all %}
                                             <div class="post-rating post-rating-selected">
@@ -121,7 +123,6 @@
                     {% if post.poster == request.user %}
                         <div class="edit" style="display: none;">
                             <h6>Edit your post</h6>
-
                             <form>
                                 <div class="form-group">
                                     <textarea class="edit_field form-control" rows="5" placeholder="Your post">{{ post.content }}</textarea>
